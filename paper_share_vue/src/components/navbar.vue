@@ -3,12 +3,12 @@
         <v-card   outlined>
                 <v-row>
                      <v-col >
-                        <img class="logoImg" width="280" height="100vh" style="background-color: silver"/>
+                        <img class="logoImg" width="280" height="100vh" style="background-color: silver" @click="$router.push('/')"/>
                     </v-col>
                     <v-col :cols="3" >
                         <v-row  class="navbarButtons">
-                            <v-btn  class="ma-2" outlined color="indigo" text>Log in</v-btn>
-                            <v-btn  class="ma-2" outlined color="indigo" text>Sign in</v-btn>
+                            <v-btn  class="ma-2" outlined color="indigo" text @click="$router.push('/login')">Log in</v-btn>
+                            <v-btn  class="ma-2" outlined color="indigo" text @click="$router.push('/register')">Sign in</v-btn>
                         </v-row> 
                     </v-col>
                 </v-row> 
