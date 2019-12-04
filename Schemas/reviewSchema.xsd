@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <xs:element name="Reviewer" type="xs:string"/>
+    <xs:element name="Paper">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="PaperTitle" type="xs:string"/>
+                <xs:element name="PaperAuthor" type="xs:string"/>
+                <xs:element name="Chapters" type="Chapter"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Review">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Reviewer"/>
+                <xs:element ref="Paper"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="Chapter">
+        <xs:sequence>
+            <xs:element name="OriginalChapter"/>
+            <xs:element name="ChapterReview"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
