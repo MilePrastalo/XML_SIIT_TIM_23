@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="http://www.sharePaper/model" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.sharePaper/model"
+    elementFormDefault="qualified" >
     <xs:element name="ScientificPaper">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="Authors">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element maxOccurs="unbounded" ref="Author"/>
+                       
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -38,19 +38,11 @@
     <xs:element name="Author">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="FirstName">
+                <xs:element name="authorUsername">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
-                            <xs:minLength value="1"/>
-                            <xs:maxLength value="30"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:element>
-                <xs:element name="LastName">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:minLength value="1"/>
-                            <xs:maxLength value="30"/>
+                            <xs:minLength value="3"/>
+                            <xs:maxLength value="20"/>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
@@ -83,14 +75,6 @@
                             </xs:element>
                         </xs:sequence>
                     </xs:complexType>
-                </xs:element>
-                <xs:element minOccurs="0" name="AuthorTitle">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:minLength value="1"/>
-                            <xs:maxLength value="15"/>
-                        </xs:restriction>
-                    </xs:simpleType>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>

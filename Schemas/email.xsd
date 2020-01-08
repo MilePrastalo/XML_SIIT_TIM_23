@@ -6,12 +6,13 @@
     <xs:element name="Email">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Writer" type="xs:string"/>
-                <xs:element name="Recipient" type="xs:string"/>
-                <xs:element name="Subject" type="xs:string"/>
-                <xs:element name="Body" type="xs:string"/>
+                <xs:element name="writerUsername" type="xs:string"/>
+                <xs:element name="recipientUsername" type="xs:string"/>
+                <xs:element name="subject" type="xs:string"/>
+                <xs:element name="body" type="xs:string"/>
             </xs:sequence>
             <xs:attribute name="date" type="xs:date"/>
+            <xs:attribute name="id" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

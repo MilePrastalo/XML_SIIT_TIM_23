@@ -4,55 +4,31 @@
     <xs:element name="coverLetter">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="AuthorInfo"/>
-                <xs:element ref="Content"/>
+                <xs:element name="authorUsername">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="3"/>
+                            <xs:maxLength value="20"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="Content">
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded" minOccurs="1">
+                            <xs:element name="paragraph" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="title">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="5"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
             </xs:sequence>
             <xs:attribute name="date" type="xs:dateTime" use="optional"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="AuthorInfo">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="FirstName">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:minLength value="1"/>
-                            <xs:maxLength value="30"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:element>
-                <xs:element name="LastName">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:minLength value="1"/>
-                            <xs:maxLength value="30"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:element>
-                <xs:element name="Address" type="xs:string"> </xs:element>
-                <xs:element name="Phone">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:minLength value="1"/>
-                            <xs:maxLength value="10"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:element>
-                <xs:element name="Vocation">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:maxLength value="30"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:element>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="Content">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" name="Paragraph" type="xs:string"/>
-            </xs:sequence>
+            <xs:attribute name="id" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>
