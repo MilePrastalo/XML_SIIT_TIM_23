@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.sharePaper/model"
-    elementFormDefault="qualified" >
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:element name="ScientificPaper">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="Authors">
                     <xs:complexType>
-                        <xs:sequence>
-                       
+                        <xs:sequence maxOccurs="unbounded">
+
+                            <xs:element ref="Author"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -33,6 +33,7 @@
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="page_number" type="xs:positiveInteger"/>
+            <xs:attribute name="id" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="Author">
@@ -49,7 +50,7 @@
                 <xs:element name="University">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="UniversityName">
+                            <xs:element name="universityName">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
                                         <xs:minLength value="1"/>
@@ -57,7 +58,7 @@
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
-                            <xs:element name="City">
+                            <xs:element name="city">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
                                         <xs:minLength value="1"/>
@@ -65,7 +66,7 @@
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
-                            <xs:element name="Country">
+                            <xs:element name="country">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
                                         <xs:minLength value="1"/>
@@ -95,7 +96,7 @@
     <xs:element name="Keywords">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Keyword">
+                <xs:element name="Keyword" maxOccurs="unbounded">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:minLength value="2"/>
@@ -108,7 +109,13 @@
     <xs:element name="Chapter">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="ChapterName" type="xs:string"/>
+                <xs:element name="ChapterName">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="3"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
                 <xs:element name="ChapterBody">
                     <xs:complexType>
                         <xs:sequence>
@@ -118,12 +125,12 @@
                                         <xs:element name="MixedContent">
                                             <xs:complexType mixed="true">
                                                 <xs:sequence>
-                                                  <xs:element ref="chapterText"/>
-                                                  <xs:element ref="chapterImage"/>
+                                                  <xs:element name="chapterText" type="xs:string"/>
+                                                  <xs:element name="chapterImage" type="xs:string"/>
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
-                                        <xs:element ref="chapterText"/>
+                                        <xs:element name="chapterText" type="xs:string"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
@@ -132,18 +139,23 @@
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
+            <xs:attribute name="id" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="chapterImage"/>
-    <xs:element name="chapterText"/>
     <xs:element name="References">
         <xs:complexType>
             <xs:sequence>
                 <xs:element maxOccurs="unbounded" minOccurs="1" name="Reference">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element ref="Author"/>
-                            <xs:element name="Year">
+                            <xs:element name="AuthorInformation">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:minLength value="2"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="year">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:positiveInteger">
                                         <xs:minInclusive value="1500"/>
@@ -151,21 +163,21 @@
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
-                            <xs:element name="Magazine">
+                            <xs:element name="magazine">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
                                         <xs:minLength value="1"/>
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
-                            <xs:element name="Article">
+                            <xs:element name="article">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
                                         <xs:minLength value="1"/>
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
-                            <xs:element name="Publisher" type="xs:string"/>
+                            <xs:element name="publisher" type="xs:string"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="reviews">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="Review"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="ReviewPaper">
         <xs:complexType>
             <xs:sequence>
@@ -36,6 +43,7 @@
                 <xs:element ref="ReviewPaper"/>
             </xs:sequence>
             <xs:attribute name="date" type="xs:date"/>
+            <xs:attribute name="done" type="xs:boolean"/>
             <xs:attribute name="id" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
