@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified"
+    vc:minVersion="1.0" vc:maxVersion="1.1">
+
+    <xs:element name="Email">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="writerUsername" type="xs:string"/>
+                <xs:element name="recipientUsername" type="xs:string"/>
+                <xs:element name="subject" type="xs:string"/>
+                <xs:element name="body" type="xs:string"/>
+            </xs:sequence>
+            <xs:attribute name="date" type="xs:date"/>
+            <xs:attribute name="id" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
