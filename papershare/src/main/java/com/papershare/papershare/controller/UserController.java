@@ -21,7 +21,7 @@ public class UserController {
 	@CrossOrigin
 	public void store() throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		System.out.println(existManager);
-		existManager.store("/db/sample/library", "instance1.xml", "./src/main/resource/data/instance1.xml");
+		existManager.store("/db/sample/library", "instance1.xml", "./src/main/resources/data/instance1.xml");
 	}
 
 }
