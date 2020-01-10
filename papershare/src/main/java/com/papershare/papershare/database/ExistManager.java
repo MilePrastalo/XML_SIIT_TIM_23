@@ -1,6 +1,7 @@
 package com.papershare.papershare.database;
 
 import java.io.File;
+import java.util.Scanner;
 
 import org.exist.xmldb.EXistResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,18 @@ import org.springframework.stereotype.Service;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
+import org.xmldb.api.base.Resource;
+import org.xmldb.api.base.ResourceIterator;
+import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
+import org.xmldb.api.modules.XPathQueryService;
 
 @Service
 public class ExistManager {
+
+	private static final String TARGET_NAMESPACE = "https://github.com/MilePrastalo/XML_SIIT_TIM_23";
 
 	@Autowired
 	AuthenticationUtilities authUtil;
@@ -84,6 +91,63 @@ public class ExistManager {
 		} finally {
 
 			closeConnection(col, res);
+		}
+	}
+
+	public void retrieve(String collectionUri, String xpathExp)
+			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		createConnection();
+		
+		Collection col = null;
+		try {
+			col = DatabaseManager.getCollection(authUtil.getUri() + collectionUri);
+
+			// get an instance of xpath query service
+			XPathQueryService xpathService = (XPathQueryService) col.getService("XPathQueryService", "1.0");
+			xpathService.setProperty("indent", "yes");
+
+			// make the service aware of namespaces, using the default one
+			//xpathService.setNamespace("", TARGET_NAMESPACE);
+
+			// execute xpath expression
+			System.out.println("[INFO] Invoking XPath query service for: " + xpathExp);
+			ResourceSet result = xpathService.query(xpathExp);
+
+			// handle the results
+			System.out.println("[INFO] Handling the results... ");
+
+			ResourceIterator i = result.getIterator();
+			Resource res = null;
+
+			while (i.hasMoreResources()) {
+
+				try {
+					res = i.nextResource();
+					System.out.println(res.getContent());
+
+				} finally {
+
+					// don't forget to cleanup resources
+					try {
+						((EXistResource) res).freeResources();
+					} catch (XMLDBException xe) {
+						xe.printStackTrace();
+					}
+				}
+			}
+			// Done
+			System.out.println("[INFO] Done! ");
+
+		} finally {
+
+			// don't forget to cleanup
+			if (col != null) {
+				try {
+					col.close();
+				} catch (XMLDBException xe) {
+					xe.printStackTrace();
+				}
+			}
 		}
 	}
 
