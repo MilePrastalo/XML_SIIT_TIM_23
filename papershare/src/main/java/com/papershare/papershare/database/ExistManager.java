@@ -3,6 +3,7 @@ package com.papershare.papershare.database;
 import java.io.File;
 
 import org.exist.xmldb.EXistResource;
+import org.exist.xupdate.XUpdateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xmldb.api.DatabaseManager;
@@ -14,11 +15,14 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
+import org.xmldb.api.modules.XUpdateQueryService;
 
 @Service
 public class ExistManager {
-
 	private static final String TARGET_NAMESPACE = "https://github.com/MilePrastalo/XML_SIIT_TIM_23";
+	public static final String UPDATE = "<xu:modifications version=\"1.0\" xmlns:xu=\"" + XUpdateProcessor.XUPDATE_NS
+			+ "\" xmlns=\"" + TARGET_NAMESPACE + "\">" + "<xu:update select=\"%1$s\">%2$s</xu:update>"
+			+ "</xu:modifications>";
 
 	@Autowired
 	AuthenticationUtilities authUtil;
@@ -129,7 +133,7 @@ public class ExistManager {
 		return result;
 	}
 
-	public void remove(String collectionId)
+	public void remove(String collectionId, String documentId)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		createConnection();
 
@@ -139,10 +143,45 @@ public class ExistManager {
 			col = DatabaseManager.getCollection(authUtil.getUri() + collectionId, authUtil.getUser(),
 					authUtil.getPassword());
 			// Find Resource File.
-			Resource foundFile = col.getResource(collectionId);
+			Resource foundFile = col.getResource(documentId);
 
 			// Remove Resourve File.
 			col.removeResource(foundFile);
+
+		} finally {
+			// don't forget to cleanup
+			if (col != null) {
+				try {
+					col.close();
+				} catch (XMLDBException xe) {
+					xe.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public void update(String collectionId, String documentId, String contextXPath, String patch)
+			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		createConnection();
+
+		Collection col = null;
+
+		try {
+			// get the collection
+			System.out.println("[INFO] Retrieving the collection: " + collectionId);
+			col = DatabaseManager.getCollection(authUtil.getUri() + collectionId, authUtil.getUser(),
+					authUtil.getPassword());
+			col.setProperty("indent", "yes");
+
+			// get an instance of xupdate query service
+			System.out.println("[INFO] Fetching XUpdate service for the collection.");
+			XUpdateQueryService xupdateService = (XUpdateQueryService) col.getService("XUpdateQueryService", "1.0");
+			xupdateService.setProperty("indent", "yes");
+
+			System.out.println("[INFO] Updating " + contextXPath + " node.");
+			long mods = xupdateService.updateResource(documentId, String.format(UPDATE, contextXPath, patch));
+			System.out.println("[INFO] " + mods + " modifications processed.");
+			System.out.println("[UPDATE] " + UPDATE);
 
 		} finally {
 			// don't forget to cleanup
