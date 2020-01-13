@@ -14,6 +14,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
@@ -126,25 +127,26 @@ import javax.xml.bind.annotation.XmlType;
     "reviews",
     "publications"
 })
+@XmlRootElement(name = "user", namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23")
 public class TUser {
 
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23", required = true)
     protected String username;
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23", required = true)
     protected String password;
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23", required = true)
     protected String email;
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23", required = true)
     protected String firstName;
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23", required = true)
     protected String lastName;
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23", required = true)
     protected String title;
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23", required = true)
     protected String role;
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23")
     protected TUser.Reviews reviews;
-    @XmlElement(required = true)
+    @XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23")
     protected TUser.Publications publications;
 
     /**

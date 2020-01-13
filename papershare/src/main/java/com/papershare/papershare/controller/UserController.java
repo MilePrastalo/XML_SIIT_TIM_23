@@ -16,12 +16,17 @@ import com.papershare.papershare.DTO.StoreDTO;
 import com.papershare.papershare.DTO.UpdateDTO;
 import com.papershare.papershare.DTO.XPathRetrieveDTO;
 import com.papershare.papershare.database.ExistManager;
+import com.papershare.papershare.model.TUser;
+import com.papershare.papershare.service.UserService;
 
 @RestController
 public class UserController {
 
 	@Autowired
 	public ExistManager existManager;
+	
+	@Autowired
+	public UserService userService;
 
 	@RequestMapping(value = "/store", method = RequestMethod.POST)
 	@CrossOrigin
@@ -49,5 +54,18 @@ public class UserController {
 	public void update(@RequestBody UpdateDTO dto)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		existManager.update(dto.getCollectionId(), dto.getDocumentId(), dto.getContextXPath(), dto.getPatch());
+	}
+	
+	@RequestMapping(value = "/testFindByUsername", method = RequestMethod.GET)
+	@CrossOrigin
+	public void test() {
+		String username = "mira";
+		TUser user = userService.findOneByUsername(username);
+		if (user == null) {
+			System.out.println("USER DOESN'T EXIST");	
+		}else {
+			System.out.println("\tFIRST NAME = " + user.getFirstName());
+			System.out.println("\tLAST NAME = " + user.getLastName());
+		}
 	}
 }
