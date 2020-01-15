@@ -34,6 +34,7 @@
                 </xs:element>
                 <xs:element name="summary" type="xs:string"/>
             </xs:sequence>
+            <xs:attribute name="paperId" type="xs:positiveInteger"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="Review">
