@@ -4,7 +4,10 @@ import org.xmldb.api.base.ResourceIterator;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 
+import java.io.ByteArrayOutputStream;
+
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.exist.xmldb.EXistResource;
@@ -21,10 +24,11 @@ public class UserRepository {
 	@Autowired
 	private ExistManager existMenager;
 
-	private String collectionId = "/db/sample/library";
+	private String collectionId = "/db/paperShare/users";
+	private String documentId = "Users.xml";
 
 	public TUser findOneByUsername(String username) {
-		
+
 		String xPathExpression = String.format("/Users/user[username='%s']", username);
 		TUser foundUser = null;
 		try {
@@ -53,9 +57,24 @@ public class UserRepository {
 		return foundUser;
 	}
 
-	public void store(String documentId, String filePath)
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
-		existMenager.store(collectionId, documentId, filePath);
+	public void addUser(String  newUser) throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		existMenager.update(1, collectionId, documentId, "/Users", newUser);
+	}
+
+	public String marshal(TUser user){
+		String retVal = null;
+		try {
+			JAXBContext context = JAXBContext.newInstance(TUser.class);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			marshaller.marshal(user, stream);
+			retVal = new String(stream.toByteArray());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retVal;
 	}
 
 	private TUser unmarshal(XMLResource resource) {

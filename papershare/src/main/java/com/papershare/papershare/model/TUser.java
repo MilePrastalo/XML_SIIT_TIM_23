@@ -147,6 +147,22 @@ public class TUser implements UserDetails {
 	@XmlElement(namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23")
 	protected TUser.Publications publications;
 
+	public TUser() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	public TUser(String username, String password, String email, String firstName, String lastName, String title) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.title = title;
+	}
+
+
 	/**
 	 * Gets the value of the username property.
 	 * 

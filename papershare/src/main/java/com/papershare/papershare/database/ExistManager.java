@@ -23,6 +23,9 @@ public class ExistManager {
 	public static final String UPDATE = "<xu:modifications version=\"1.0\" xmlns:xu=\"" + XUpdateProcessor.XUPDATE_NS
 			+ "\" xmlns=\"" + TARGET_NAMESPACE + "\">" + "<xu:update select=\"%1$s\">%2$s</xu:update>"
 			+ "</xu:modifications>";
+	public static final String APPEND = "<xu:modifications version=\"1.0\" xmlns:xu=\"" + XUpdateProcessor.XUPDATE_NS
+			+ "\" xmlns=\"" + TARGET_NAMESPACE + "\">" + "<xu:append select=\"%1$s\" child=\"last()\">%2$s</xu:append>"
+			+ "</xu:modifications>";
 
 	@Autowired
 	AuthenticationUtilities authUtil;
@@ -109,7 +112,7 @@ public class ExistManager {
 			xpathService.setProperty("indent", "yes");
 
 			// make the service aware of namespaces, using the default one
-			// xpathService.setNamespace("", TARGET_NAMESPACE);
+			 xpathService.setNamespace("", TARGET_NAMESPACE);
 
 			// execute xpath expression
 			System.out.println("[INFO] Invoking XPath query service for: " + xpathExp);
@@ -160,12 +163,22 @@ public class ExistManager {
 		}
 	}
 
-	public void update(String collectionId, String documentId, String contextXPath, String patch)
+	public void update(int template,String collectionId, String documentId, String contextXPath, String patch)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		createConnection();
 
 		Collection col = null;
-
+		String chosenTemplate = null;
+		switch (template) {
+		case 0:
+			chosenTemplate = UPDATE;
+			break;
+		case 1:
+			chosenTemplate = APPEND;
+			break;
+		default:
+			return;
+		}
 		try {
 			// get the collection
 			System.out.println("[INFO] Retrieving the collection: " + collectionId);
@@ -179,9 +192,9 @@ public class ExistManager {
 			xupdateService.setProperty("indent", "yes");
 
 			System.out.println("[INFO] Updating " + contextXPath + " node.");
-			long mods = xupdateService.updateResource(documentId, String.format(UPDATE, contextXPath, patch));
+			long mods = xupdateService.updateResource(documentId, String.format(chosenTemplate, contextXPath, patch));
 			System.out.println("[INFO] " + mods + " modifications processed.");
-			System.out.println("[UPDATE] " + UPDATE);
+			System.out.println("[TEMPLATE] " + chosenTemplate);
 
 		} finally {
 			// don't forget to cleanup

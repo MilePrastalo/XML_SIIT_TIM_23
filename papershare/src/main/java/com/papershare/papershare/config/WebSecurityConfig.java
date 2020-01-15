@@ -64,8 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// don't authenticate this particular request
 				.authorizeRequests().antMatchers("/auth/**").permitAll().antMatchers(HttpMethod.OPTIONS, "/api/**")
 				.permitAll()
-				.antMatchers(HttpMethod.GET, "/api/locations/*", "/api/sections/*", "/api/halls/*", "/api/halls/**",
-						"/api/events/*")
+				.antMatchers(HttpMethod.POST, "/login", "/register")
 				.permitAll()
 
 				// all other requests need to be authenticated
@@ -80,15 +79,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) {
 		// TokenAuthenticationFilter will ignore the following
-		web.ignoring().antMatchers(HttpMethod.GET, "/api/events");
-		web.ignoring().antMatchers(HttpMethod.POST, "/api/events");
-		web.ignoring().antMatchers(HttpMethod.PUT, "/api/events");
-		web.ignoring().antMatchers(HttpMethod.GET, "/api/reports");
-		web.ignoring().antMatchers(HttpMethod.GET, "/api/locations");
-		web.ignoring().antMatchers(HttpMethod.GET, "/api/sections");
-		web.ignoring().antMatchers(HttpMethod.GET, "/api/halls/");
+		web.ignoring().antMatchers(HttpMethod.POST, "/login");
+		web.ignoring().antMatchers(HttpMethod.POST, "/register");
 		web.ignoring().antMatchers(HttpMethod.GET, "/testReview");
-		web.ignoring().antMatchers("/api/categories/*");
-		web.ignoring().antMatchers(HttpMethod.POST, "/api/categories");
 	}
 }
