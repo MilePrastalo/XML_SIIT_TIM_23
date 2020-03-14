@@ -1,0 +1,91 @@
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.form-wrapper {
+    margin-top: 5%;
+}
+
+.box {
+    margin: auto;
+    opacity: 1;
+    padding: 60px 50px 40px 50px;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    z-index: 5;
+    max-width: 330px;
+}
+
+.form-wrapper .form {
+    min-width: 100%;
+    max-width: 300px;
+    width: 100%;
+}
+
+.form-wrapper .field-full-width,
+.form-wrapper .btn-block {
+    width: 100%;
+}
+
+.form-wrapper mat-card-header {
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-weight: 700;
+}
+
+.form-wrapper mat-card-header mat-card-title {
+    font-size: 30px;
+    margin: 0;
+}
+
+.form-wrapper .mat-card {
+    padding: 40px 70px 50px;
+}
+
+.form-wrapper .mat-stroked-button {
+    border: 1px solid currentColor;
+    line-height: 54px;
+    background: #FFF7FA;
+}
+
+.snackBar {
+    background: #FFF7FA;
+    color: blue;
+    display: block;
+}
+
+.snackBar span {
+    margin: auto;
+    text-align: center;
+}
+
+.error-snack-bar {
+    background-color: red;
+}
+
+.error-snack-bar span {
+    margin: auto;
+    text-align: center;
+}
+
+.account-icon {
+    font-size: 70px;
+    width: auto;
+    height: auto;
+}
+
+.show-map {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}

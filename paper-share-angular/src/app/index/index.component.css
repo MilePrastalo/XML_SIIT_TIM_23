@@ -1,0 +1,26 @@
+.ticket-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 50px 100px;
+    /*width: 92%;
+    margin-top: 4%;
+    margin-left: 4%;
+    margin-right: 2%;*/
+    text-align: center;
+}
+.ticket-wrapper>* {
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+.ticketCard {
+    border: solid 1px #5C6BC0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    -o-box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    flex: 0 1 calc(23.3% - 22px);
+    text-align: center;
+    margin: 5px;
+}

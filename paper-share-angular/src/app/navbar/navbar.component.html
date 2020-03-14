@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+        <mat-toolbar-row>
+    
+            <button mat-button (click)="goToHome()"><h4>Paper Share </h4></button>
+            <span class="spacer"></span>
+            <div *ngIf="loggedIn">
+                <button mat-button (click)="goToRegister()"><i class="fa fa-users fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Register</button>
+                <button mat-button (click)="goToLogIn()"><i class="fa fa-sign-in fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Log In</button>
+            </div>
+            <div *ngIf="!loggedIn">
+                <button mat-button (click)="goToHome()"><i class="fa fa-home fa-2x" aria-hidden="true"> </i>&nbsp;Home</button>
+                <button mat-button (click)="onLogOut()"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>Log Out</button>
+            </div>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    
