@@ -1,0 +1,33 @@
+<div>
+    <app-navbar [loggedIn]="true"></app-navbar>
+
+    <div style="text-align:center">
+        <app-search-dialog></app-search-dialog>
+    </div>
+
+    <br>
+    <div class="ticket-wrapper">
+        <mat-card *ngFor="let paper of papers" class="ticketCard">
+            <mat-card-header>
+                <mat-card-title class="event-card-event-name">{{paper.title}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content flex style="text-align: center;">
+                <table>
+                    <tr>
+                        Authors: {{paper.authors}}
+                    </tr>
+                    <tr>
+                        {{paper.date}}
+                    </tr>
+                    <tr>
+                        {{paper.description}}
+                    </tr>
+                    <tr>
+                        <strong>Keywords:</strong><i> {{paper.keywords}} </i>
+                    </tr>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+</div>
