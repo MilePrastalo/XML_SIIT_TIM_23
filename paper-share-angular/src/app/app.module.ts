@@ -13,6 +13,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MaterialModule } from './material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CreatePaperComponent } from './create-paper/create-paper.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     RegisterComponent,
     IndexComponent,
     NavbarComponent,
-    SearchDialogComponent
+    SearchDialogComponent,
+    CreatePaperComponent
   ],
   imports: [
     BrowserModule,
