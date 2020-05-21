@@ -1,37 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Users xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="file:/C:/Users/Jelena%20Cuk/Desktop/XML/XML_SIIT_TIM_23/Schemas/users.xsd">
-    <user>
-        <username>username0</username>
-        <password>password0</password>
-        <email> @ .a</email>
-        <firstName>firstName0</firstName>
-        <lastName>lastName0</lastName>
-        <title>PhD</title>
-        <role>USER</role>
-        <reviews/>
-        <publications/>
-    </user>
-    <user>
-        <username>mira</username>
-        <password>password1</password>
-        <email> @ .a</email>
-        <firstName>Mira</firstName>
-        <lastName>Miric</lastName>
-        <title>PhD</title>
-        <role>USER</role>
-        <reviews/>
-        <publications/>
-    </user>
-    <user>
-        <username>username2</username>
-        <password>password2</password>
-        <email> @ .a</email>
-        <firstName>firstName2</firstName>
-        <lastName>lastName2</lastName>
-        <title>PhD</title>
-        <role>USER</role>
-        <reviews/>
-        <publications/>
-    </user>
+<Users xmlns="https://github.com/MilePrastalo/XML_SIIT_TIM_23">
+    <ns2:user xmlns:ns2="https://github.com/MilePrastalo/XML_SIIT_TIM_23">
+        <ns2:username>mira</ns2:username>
+        <ns2:password>$2a$10$C4sxgfS9YfhvCq9Yh9VTkubItrOeeQUv9eUNAX5tBprOrfNvrbMua</ns2:password>
+        <ns2:email>mira@mail.com</ns2:email>
+        <ns2:firstName>Mira</ns2:firstName>
+        <ns2:role>ROLE_USER</ns2:role>
+    </ns2:user>
 </Users>
