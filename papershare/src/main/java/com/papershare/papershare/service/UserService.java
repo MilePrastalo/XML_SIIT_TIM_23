@@ -7,9 +7,11 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.xmldb.api.base.XMLDBException;
 
+import com.papershare.papershare.DTO.JwtResponseDTO;
 import com.papershare.papershare.DTO.LoginDTO;
 import com.papershare.papershare.DTO.UserDTO;
 import com.papershare.papershare.model.TUser;
@@ -30,6 +32,9 @@ public class UserService {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public TUser findOneByUsername(String username) {
 		return userRepository.findOneByUsername("mira");
@@ -41,9 +46,9 @@ public class UserService {
 		if (userRepository.findOneByUsername(dto.getUsername()) != null) {
 			return false;
 		}
-		TUser newUser = new TUser(dto.getUsername(), dto.getPassword(), dto.getEmail(), dto.getFirstName(),
+		TUser newUser = new TUser(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), dto.getFirstName(),
 				dto.getLastNAme(), dto.getTitle());
-		newUser.setRole("USER");
+		newUser.setRole("ROLE_USER");
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		newUser.setPassword(bc.encode(dto.getPassword()));
 		String xmlFragment = userRepository.marshal(newUser);
@@ -53,7 +58,7 @@ public class UserService {
 		return true;
 	}
 
-	public String logIn(LoginDTO authenticationRequest) {
+	public JwtResponseDTO logIn(LoginDTO authenticationRequest) {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
@@ -63,7 +68,9 @@ public class UserService {
 		final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
 		System.out.println(jwt);
-		return jwt;
+		JwtResponseDTO jwtDto = new JwtResponseDTO(jwt);
+		
+		return jwtDto;
 	}
 
 }

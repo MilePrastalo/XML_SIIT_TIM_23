@@ -11,15 +11,15 @@ import { User } from 'src/model/user.model';
 export class UserService {
 
   constructor(private http: HttpClient) { }
-  private path: string = 'http://localhost:8080'
+  private path = 'http://localhost:8080';
 
 
   registerUser(user: User): Observable<User> {
-    return this.http.post<User>(this.path + '/auth/register', user);
+    return this.http.post<User>(this.path + '/api/user/register', user);
   }
 
   login(dto: LogIn): Observable<LoginJwt> {
-    return this.http.post<LoginJwt>(this.path + '/authenticate', dto);
+    return this.http.post<LoginJwt>(this.path + '/api/user/login', dto);
   }
 
 }

@@ -1,6 +1,11 @@
 package com.papershare.papershare.service;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +28,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
 		} else {
-			return user;
+			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
+			Collection<SimpleGrantedAuthority> authorities = new HashSet<SimpleGrantedAuthority>();
+			authorities.add(authority);
+
+			return new User(user.getUsername(), user.getPassword(), authorities);
 		}
 	}
 
