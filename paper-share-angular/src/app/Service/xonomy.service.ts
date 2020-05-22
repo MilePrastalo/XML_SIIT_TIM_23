@@ -18,6 +18,13 @@ export class XonomyService {
           hideIf: function (jsElement) {
             return jsElement.hasAttribute("language");
           }
+        },{
+          caption: 'Add <title>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<title></title>',
+          hideIf: function (jsElement) {
+            return jsElement.hasChildElement("title");
+          }
         }, {
           caption: 'Add <Authors>',
           action: Xonomy.newElementChild,
@@ -66,6 +73,16 @@ export class XonomyService {
             }]
           }
         }
+      },
+      title: {
+        mustBeBefore: ['Authors','Abstract', 'Keywords', 'Chapters', 'References'],
+        hasText: true,
+        oneliner: true,
+        asker: Xonomy.askString,
+        menu: [{
+          caption: 'Delete element',
+          action: Xonomy.deleteElement
+        }],
       },
       Authors: {
         mustBeBefore: ['Abstract', 'Keywords', 'Chapters', 'References'],
