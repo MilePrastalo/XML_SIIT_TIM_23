@@ -1,8 +1,12 @@
 package com.papershare.papershare.dom;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -16,25 +20,29 @@ import org.w3c.dom.Document;
 @Component
 public class XSLTransformer {
 
-	public void convertXMLtoHTML(Document xml, String xmlFileName) {
+	public String convertXMLtoHTML(String xslFileName, Document xml) {
 		
-		String xslFileName = XMLTOString(xml);		
+		String xmlString = XMLToString(xml);
+	
 		TransformerFactory factory = TransformerFactory.newInstance();
-		StreamSource xslStream = new StreamSource(xslFileName);
+		StreamSource xslStream = new StreamSource(new File(xslFileName));
 		
-		StreamSource in = new StreamSource(xmlFileName);
-		StreamResult out = new StreamResult(System.out);
+		StreamSource in = new StreamSource(new StringReader(xmlString));
+		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+		Result out = new StreamResult(outStream);
 		
 		try {
 			Transformer transformer = factory.newTransformer(xslStream);
 			transformer.transform(in, out);
+			return outStream.toString();
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
+		return "";
 		
 	}
 	
-	private String XMLTOString(Document doc) {
+	private String XMLToString(Document doc) {
 		try {
             StringWriter sw = new StringWriter();
             TransformerFactory tf = TransformerFactory.newInstance();

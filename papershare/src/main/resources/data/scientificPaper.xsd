@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"
+    targetNamespace="https://XML_SIIT_TIM_23/ScientificPaper">
     <xs:element name="ScientificPaper">
         <xs:complexType>
             <xs:sequence>
@@ -7,20 +9,20 @@
                     <xs:complexType>
                         <xs:sequence maxOccurs="unbounded">
 
-                            <xs:element ref="Author"/>
+                            <xs:element ref="sci:Author"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element ref="Abstract"/>
-                <xs:element ref="Keywords"/>
+                <xs:element ref="sci:Abstract"/>
+                <xs:element ref="sci:Keywords"/>
                 <xs:element name="Chapters">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element maxOccurs="unbounded" ref="Chapter"/>
+                            <xs:element maxOccurs="unbounded" ref="sci:Chapter"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element ref="References"/>
+                <xs:element ref="sci:References"/>
             </xs:sequence>
             <xs:attribute name="recieved_date" type="xs:date"/>
             <xs:attribute name="accepted_date" type="xs:date"/>
@@ -134,7 +136,7 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element ref="Chapter" maxOccurs="unbounded" minOccurs="0"/>
+                            <xs:element ref="sci:Chapter" maxOccurs="unbounded" minOccurs="0"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
