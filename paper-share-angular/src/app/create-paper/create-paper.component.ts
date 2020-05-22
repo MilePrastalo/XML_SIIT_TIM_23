@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { XonomyService } from '../Service/xonomy.service';
+import { PaperService } from '../Service/paper.service';
+import { PaperUpload } from '../model/paperUpload';
 
 declare const Xonomy: any;
 @Component({
@@ -9,10 +11,10 @@ declare const Xonomy: any;
 })
 export class CreatePaperComponent implements OnInit {
 
-  constructor(private xonomyService: XonomyService) { }
+  constructor(private xonomyService: XonomyService, private paperService: PaperService) { }
   scientificPublication = '';
   fileToUpload: File = null;
-  fileString:any;
+  fileString: any;
   ngOnInit(): void {
   }
 
@@ -31,10 +33,15 @@ export class CreatePaperComponent implements OnInit {
       this.fileString = reader.result;
       let xonomyElement = document.getElementById("editor");
       Xonomy.render(this.fileString, xonomyElement, this.xonomyService.scientificPublicationSpecification);
-   };
+    };
   }
-  sendFile(){
-    
+  sendFile() {
+    let text = Xonomy.harvest();
+    this.paperService.sendPaper(new PaperUpload(text)).subscribe(
+      response => {
+        console.log("Hello");
+      }
+    );
   }
 
 }
