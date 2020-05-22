@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.papershare.papershare.DTO.PaperUploadDTO;
 import com.papershare.papershare.service.PaperService;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+
 @RestController()
 @RequestMapping(value = "api/papers")
 @CrossOrigin()
@@ -30,5 +34,11 @@ public class PaperController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 
 	}
-
+	@GetMapping(value = "/{name}")
+	public void getSciPaperHTML(@PathVariable("name") String name) {
+		String result = paperService.convertXMLtoHTML(name);
+		System.out.println(result);
+	}
 }
+
+

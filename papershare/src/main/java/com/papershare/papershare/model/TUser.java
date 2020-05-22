@@ -9,7 +9,6 @@ package com.papershare.papershare.model;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -17,9 +16,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * <p>
@@ -124,7 +120,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @XmlType(name = "TUser", propOrder = { "username", "password", "email", "firstName", "lastName", "title", "role",
 		"reviews", "publications" })
 @XmlRootElement(name = "user", namespace = "https://github.com/MilePrastalo/XML_SIIT_TIM_23")
-public class TUser implements UserDetails {
+public class TUser {
 
 	private static final long serialVersionUID = 1L;
 
@@ -150,8 +146,7 @@ public class TUser implements UserDetails {
 	public TUser() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	
+
 	public TUser(String username, String password, String email, String firstName, String lastName, String title) {
 		super();
 		this.username = username;
@@ -161,7 +156,6 @@ public class TUser implements UserDetails {
 		this.lastName = lastName;
 		this.title = title;
 	}
-
 
 	/**
 	 * Gets the value of the username property.
@@ -461,46 +455,6 @@ public class TUser implements UserDetails {
 			return this.reviewId;
 		}
 
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-
-		GrantedAuthority authority = new GrantedAuthority() {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getAuthority() {
-
-				return role;
-			}
-		};
-
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		authorities.add(authority);
-
-		return authorities;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
 	}
 
 }
