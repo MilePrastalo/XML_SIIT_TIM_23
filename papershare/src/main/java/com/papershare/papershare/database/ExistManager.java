@@ -2,6 +2,8 @@ package com.papershare.papershare.database;
 
 import java.io.File;
 
+import javax.xml.transform.OutputKeys;
+
 import org.exist.xmldb.EXistResource;
 import org.exist.xupdate.XUpdateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +136,36 @@ public class ExistManager {
 		}
 
 		return result;
+	}
+	
+	public XMLResource load(String collectionUri, String documentId)
+			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		createConnection();
+
+		Collection col = null;
+		XMLResource res = null;
+		try {
+			col = DatabaseManager.getCollection(authUtil.getUri() + collectionUri);
+			col.setProperty(OutputKeys.INDENT, "yes");
+			System.out.println("[INFO] Retrieving the document: " + documentId);
+	         res = (XMLResource)col.getResource(documentId);
+			if(res == null) {
+                System.out.println("[WARNING] Document '" + documentId + "' can not be found!");
+            } else {
+            	System.out.println("Done!");
+            	//System.out.println(res.getContent());
+            }
+			return res;
+		} finally {
+			// don't forget to cleanup
+			if (col != null) {
+				try {
+					col.close();
+				} catch (XMLDBException xe) {
+					xe.printStackTrace();
+				}
+			}
+		}
 	}
 
 	public void remove(String collectionId, String documentId)
