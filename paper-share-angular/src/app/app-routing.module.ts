@@ -4,13 +4,15 @@ import { IndexComponent } from './index/index.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { CreatePaperComponent } from './create-paper/create-paper.component';
+import { ViewPaperComponent } from './view-paper/view-paper.component';
 
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'add', component: CreatePaperComponent }
+  { path: 'add', component: CreatePaperComponent },
+  { path: 'view-paper', component: ViewPaperComponent }
 ];
 
 @NgModule({

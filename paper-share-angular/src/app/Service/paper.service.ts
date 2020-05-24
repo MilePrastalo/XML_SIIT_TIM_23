@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PaperUpload } from '../model/paperUpload';
 import { Observable } from 'rxjs';
+import { HtmlResponse } from '../model/htmlResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,17 @@ import { Observable } from 'rxjs';
 export class PaperService {
 
   constructor(private http: HttpClient) { }
-  path = "http://localhost:8080";
+  path = 'http://localhost:8080';
+  headers: HttpHeaders = new HttpHeaders({
+    Authorization: 'Bearer ' + localStorage.getItem('token')
+  });
 
   sendPaper(paper: PaperUpload): Observable<void> {
-    return this.http.post<void>(this.path + "/api/papers", paper);
+    return this.http.post<void>(this.path + '/api/papers', paper);
+  }
+
+  getPaper( name: string) {
+    const x =  this.http.get(this.path + '/api/papers/' + name, { headers: this.headers, responseType: 'text' });
+    return x;
   }
 }

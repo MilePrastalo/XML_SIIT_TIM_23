@@ -1,67 +1,72 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <ScientificPaper xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper" accepted_date="2006-05-04" revised_date="2006-05-04" language="language0" page_number="50" id="50">
     <sci:Authors>
         <sci:Author>
-            <sci:authorUsername>authorUsername0</sci:authorUsername>
+            <sci:authorUsername>Mile Prastalo</sci:authorUsername>
             <sci:University>
-                <sci:universityName>universityName0</sci:universityName>
-                <sci:city>city0</sci:city>
-                <sci:country>country0</sci:country>
+                <sci:universityName>FTN</sci:universityName>
+                <sci:city>Novi Sad</sci:city>
+                <sci:country>Srbija</sci:country>
             </sci:University>
         </sci:Author>
         <sci:Author>
-            <sci:authorUsername>authorUsername1</sci:authorUsername>
+            <sci:authorUsername>Jelena Cuk</sci:authorUsername>
             <sci:University>
-                <sci:universityName>universityName1</sci:universityName>
-                <sci:city>city1</sci:city>
-                <sci:country>country1</sci:country>
+                <sci:universityName>FTN</sci:universityName>
+                <sci:city>Novi Sad</sci:city>
+                <sci:country>Srbija</sci:country>
+            </sci:University>
+        </sci:Author>
+         <sci:Author>
+            <sci:authorUsername>Nikola Saric</sci:authorUsername>
+            <sci:University>
+                <sci:universityName>FTN</sci:universityName>
+                <sci:city>Novi Sad</sci:city>
+                <sci:country>Srbija</sci:country>
             </sci:University>
         </sci:Author>
     </sci:Authors>
     <sci:Abstract>
-        <sci:Paragraph>Paragraph0</sci:Paragraph>
-        <sci:Paragraph>Paragraph1</sci:Paragraph>
+        <sci:Paragraph>
+            Glavni zadatak ovog rada je da upozna osobe koje ranije nisu imale kontakt sa veštačkom inteligencijom sa problemima koje ona donosi i              koje bi mogla doneti. Važnost ovog rada ogleda se u  tome što naglašavanjem i proučavanjem etičkih problema veštačke inteligencije                  možemo bolje sagledati problem i ublažiti njegove efekte. Takođe, što više znanja imamo, spremnije ćemo dočekati budućnost. U ovom radu             pokazano je da veštačka inteligencija koliko može biti dobra, toliko može biti i štetna po čoveka. Da bismo mogli da vidimo samo njenu              dobru stranu,  neophodna su veća ulaganja u edukaciju ljudi, adaptacija na novi način života, zakonske regulative i nova ekonomska                  politika.  
+        </sci:Paragraph>
     </sci:Abstract>
     <sci:Keywords>
-        <sci:Keyword>Keyword0</sci:Keyword>
-        <sci:Keyword>Keyword1</sci:Keyword>
+        <sci:Keyword> veštačka inteligencija</sci:Keyword>
+        <sci:Keyword>etika</sci:Keyword>
+        <sci:Keyword>bezbednost</sci:Keyword>
+        <sci:Keyword>privatnost</sci:Keyword>
+        <sci:Keyword>nezaposlenost</sci:Keyword>
+        <sci:Keyword>roboti</sci:Keyword>
+        <sci:Keyword>rasizam</sci:Keyword>
     </sci:Keywords>
     <sci:Chapters>
         <sci:Chapter>
-            <sci:ChapterName>ChapterName0</sci:ChapterName>
+            <sci:ChapterName>Uvod</sci:ChapterName>
             <sci:ChapterBody>
                 <sci:ChapterContent>
-                    <sci:MixedContent>
-                        <sci:chapterText>chapterText0</sci:chapterText>
-                        <sci:chapterImage>chapterImage0</sci:chapterImage>
-                    </sci:MixedContent>
-                    <sci:chapterText>chapterText1</sci:chapterText>
+                    <sci:chapterText>
+                    Motivacija za ovaj rad je sve brži razvoj veštaĉke inteligencije i njena sve veća primena u raznim obalstima. U radu ćemo                           govoriti o nekoliko etiĉkih problema koji su najprisutniji. Koristićemo klasifikaciju navedenu u [43]. Rad ima za cilj da upozna                     osobe koje ranije nisu imale kontakt sa veštaĉkom inteligencijom sa problemima koje ona donosi i koje bi mogla doneti. Takođe,                      cilj rada je i ukazivanje na mere koje je neophodno preduzeti kako bi spremnije doĉekali budućnost.  Problemi će biti prikazani                     kroz primere iz raznih oblasti. 
+                    </sci:chapterText>
                 </sci:ChapterContent>
                 <sci:ChapterContent>
-                    <sci:MixedContent>
-                        <sci:chapterText>chapterText2</sci:chapterText>
-                        <sci:chapterImage>chapterImage1</sci:chapterImage>
-                    </sci:MixedContent>
-                    <sci:chapterText>chapterText3</sci:chapterText>
+                    <sci:chapterText>
+                    Analiza uticaja veštaĉke inteligencije  na radnu snagu data je u drugom poglavlju. Mišljenja ljudi na ovu temu su podeljena,                        dok jedni strahaju da će veštaĉka inteligencija prouzrokovati masovnu nezaposlenost , drugi smatraju da će ona stvoriti više                        radnih mesta nego što će ih eliminisati. U našem radu potrudićemo se da pokažemo znaĉajnija istraživanja koja su sprovedena                         na tu temu, kao i statiĉke podatke i procene. Analiziraćemo  koja zanimanja će nestati kao i koje veštine će biti oĉekivane                         od radne snage budućnosti. 
+                    </sci:chapterText>
                 </sci:ChapterContent>
             </sci:ChapterBody>
         </sci:Chapter>
         <sci:Chapter>
-            <sci:ChapterName>ChapterName1</sci:ChapterName>
+            <sci:ChapterName>Nezaposlenost I nejednakost </sci:ChapterName>
             <sci:ChapterBody>
                 <sci:ChapterContent>
-                    <sci:MixedContent>
-                        <sci:chapterText>chapterText4</sci:chapterText>
-                        <sci:chapterImage>chapterImage2</sci:chapterImage>
-                    </sci:MixedContent>
-                    <sci:chapterText>chapterText5</sci:chapterText>
+                    <sci:chapterText>
+                        U ovom poglavlju ćemo se baviti analizom gubitka poslova koji je uzrokovan ili će biti uzrokovan razvojem i primenom                                veštaĉke inteligencije, kao i stvaranju novih poslova i potrebnim veštinima koje treba da poseduje radna snaga budućnosti.
+                    </sci:chapterText>
                 </sci:ChapterContent>
                 <sci:ChapterContent>
-                    <sci:MixedContent>
-                        <sci:chapterText>chapterText6</sci:chapterText>
-                        <sci:chapterImage>chapterImage3</sci:chapterImage>
-                    </sci:MixedContent>
-                    <sci:chapterText>chapterText7</sci:chapterText>
+                    <sci:chapterText>
+                        Mašine su danas sposobne da obavljaju širok spektar kako fiziĉkih tako i kognitivnih zadataka i oĉekuje se da njihova                               efikasnost sve više raste sa razvojem veštaĉke inteligencije. Uticaj veštaĉke inteligencije na radni odnos otvara prostor za                         zabrinutost kod ljudi za svoje poslove. Razlog za dodatnu zabrinutost izazvao je izveštaj iz 2013. godine univerziteta                              Oxford u kojem je reĉeno da je ĉak 47% poslova u SAD-u pod rizikom da budu potpuno automatizovani [1]. Autori istiĉu da                             zanimanja kao što su trgovina, servisne usluge, administracija i raĉunovodstvo  imaju najveće šanse da budu automatizovana.                         Većina poslovava koji imaju rutinske elemente bi mogla da mašina umesto ljudi omogućavajući radnicima da se fokusiraju na                           važnije stvari. Dok poslovi koji su visoko plaćeni i koji zahtevaju visoko obrazovanje su manje izloženi pritiscima                                 automatizacije.TakoĊe, u istaživanje pokazuje da zanimanja za koja je potrebna Socijalna inteligencija, kreativnost i                               percepcija su poslovi koje će ljudi nastavljati da obavljaju. Tako da su umetnici, analitiĉari, politiĉari i sliĉni profili                         najmanje ugroženi.
+                    </sci:chapterText>
                 </sci:ChapterContent>
             </sci:ChapterBody>
         </sci:Chapter>

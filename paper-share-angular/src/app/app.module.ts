@@ -14,6 +14,8 @@ import { MaterialModule } from './material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreatePaperComponent } from './create-paper/create-paper.component';
+import { ViewPaperComponent } from './view-paper/view-paper.component';
+import { SafeHtmlPipe } from './safe-html.pipe';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { CreatePaperComponent } from './create-paper/create-paper.component';
     IndexComponent,
     NavbarComponent,
     SearchDialogComponent,
-    CreatePaperComponent
+    CreatePaperComponent,
+    ViewPaperComponent,
+    SafeHtmlPipe
   ],
   imports: [
     BrowserModule,
