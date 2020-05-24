@@ -63,7 +63,8 @@ public class ExistManager {
 		}
 	}
 
-	public void store(String collectionId, String documentId, String xmlContent)
+	// Stores XML files to Exist db, used for adding existing XML files.
+	public void store(String collectionId, String documentId, String filePath)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		createConnection();
 
@@ -71,10 +72,28 @@ public class ExistManager {
 		XMLResource res = null;
 		try {
 
+			System.out.println("[INFO] Retrieving the collection: " + collectionId);
 			col = getOrCreateCollection(collectionId, 0);
+
+			/*
+			 * create new XMLResource with a given id an id is assigned to the new resource
+			 * if left empty (null)
+			 */
+			System.out.println("[INFO] Inserting the document: " + documentId);
 			res = (XMLResource) col.createResource(documentId, XMLResource.RESOURCE_TYPE);
-			res.setContent(xmlContent);
+
+			File f = new File(filePath);
+
+			if (!f.canRead()) {
+				System.out.println("[ERROR] Cannot read the file: " + filePath);
+				return;
+			}
+
+			res.setContent(f);
+			System.out.println("[INFO] Storing the document: " + res.getId());
+
 			col.storeResource(res);
+			System.out.println("[INFO] Done.");
 
 		} finally {
 
@@ -96,7 +115,7 @@ public class ExistManager {
 			xpathService.setProperty("indent", "yes");
 
 			// make the service aware of namespaces, using the default one
-			 xpathService.setNamespace("", TARGET_NAMESPACE);
+			xpathService.setNamespace("", TARGET_NAMESPACE);
 
 			// execute xpath expression
 			System.out.println("[INFO] Invoking XPath query service for: " + xpathExp);
@@ -119,7 +138,7 @@ public class ExistManager {
 
 		return result;
 	}
-	
+
 	public XMLResource load(String collectionUri, String documentId)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		createConnection();
@@ -128,15 +147,17 @@ public class ExistManager {
 		XMLResource res = null;
 		try {
 			col = DatabaseManager.getCollection(authUtil.getUri() + collectionUri);
+			System.out.println("Found item");
+			System.out.println(col);
 			col.setProperty(OutputKeys.INDENT, "yes");
 			System.out.println("[INFO] Retrieving the document: " + documentId);
-	         res = (XMLResource)col.getResource(documentId);
-			if(res == null) {
-                System.out.println("[WARNING] Document '" + documentId + "' can not be found!");
-            } else {
-            	System.out.println("Done!");
-            	//System.out.println(res.getContent());
-            }
+			res = (XMLResource) col.getResource(documentId);
+			if (res == null) {
+				System.out.println("[WARNING] Document '" + documentId + "' can not be found!");
+			} else {
+				System.out.println("Done!");
+				// System.out.println(res.getContent());
+			}
 			return res;
 		} finally {
 			// don't forget to cleanup
@@ -177,7 +198,7 @@ public class ExistManager {
 		}
 	}
 
-	public void update(int template,String collectionId, String documentId, String contextXPath, String patch)
+	public void update(int template, String collectionId, String documentId, String contextXPath, String patch)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		createConnection();
 

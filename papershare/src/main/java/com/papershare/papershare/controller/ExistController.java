@@ -53,5 +53,9 @@ public class ExistController {
 	@GetMapping(value = "/initiateData")
 	public void initiateDate() throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		existManager.store("/db/paperShare/users", "Users.xml", absolutePath + "/data/Users.xml");
+		existManager.store("/db/paperShare/reviews", "rev1.xml", absolutePath + "/data/rev1.xml");
+		existManager.store("/db/paperShare/reviews", "rev2.xml", absolutePath + "/data/rev2.xml");
+		existManager.store("/db/paperShare/reviews", "rev3.xml", absolutePath + "/data/rev3.xml");
+		
 	}
 }

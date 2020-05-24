@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PaperUpload } from '../model/paperUpload';
 import { Observable } from 'rxjs';
-import { HtmlResponse } from '../model/htmlResponse';
 
 @Injectable({
   providedIn: 'root'

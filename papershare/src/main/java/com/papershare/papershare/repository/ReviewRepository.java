@@ -9,6 +9,7 @@ import org.exist.xmldb.EXistResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.stereotype.Repository;
+import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -32,7 +33,7 @@ public class ReviewRepository {
 	@Autowired
 	private UserService userService;
 
-	private String collectionId = "/db/sample/library";
+	private String collectionId = "/db/paperShare/reviews";
 
 	public Review findById(String id) {
 
@@ -122,5 +123,23 @@ public class ReviewRepository {
 			e.printStackTrace();
 		}
 		return foundReview;
+	}
+	
+	public Document findByName(String name) {
+		Document document = null;
+		try {
+			XMLResource xmlResource = existMenager.load(collectionId, name);
+			document = (Document) xmlResource.getContentAsDOM();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return document;
+	}
+	
+	public String save(String xmlEntity, String title)
+			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		existMenager.store(collectionId, title, xmlEntity);
+
+		return "OK";
 	}
 }
