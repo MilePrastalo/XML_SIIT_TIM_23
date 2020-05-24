@@ -63,7 +63,7 @@ public class ExistManager {
 		}
 	}
 
-	public void store(String collectionId, String documentId, String filePath)
+	public void store(String collectionId, String documentId, String xmlContent)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		createConnection();
 
@@ -71,28 +71,10 @@ public class ExistManager {
 		XMLResource res = null;
 		try {
 
-			System.out.println("[INFO] Retrieving the collection: " + collectionId);
 			col = getOrCreateCollection(collectionId, 0);
-
-			/*
-			 * create new XMLResource with a given id an id is assigned to the new resource
-			 * if left empty (null)
-			 */
-			System.out.println("[INFO] Inserting the document: " + documentId);
 			res = (XMLResource) col.createResource(documentId, XMLResource.RESOURCE_TYPE);
-
-			File f = new File(filePath);
-
-			if (!f.canRead()) {
-				System.out.println("[ERROR] Cannot read the file: " + filePath);
-				return;
-			}
-
-			res.setContent(f);
-			System.out.println("[INFO] Storing the document: " + res.getId());
-
+			res.setContent(xmlContent);
 			col.storeResource(res);
-			System.out.println("[INFO] Done.");
 
 		} finally {
 
