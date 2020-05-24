@@ -1,7 +1,12 @@
 package com.papershare.papershare.controller;
 
+import java.io.IOException;
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +34,7 @@ public class ExistController {
 	@RequestMapping(value = "/store", method = RequestMethod.POST)
 	public void store(@RequestBody StoreDTO dto)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		existManager.store(dto.getCollectionId(), dto.getName(), dto.getPath());
+		existManager.storeXML(dto.getCollectionId(), dto.getName(), dto.getPath());
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -51,7 +56,11 @@ public class ExistController {
 	}
 	
 	@GetMapping(value = "/initiateData")
-	public void initiateDate() throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
-		existManager.store("/db/paperShare/users", "Users.xml", absolutePath + "/data/Users.xml");
+	public void initiateDate() throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException, IOException {
+		Resource resource = new ClassPathResource("data");
+		URI a = resource.getURI();
+		
+		existManager.storeXML("/db/paperShare/users", "Users.xml", a.getPath() + "/Users.xml");
+		existManager.storeXML("/db/paperShare/CoverLetters", "CoverLetters.xml", a.getPath() + "/CoverLetters.xml");
 	}
 }

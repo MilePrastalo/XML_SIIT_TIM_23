@@ -15,6 +15,7 @@ public class PaperRepository {
 	private ExistManager existMenager;
 
 	private String collectionId = "/db/paperShare/ScientificPapers";
+	private String coverLettercollectionId = "/db/paperShare/CoverLetters";
 
 	public Document findScientificPaper(String name) {
 		Document document = null;
@@ -31,6 +32,11 @@ public class PaperRepository {
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		existMenager.store(collectionId, title, xmlEntity);
 
+		return "OK";
+	}
+	public String saveCoverLetter(String xmlEntity)
+			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		existMenager.update(1, coverLettercollectionId, "CoverLetters.xml", "/CoverLetters", xmlEntity);
 		return "OK";
 	}
 
