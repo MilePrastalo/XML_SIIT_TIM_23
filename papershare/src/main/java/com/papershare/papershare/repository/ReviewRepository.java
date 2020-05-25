@@ -1,13 +1,8 @@
 package com.papershare.papershare.repository;
 
 import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.exist.xmldb.EXistResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.stereotype.Repository;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -20,7 +15,6 @@ import org.xmldb.api.modules.XMLResource;
 
 import com.papershare.papershare.database.ExistManager;
 import com.papershare.papershare.model.Chapter;
-import com.papershare.papershare.model.TUser;
 import com.papershare.papershare.model.review.Review;
 import com.papershare.papershare.model.review.ReviewChapter;
 import com.papershare.papershare.service.UserService;
@@ -124,7 +118,7 @@ public class ReviewRepository {
 		}
 		return foundReview;
 	}
-	
+
 	public Document findByName(String name) {
 		Document document = null;
 		try {
@@ -135,11 +129,10 @@ public class ReviewRepository {
 		}
 		return document;
 	}
-	
+
 	public String save(String xmlEntity, String title)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		existMenager.store(collectionId, title, xmlEntity);
-
 		return "OK";
 	}
 }

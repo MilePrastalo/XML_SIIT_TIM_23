@@ -17,6 +17,9 @@ export class PaperService {
   sendPaper(paper: PaperUpload): Observable<void> {
     return this.http.post<void>(this.path + '/api/papers', paper);
   }
+  sendReview(paper: PaperUpload): Observable<void> {
+    return this.http.post<void>(this.path + '/api/reviews', paper);
+  }
 
   getPaper( name: string) {
     const x =  this.http.get(this.path + '/api/papers/' + name, { headers: this.headers, responseType: 'text' });

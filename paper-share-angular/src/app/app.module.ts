@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreatePaperComponent } from './create-paper/create-paper.component';
 import { ViewPaperComponent } from './view-paper/view-paper.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
+import { AddReviewComponent } from './add-review/add-review.component';
 import { ViewReviewComponent } from './view-review/view-review.component';
 
 
@@ -30,6 +31,7 @@ import { ViewReviewComponent } from './view-review/view-review.component';
     CreatePaperComponent,
     ViewPaperComponent,
     SafeHtmlPipe,
+    AddReviewComponent,
     ViewReviewComponent
   ],
   imports: [
