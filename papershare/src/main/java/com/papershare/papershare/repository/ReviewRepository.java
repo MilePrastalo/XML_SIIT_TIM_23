@@ -132,7 +132,7 @@ public class ReviewRepository {
 
 	public String save(String xmlEntity, String title)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		existMenager.store(collectionId, title, xmlEntity);
+		existMenager.storeXMLFromText(collectionId, title, xmlEntity);
 		return "OK";
 	}
 }

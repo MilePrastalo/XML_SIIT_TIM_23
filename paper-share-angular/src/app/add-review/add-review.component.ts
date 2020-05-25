@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { XonomyService } from '../Service/xonomy.service';
-import { PaperService } from '../Service/paper.service';
 import { PaperUpload } from '../model/paperUpload';
+import { ReviewService } from '../Service/review.service';
 declare const Xonomy: any;
 @Component({
   selector: 'app-add-review',
@@ -13,18 +13,18 @@ export class AddReviewComponent implements OnInit {
   fileToUpload: File = null;
   fileString: any;
   paperTitle: string;
-  constructor(private xonomyService: XonomyService, private paperService: PaperService) { }
+  constructor(private xonomyService: XonomyService, private reviewService: ReviewService) { }
 
   ngOnInit(): void {
     if (!this.paperTitle) {
-      this.paperTitle = "Naslov";
+      this.paperTitle = 'Naslov';
     }
   }
 
   ngAfterViewInit() {
     this.scientificPublication = '<Review><Reviewer>' + this.getUsername() +
       '</Reviewer><ReviewPaper><paperTitle>' + this.paperTitle +
-       '</paperTitle><paperAuthorUsername>Unknown</paperAuthorUsername></ReviewPaper></Review>';
+      '</paperTitle><paperAuthorUsername>Unknown</paperAuthorUsername></ReviewPaper></Review>';
     let xonomyElement = document.getElementById("editor");
     Xonomy.render(this.scientificPublication, xonomyElement, this.xonomyService.reviewSpecification);
   }
@@ -42,7 +42,7 @@ export class AddReviewComponent implements OnInit {
   }
   sendFile() {
     let text = Xonomy.harvest();
-    this.paperService.sendReview(new PaperUpload(text, '')).subscribe(
+    this.reviewService.sendReview(new PaperUpload(text, '')).subscribe(
       response => {
         console.log("Hello");
       }

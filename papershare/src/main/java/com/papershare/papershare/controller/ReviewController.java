@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.xmldb.api.base.XMLDBException;
 
 import com.papershare.papershare.DTO.PaperUploadDTO;
 import com.papershare.papershare.service.ReviewService;
@@ -32,8 +33,8 @@ public class ReviewController {
 	}
 
 	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void addReview(@RequestBody PaperUploadDTO dto) {
-
+	public void addReview(@RequestBody PaperUploadDTO dto) throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		reviewService.addReview(dto.getText());
 	}
 
 	@GetMapping(value = "/{name}")
