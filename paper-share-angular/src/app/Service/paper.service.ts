@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PaperUpload } from '../model/paperUpload';
 import { Observable } from 'rxjs';
-import { HtmlResponse } from '../model/htmlResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +16,9 @@ export class PaperService {
 
   sendPaper(paper: PaperUpload): Observable<void> {
     return this.http.post<void>(this.path + '/api/papers', paper);
+  }
+  sendReview(paper: PaperUpload): Observable<void> {
+    return this.http.post<void>(this.path + '/api/reviews', paper);
   }
 
   getPaper( name: string) {

@@ -62,5 +62,7 @@ public class ExistController {
 		
 		existManager.storeXML("/db/paperShare/users", "Users.xml", a.getPath() + "/Users.xml");
 		existManager.storeXML("/db/paperShare/CoverLetters", "CoverLetters.xml", a.getPath() + "/CoverLetters.xml");
+		existManager.storeXML("/db/paperShare/Reviews","Reviews.xml" , a.getPath() + "reviews1.xml");
+
 	}
 }

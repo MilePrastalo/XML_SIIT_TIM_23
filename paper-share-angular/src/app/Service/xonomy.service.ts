@@ -18,7 +18,7 @@ export class XonomyService {
           hideIf: function (jsElement) {
             return jsElement.hasAttribute("language");
           }
-        },{
+        }, {
           caption: 'Add <sci:title>',
           action: Xonomy.newElementChild,
           actionParameter: '<sci:title xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:title>',
@@ -64,7 +64,7 @@ export class XonomyService {
           }
         }
         ],
-          attributes: {
+        attributes: {
           "language": {
             asker: Xonomy.askString,
             menu: [{
@@ -75,7 +75,7 @@ export class XonomyService {
         }
       },
       "sci:title": {
-        mustBeBefore: ['Authors','Abstract', 'Keywords', 'Chapters', 'References'],
+        mustBeBefore: ['Authors', 'Abstract', 'Keywords', 'Chapters', 'References'],
         hasText: true,
         oneliner: true,
         asker: Xonomy.askString,
@@ -414,6 +414,99 @@ export class XonomyService {
           caption: 'Delete element',
           action: Xonomy.deleteElement
         }]
+      }
+    }
+  };
+
+
+  public reviewSpecification = {
+    elements: {
+      Review: {
+        menu: [
+          {
+            caption: 'Add <ReviewPaper>',
+            action: Xonomy.newElementChild,
+            actionParameter: '<ReviewPaper><ReviewPaper>',
+            hideIf: function (jsElement) {
+              return jsElement.hasChildElement("ReviewPaper");
+            }
+          }
+        ]
+      }
+      ,
+      Reviewer: {
+        hasText: true,
+        asker: Xonomy.askString,
+        oneliner: true,
+      },
+      ReviewPaper: {
+        menu: [{
+          caption: 'Add <chapters>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<chapters></chapters>',
+          hideIf: function (jsElement) {
+            return jsElement.hasChildElement("chapters");
+          }
+        }]
+      },
+      paperTitle: {
+        hasText: true,
+        asker: Xonomy.askString,
+        oneliner: true,
+      },
+      paperAuthorUsername: {
+        hasText: true,
+        asker: Xonomy.askString,
+        oneliner: true,
+      },
+      chapters: {
+        menu: [{
+          caption: 'Add <Chapter>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<Chapter></Chapter>'
+        }]
+      },
+      Chapter: {
+        menu: [{
+          caption: 'Add <chapterId>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<chapterId></chapterId>',
+          hideIf: function (jsElement) {
+            return jsElement.hasChildElement("chapterId");
+          }
+        }, {
+          caption: 'Add <ChapterReview>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<ChapterReview></ChapterReview>',
+          hideIf: function (jsElement) {
+            return jsElement.hasChildElement("ChapterReview");
+          }
+        }]
+      },
+      chapterId: {
+        hasText: true,
+        asker: Xonomy.askString,
+        oneliner: true,
+        menu: [{
+          caption: 'Delete element',
+          action: Xonomy.deleteElement
+        }],
+      },
+      ChapterReview: {
+        hasText: true,
+        asker: Xonomy.askString,
+        menu: [{
+          caption: 'Delete element',
+          action: Xonomy.deleteElement
+        }],
+      },
+      summary: {
+        hasText: true,
+        asker: Xonomy.askString,
+        menu: [{
+          caption: 'Delete element',
+          action: Xonomy.deleteElement
+        }],
       }
     }
   };

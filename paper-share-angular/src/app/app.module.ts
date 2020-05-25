@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreatePaperComponent } from './create-paper/create-paper.component';
 import { ViewPaperComponent } from './view-paper/view-paper.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
+import { AddReviewComponent } from './add-review/add-review.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { SafeHtmlPipe } from './safe-html.pipe';
     SearchDialogComponent,
     CreatePaperComponent,
     ViewPaperComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    AddReviewComponent
   ],
   imports: [
     BrowserModule,

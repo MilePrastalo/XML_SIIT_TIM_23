@@ -33,6 +33,7 @@ public class ReviewRepository {
 	private UserService userService;
 
 	private String collectionId = "/db/sample/library";
+	private String collectionReviews = "/db/paperShare/Reviews";
 
 	public Review findById(String id) {
 
@@ -122,5 +123,8 @@ public class ReviewRepository {
 			e.printStackTrace();
 		}
 		return foundReview;
+	}
+	public void save(String review) throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		existMenager.update(1, collectionReviews, "Reviews.xml", "/Reviews", review);
 	}
 }
