@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PaperUpload } from '../model/paperUpload';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,5 +17,9 @@ export class ReviewService {
   getReview( name: string) {
     const x =  this.http.get(this.path + '/api/review/' + name, { headers: this.headers, responseType: 'text' });
     return x;
+  }
+
+  sendReview(paper: PaperUpload): Observable<void> {
+    return this.http.post<void>(this.path + '/api/review', paper);
   }
 }
