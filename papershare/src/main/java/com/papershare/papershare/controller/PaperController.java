@@ -35,7 +35,7 @@ public class PaperController {
 
 	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin
-	public ResponseEntity<PaperUploadDTO> uploadPaper(@RequestBody PaperUploadDTO dto) throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, TransformerException, XMLDBException {
+	public ResponseEntity<PaperUploadDTO> uploadPaper(@RequestBody PaperUploadDTO dto) throws Exception {
 		paperService.savePaper(dto);
 		return new ResponseEntity<>(dto,HttpStatus.OK);
 

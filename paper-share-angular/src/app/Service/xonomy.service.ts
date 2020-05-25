@@ -19,11 +19,11 @@ export class XonomyService {
             return jsElement.hasAttribute("language");
           }
         },{
-          caption: 'Add <title>',
+          caption: 'Add <sci:title>',
           action: Xonomy.newElementChild,
-          actionParameter: '<title></title>',
+          actionParameter: '<sci:title xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:title>',
           hideIf: function (jsElement) {
-            return jsElement.hasChildElement("title");
+            return jsElement.hasChildElement("sci:title");
           }
         }, {
           caption: 'Add <Authors>',
@@ -33,18 +33,18 @@ export class XonomyService {
             return jsElement.hasChildElement("Authors");
           }
         }, {
-          caption: 'Add <Abstract>',
+          caption: 'Add <sci:Abstract>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Abstract></Abstract>',
+          actionParameter: '<sci:Abstract xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:Abstract>',
           hideIf: function (jsElement) {
-            return jsElement.hasChildElement("Abstract");
+            return jsElement.hasChildElement("sci:Abstract");
           }
         }, {
           caption: 'Add <Keywords>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Keywords></Keywords>',
+          actionParameter: '<sci:Keywords xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:Keywords>',
           hideIf: function (jsElement) {
-            return jsElement.hasChildElement("Keywords");
+            return jsElement.hasChildElement("sci:Keywords");
           }
         },
         {
@@ -74,7 +74,7 @@ export class XonomyService {
           }
         }
       },
-      title: {
+      "sci:title": {
         mustBeBefore: ['Authors','Abstract', 'Keywords', 'Chapters', 'References'],
         hasText: true,
         oneliner: true,
@@ -87,15 +87,15 @@ export class XonomyService {
       Authors: {
         mustBeBefore: ['Abstract', 'Keywords', 'Chapters', 'References'],
         menu: [{
-          caption: 'Add <Author>',
+          caption: 'Add <sci:Author>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Author></Author>'
+          actionParameter: '<sci:Author  xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:Author>'
         }, {
           caption: 'Delete element',
           action: Xonomy.deleteElement
         }]
       },
-      Keywords: {
+      "sci:Keywords": {
         mustBeBefore: ['Chapters', 'References'],
         menu: [{
           caption: 'Add <Keyword>',
@@ -109,12 +109,12 @@ export class XonomyService {
       Chapters: {
         mustBeBefore: ['References'],
         menu: [{
-          caption: 'Add <Chapter>',
+          caption: 'Add <sci:Chapter>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Chapter></Chapter>'
+          actionParameter: '<sci:Chapter xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:Chapter>'
         }]
       },
-      Author: {
+      "sci:Author": {
         menu: [{
           caption: 'Add <authorUsername>',
           action: Xonomy.newElementChild,
@@ -168,7 +168,7 @@ export class XonomyService {
         }
         ]
       },
-      Abstract: {
+      "sci:Abstract": {
         mustBeBefore: ['Keywords', 'Chapters', 'References'],
         menu: [{
           caption: 'Add <Paragraph>',
@@ -225,7 +225,7 @@ export class XonomyService {
         attributes: {
         }
       },
-      Chapter: {
+      "sci:Chapter": {
         menu: [{
           caption: "Add attribute 'id'",
           action: Xonomy.newAttribute,

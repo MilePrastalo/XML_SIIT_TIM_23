@@ -37,7 +37,8 @@ export class CreatePaperComponent implements OnInit {
   }
   sendFile() {
     let text = Xonomy.harvest();
-    this.paperService.sendPaper(new PaperUpload(text)).subscribe(
+    let cover = (document.getElementById("cover") as HTMLTextAreaElement).value;
+    this.paperService.sendPaper(new PaperUpload(text,cover)).subscribe(
       response => {
         console.log("Hello");
       }
