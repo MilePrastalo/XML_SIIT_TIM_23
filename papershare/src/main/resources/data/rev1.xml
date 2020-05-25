@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<review xmlns:rv="http://ftn.uns.ac.rs/review">
+    <metadata>
+    	<reviewer>mira</reviewer>
+        <publicationName>publicationName1</publicationName>
+        <submissionDate>2006-05-04</submissionDate>
+    </metadata>
+    <body>
+        <criteriaEvaluation>
+            <relevanceOfResearchProblem>very good</relevanceOfResearchProblem>
+            <introduction>very good</introduction>
+            <conceptualQuality>very good</conceptualQuality>
+            <methodologicalQuality>very good</methodologicalQuality>
+            <results>very good</results>
+            <discussion>very good</discussion>
+            <readability>very good</readability>
+        </criteriaEvaluation>
+        <overallEvaluation>acceptable without changes</overallEvaluation>
+        <commentsToAuthor>
+            <proposedChange partID="a/a">proposedChange0</proposedChange>
+            <proposedChange partID="a/a">proposedChange1</proposedChange>
+        </commentsToAuthor>
+        <commentsToEditor>commentsToEditor0</commentsToEditor>
+    </body>
+</review>

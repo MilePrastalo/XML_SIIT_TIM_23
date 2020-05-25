@@ -1,14 +1,10 @@
 package com.papershare.papershare.repository;
 
 import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.exist.xmldb.EXistResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.stereotype.Repository;
+import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -19,7 +15,6 @@ import org.xmldb.api.modules.XMLResource;
 
 import com.papershare.papershare.database.ExistManager;
 import com.papershare.papershare.model.Chapter;
-import com.papershare.papershare.model.TUser;
 import com.papershare.papershare.model.review.Review;
 import com.papershare.papershare.model.review.ReviewChapter;
 import com.papershare.papershare.service.UserService;
@@ -32,8 +27,7 @@ public class ReviewRepository {
 	@Autowired
 	private UserService userService;
 
-	private String collectionId = "/db/sample/library";
-	private String collectionReviews = "/db/paperShare/Reviews";
+	private String collectionId = "/db/paperShare/reviews";
 
 	public Review findById(String id) {
 
@@ -124,7 +118,21 @@ public class ReviewRepository {
 		}
 		return foundReview;
 	}
-	public void save(String review) throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
-		existMenager.update(1, collectionReviews, "Reviews.xml", "/Reviews", review);
+
+	public Document findByName(String name) {
+		Document document = null;
+		try {
+			XMLResource xmlResource = existMenager.load(collectionId, name);
+			document = (Document) xmlResource.getContentAsDOM();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return document;
+	}
+
+	public String save(String xmlEntity, String title)
+			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		existMenager.store(collectionId, title, xmlEntity);
+		return "OK";
 	}
 }

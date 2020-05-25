@@ -27,7 +27,7 @@ import com.papershare.papershare.database.ExistManager;
 public class ExistController {
 	@Autowired
 	public ExistManager existManager;
-	
+
 	@Value("${abs.path}")
 	private String absolutePath;
 
@@ -54,15 +54,17 @@ public class ExistController {
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		existManager.update(0, dto.getCollectionId(), dto.getDocumentId(), dto.getContextXPath(), dto.getPatch());
 	}
-	
+
 	@GetMapping(value = "/initiateData")
-	public void initiateDate() throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException, IOException {
+	public void initiateDate()
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException, IOException {
 		Resource resource = new ClassPathResource("data");
 		URI a = resource.getURI();
-		
+
 		existManager.storeXML("/db/paperShare/users", "Users.xml", a.getPath() + "/Users.xml");
 		existManager.storeXML("/db/paperShare/CoverLetters", "CoverLetters.xml", a.getPath() + "/CoverLetters.xml");
-		existManager.storeXML("/db/paperShare/Reviews","Reviews.xml" , a.getPath() + "reviews1.xml");
-
+		existManager.store("/db/paperShare/reviews", "rev1.xml", a.getPath() + "/data/rev1.xml");
+		existManager.store("/db/paperShare/reviews", "rev2.xml", a.getPath() + "/data/rev2.xml");
+		existManager.store("/db/paperShare/reviews", "rev3.xml", a.getPath() + "/data/rev3.xml");
 	}
 }

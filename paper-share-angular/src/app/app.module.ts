@@ -17,6 +17,7 @@ import { CreatePaperComponent } from './create-paper/create-paper.component';
 import { ViewPaperComponent } from './view-paper/view-paper.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { AddReviewComponent } from './add-review/add-review.component';
+import { ViewReviewComponent } from './view-review/view-review.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { AddReviewComponent } from './add-review/add-review.component';
     CreatePaperComponent,
     ViewPaperComponent,
     SafeHtmlPipe,
-    AddReviewComponent
+    AddReviewComponent,
+    ViewReviewComponent
   ],
   imports: [
     BrowserModule,
