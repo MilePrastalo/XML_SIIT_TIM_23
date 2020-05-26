@@ -13,7 +13,7 @@ export class ViewReviewComponent implements OnInit {
   constructor(private reviewService: ReviewService) { }
 
   ngOnInit(): void {
-    this.name = 'rev2.xml';
+    this.name = 'rev1590438540062.xml';
     this.getReview();
   }
 
