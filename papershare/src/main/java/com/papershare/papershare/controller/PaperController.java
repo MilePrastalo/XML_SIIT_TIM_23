@@ -44,9 +44,27 @@ public class PaperController {
 	}
 	
 	@GetMapping(value = "/userPapers")
-	public ResponseEntity<List<PaperViewDTO>> test() {
+	public ResponseEntity<List<PaperViewDTO>> userPapers() {
 		List<PaperViewDTO> paperList = paperService.findPapersByUser();
 		return new ResponseEntity<List<PaperViewDTO>>(paperList, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/completedPapers")
+	public ResponseEntity<List<PaperViewDTO>> completedPapers() {
+		List<PaperViewDTO> paperList = paperService.findCompletedPapers();
+		return new ResponseEntity<List<PaperViewDTO>>(paperList, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "acceptPaper/{name}")
+	public ResponseEntity<Boolean> acceptPaper(@PathVariable("name") String name) {
+		paperService.changePaperStatus(name, "published");
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "rejectPaper/{name}")
+	public ResponseEntity<Boolean> rejectPaper(@PathVariable("name") String name) {
+		paperService.changePaperStatus(name, "rejected");
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 }
 
