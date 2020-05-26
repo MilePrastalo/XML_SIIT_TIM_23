@@ -1,6 +1,5 @@
 package com.papershare.papershare.service;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -21,8 +20,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -121,16 +118,31 @@ public class PaperService {
 
 		return new UrlResource(file.toUri());
 	}	
+
+	public void changePaperStatus(String paperName, String status) {
+		String documentId = paperName + ".xml";
+		String targetElement = "/ScientificPaper/status";
+		String xmlFragmet = status;
+		paperRepository.modifyPaper(documentId, targetElement, xmlFragmet);
+	}
+
 	public ArrayList<PaperViewDTO> getAllPapers() {
 		String xPathExpression = "/ScientificPaper";
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
 	}
-	
+
+	public ArrayList<PaperViewDTO> findCompletedPapers() {
+		String xPathExpression = "/ScientificPaper[status = 'completed']";
+		ResourceSet result = paperRepository.findPapers(xPathExpression);
+		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
+		return paperList;
+	}
+
 	public ArrayList<PaperViewDTO> findPapersByUser() {
 		String username = getLoggedUser();
-		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s']",username);
+		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s']", username);
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;

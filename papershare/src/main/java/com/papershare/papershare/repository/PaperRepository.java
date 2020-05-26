@@ -34,12 +34,13 @@ public class PaperRepository {
 
 		return "OK";
 	}
+
 	public String saveCoverLetter(String xmlEntity)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		existMenager.update(1, coverLettercollectionId, "CoverLetters.xml", "/CoverLetters", xmlEntity);
 		return "OK";
 	}
-	
+
 	public ResourceSet findPapers(String xPathExpression) {
 		ResourceSet result = null;
 		try {
@@ -49,6 +50,14 @@ public class PaperRepository {
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	public void modifyPaper(String documentId, String targetElement, String xmlFragmet) {
+		try {
+			existMenager.update(0, collectionId, documentId, targetElement, xmlFragmet);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | XMLDBException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
