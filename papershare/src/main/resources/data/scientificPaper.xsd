@@ -35,7 +35,7 @@
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:enumeration value="completed"/>
-                            <xs:enumeration value="notcompleted"/>
+                            <xs:enumeration value="not completed"/>
                             <xs:enumeration value="published"/>
                             <xs:enumeration value="rejected"/>
                         </xs:restriction>

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PaperService } from '../Service/paper.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-paper',
@@ -10,10 +11,10 @@ export class ViewPaperComponent implements OnInit {
 
   @Input() name: string;
   public html: string;
-  constructor(private paperService: PaperService) { }
+  constructor(private paperService: PaperService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.name = 'sciExample1';
+    this.name = this.route.snapshot.paramMap.get('name');
     this.getPaper();
   }
 

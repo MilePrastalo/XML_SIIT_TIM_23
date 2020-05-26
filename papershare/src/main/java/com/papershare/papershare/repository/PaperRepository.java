@@ -20,7 +20,7 @@ public class PaperRepository {
 	public Document findScientificPaper(String name) {
 		Document document = null;
 		try {
-			XMLResource xmlResource = existMenager.load(collectionId, name);
+			XMLResource xmlResource = existMenager.load(collectionId, name + ".xml");
 			document = (Document) xmlResource.getContentAsDOM();
 		} catch (Exception e) {
 			e.printStackTrace();
