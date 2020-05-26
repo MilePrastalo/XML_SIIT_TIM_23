@@ -9,6 +9,7 @@ import { AddReviewComponent } from './add-review/add-review.component';
 import { ViewReviewComponent } from './view-review/view-review.component';
 import { PaperListComponent } from './paper-list/paper-list.component';
 import { AssignReviewComponent } from './assign-review/assign-review.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 
 
@@ -18,10 +19,11 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'add', component: CreatePaperComponent },
   { path: 'addReview', component: AddReviewComponent },
-  { path: 'view-paper/:name'', component: ViewPaperComponent },
+  { path: 'view-paper/:name', component: ViewPaperComponent },
   { path: 'view-review', component: ViewReviewComponent },
   { path: 'assign-review', component: AssignReviewComponent },
-  { path: 'paper-list', component: PaperListComponent }
+  { path: 'paper-list', component: PaperListComponent },
+  { path: 'user-profile', component: UserProfileComponent }
 ];
 
 @NgModule({
@@ -29,3 +31,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+

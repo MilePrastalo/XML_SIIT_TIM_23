@@ -1,42 +1,38 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PaperService } from '../Service/paper.service';
 import { PaperView } from '../model/paperView';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-paper-list',
-  templateUrl: './paper-list.component.html',
-  styleUrls: ['./paper-list.component.css']
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.css']
 })
-export class PaperListComponent implements OnInit {
+export class UserProfileComponent implements OnInit {
 
-  @Input() papers: Array<PaperView>;
-  @Input() forUser: boolean;
+  public userPapers: Array<PaperView>;
+  public completedPapers: Array<PaperView>;
+  public role: string;
 
   constructor(private paperService: PaperService, private router: Router) { }
 
   ngOnInit(): void {
+
+    this.role = localStorage.getItem('role');
+    this.getUserPapers();
   }
 
   getUserPapers() {
     this.paperService.getUserPapers().subscribe(
       (response => {
         if (response !== null) {
-          this.papers = response;
+          this.userPapers = response;
         }
       }),
       (error => {
         alert(error.error.message);
       })
     );
-  }
-
-  assignReview() {
-    this.router.navigateByUrl('/assign-review');
-  }
-
-  openPaper(name: string) {
-    this.router.navigate(['/view-paper', name]);
   }
 
 }
