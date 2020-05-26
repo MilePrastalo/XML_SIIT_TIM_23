@@ -22,9 +22,9 @@
                 </div>
                 <div *ngIf = "forUser === false">
                     <button class="paper_btns" (click) = "openPaper(paper.title)" mat-stroked-button color="primary">Open</button>
-                    <button class="paper_btns" mat-stroked-button color="primary">Publish</button>
+                    <button class="paper_btns" (click) = "acceptPaper(paper.title, i)" mat-stroked-button color="primary">Accept</button>
                     <button class="paper_btns" (click) = "assignReview()" mat-stroked-button color="primary">Send for review</button>
-                    <button class="paper_btns" mat-stroked-button color="primary">Reject</button>
+                    <button class="paper_btns"(click) = "rejectPaper(paper.title, i)" mat-stroked-button color="primary">Reject</button>
                 </div>
             </mat-card-content>
         </mat-card>

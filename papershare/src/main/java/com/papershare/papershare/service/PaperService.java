@@ -93,24 +93,31 @@ public class PaperService {
 				+ "</Content><title>" + title + "</title></coverLetter>";
 		paperRepository.saveCoverLetter(coverLetter);
 	}
-	
+
+	public void changePaperStatus(String paperName, String status) {
+		String documentId = paperName + ".xml";
+		String targetElement = "/ScientificPaper/status";
+		String xmlFragmet = status;
+		paperRepository.modifyPaper(documentId, targetElement, xmlFragmet);
+	}
+
 	public ArrayList<PaperViewDTO> getAllPapers() {
 		String xPathExpression = "/ScientificPaper";
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
 	}
-	
+
 	public ArrayList<PaperViewDTO> findCompletedPapers() {
 		String xPathExpression = "/ScientificPaper[status = 'completed']";
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
 	}
-	
+
 	public ArrayList<PaperViewDTO> findPapersByUser() {
 		String username = getLoggedUser();
-		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s']",username);
+		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s']", username);
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;

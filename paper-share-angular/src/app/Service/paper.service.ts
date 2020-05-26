@@ -32,4 +32,13 @@ export class PaperService {
     return this.http.get<Array<PaperView>>(this.path + '/api/papers/completedPapers', { headers: this.headers});
   }
 
+
+  acceptPaper( paperName: string): Observable<boolean> {
+    return this.http.get<boolean>(this.path + '/api/papers/acceptPaper/' + paperName, { headers: this.headers});
+  }
+
+  rejectPaper( paperName: string): Observable<boolean> {
+    return this.http.get<boolean>(this.path + '/api/papers/rejectPaper/' + paperName, { headers: this.headers});
+  }
+
 }

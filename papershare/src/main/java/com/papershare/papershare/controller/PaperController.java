@@ -54,6 +54,18 @@ public class PaperController {
 		List<PaperViewDTO> paperList = paperService.findCompletedPapers();
 		return new ResponseEntity<List<PaperViewDTO>>(paperList, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "acceptPaper/{name}")
+	public ResponseEntity<Boolean> acceptPaper(@PathVariable("name") String name) {
+		paperService.changePaperStatus(name, "published");
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "rejectPaper/{name}")
+	public ResponseEntity<Boolean> rejectPaper(@PathVariable("name") String name) {
+		paperService.changePaperStatus(name, "rejected");
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
 }
 
 	
