@@ -24,7 +24,7 @@
 	         		</p>
 	         	</xsl:for-each>
 	         	
-				<h1>Apstrakt</h1>
+				<h1>Abstract</h1>
 	         	
 			
 	         	<xsl:for-each select="/ScientificPaper/sci:Abstract/sci:Paragraph">
@@ -44,21 +44,16 @@
 	         		
 	         			
 	         				<h1><xsl:value-of select="sci:ChapterName"/></h1>
-	         		
-	         				<xsl:for-each select="/ScientificPaper/sci:Chapters/sci:Chapter">
-									<p>
-									<xsl:value-of select="sci:ChapterBody/sci:ChapterContent/sci:MixedContent/sci:chapterText"/>
-									<xsl:value-of select="sci:ChapterBody/sci:ChapterContent/sci:MixedContent/sci:chapterImage"/>
-									</p>
-									<p>
-	         						<xsl:value-of select="sci:ChapterBody/sci:ChapterContent/sci:chapterText"/>
-	         						</p>
+	         				<xsl:for-each select="sci:ChapterContent">
+	         				<p>
+	         						<xsl:value-of select="."/>
+	         				</p>
 	         				</xsl:for-each>
 	         				
 	         	</xsl:for-each>
 				</div>
 				
-				<h1>Literatura</h1>
+				<h1>References</h1>
 	       
 	         		<xsl:for-each select="/ScientificPaper/sci:References/sci:Reference">
 	         		<p>

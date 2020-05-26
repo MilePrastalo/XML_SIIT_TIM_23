@@ -147,21 +147,8 @@
                 <xs:element name="ChapterBody">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element maxOccurs="unbounded" name="ChapterContent">
-                                <xs:complexType mixed="true">
-                                    <xs:sequence>
-                                        <xs:element name="MixedContent">
-                                            <xs:complexType mixed="true">
-                                                <xs:sequence>
-                                                  <xs:element name="chapterText" type="xs:string"/>
-                                                  <xs:element name="chapterImage" type="xs:string"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="chapterText" type="xs:string"/>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
+                            <xs:element maxOccurs="unbounded" name="ChapterContent" type="xs:string"
+                                > </xs:element>
                             <xs:element ref="sci:Chapter" maxOccurs="unbounded" minOccurs="0"/>
                         </xs:sequence>
                     </xs:complexType>
