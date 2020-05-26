@@ -1,0 +1,30 @@
+<div class="form-wrapper" >
+  <mat-card class="box" id="login-box">
+
+    <mat-card-header>
+        Assign Review
+      </mat-card-header>
+
+    <form class="form" [formGroup]="assignReviewForm" (ngSubmit)="assignReviewForm.valid && onAssignReviewSubmit()" noval>
+      <mat-card-content>
+        <mat-form-field class="field-full-width">
+          <input id="username"
+            matInput
+            formControlName="username"
+            placeholder="Username" />
+            <mat-error >Username can not be blank.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="field-full-width">
+          <input id="publicationName"
+              matInput
+              formControlName="publicationName"
+              placeholder="Publication name"  />
+              <mat-error >Publication name can not be blank.</mat-error>
+        </mat-form-field>
+      </mat-card-content>
+      <button id="assignReviewBt" mat-stroked-button color= "primary" class="btn-block">Assign Review</button>
+    </form>
+  </mat-card>
+
+</div>

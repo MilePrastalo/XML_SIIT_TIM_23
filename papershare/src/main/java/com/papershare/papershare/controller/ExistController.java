@@ -34,7 +34,7 @@ public class ExistController {
 	@RequestMapping(value = "/store", method = RequestMethod.POST)
 	public void store(@RequestBody StoreDTO dto)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		existManager.storeXML(dto.getCollectionId(), dto.getName(), dto.getPath());
+		existManager.store(dto.getCollectionId(), dto.getName(), dto.getPath());
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -61,10 +61,12 @@ public class ExistController {
 		Resource resource = new ClassPathResource("data");
 		URI a = resource.getURI();
 
-		existManager.storeXML("/db/paperShare/users", "Users.xml", a.getPath() + "/Users.xml");
-		existManager.storeXML("/db/paperShare/CoverLetters", "CoverLetters.xml", a.getPath() + "/CoverLetters.xml");
-		existManager.store("/db/paperShare/reviews", "rev1.xml", a.getPath() + "/data/rev1.xml");
-		existManager.store("/db/paperShare/reviews", "rev2.xml", a.getPath() + "/data/rev2.xml");
-		existManager.store("/db/paperShare/reviews", "rev3.xml", a.getPath() + "/data/rev3.xml");
+		existManager.store("/db/paperShare/users", "Users.xml", a.getPath() + "/Users.xml");
+		existManager.store("/db/paperShare/CoverLetters", "CoverLetters.xml", a.getPath() + "/CoverLetters.xml");
+		existManager.store("/db/paperShare/reviews", "rev1.xml", a.getPath() + "/rev1.xml");
+		existManager.store("/db/paperShare/reviews", "rev2.xml", a.getPath() + "/rev2.xml");
+		existManager.store("/db/paperShare/reviews", "rev3.xml", a.getPath() + "/rev3.xml");
+		existManager.store("/db/paperShare/ScientificPapers", "etika.xml", a.getPath() + "/etika.xml");
+		existManager.store("/db/paperShare/ScientificPapers", "auroraBorealis.xml", a.getPath() + "/auroraBorealis.xml");
 	}
 }

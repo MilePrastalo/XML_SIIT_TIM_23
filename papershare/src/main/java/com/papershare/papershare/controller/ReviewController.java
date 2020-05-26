@@ -1,7 +1,7 @@
 package com.papershare.papershare.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.exist.http.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.xmldb.api.base.XMLDBException;
 
-import com.papershare.papershare.DTO.PaperUploadDTO;
+import com.papershare.papershare.DTO.AddReviewDTO;
 import com.papershare.papershare.service.ReviewService;
 
 @RestController
@@ -32,8 +33,12 @@ public class ReviewController {
 	}
 
 	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void addReview(@RequestBody PaperUploadDTO dto) {
-
+	public ResponseEntity<String> addReview(@RequestBody AddReviewDTO dto) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException, XMLDBException, NotFoundException {
+		reviewService.addReview(dto);
+		return new ResponseEntity<String>(
+				"Successfully assigned review for: " + dto.getPublicationName() + " to: " + dto.getUsername(),
+				HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{name}")

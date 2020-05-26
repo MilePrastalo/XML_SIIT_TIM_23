@@ -67,8 +67,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.antMatchers(HttpMethod.POST, "/api/user/login", "/api/user/register")
 				.permitAll()
+				
+				// Only for test purposes.
 				.antMatchers(HttpMethod.GET, "/api/exist/initiateData").permitAll()
 				.antMatchers(HttpMethod.GET, "/api/review/**").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/review/**").permitAll()
 
 				// all other requests need to be authenticated
 				.anyRequest().authenticated().and();
@@ -88,5 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers(HttpMethod.POST, "/api/papers");
 		web.ignoring().antMatchers(HttpMethod.GET, "/api/exist/initiateData");
 		web.ignoring().antMatchers(HttpMethod.GET, "/api/review/**");
+		web.ignoring().antMatchers(HttpMethod.POST, "/api/review/**");
+
 	}
 }
