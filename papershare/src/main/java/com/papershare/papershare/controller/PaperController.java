@@ -46,7 +46,7 @@ public class PaperController {
 	}
 	
 	@GetMapping(value="/{name}/pdf", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public ResponseEntity<Object> getPdf(@PathVariable("name") String name){
+	public ResponseEntity<Object> getPdf(@PathVariable("name") String name) throws Exception{
 		Resource resource = paperService.getPdf(name);
 		 return ResponseEntity.ok()
                  .contentType(MediaType.APPLICATION_OCTET_STREAM)

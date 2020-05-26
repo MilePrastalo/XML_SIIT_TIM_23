@@ -3,6 +3,7 @@
 	xmlns ="https://github.com/MilePrastalo/XML_SIIT_TIM_23"
 	 xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"
 	 version="2.0">
+        <xsl:import href="templates.xsl"/>
     
     	<xsl:template match="/">
 	      <html>

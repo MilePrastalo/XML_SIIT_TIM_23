@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'add', component: CreatePaperComponent },
   { path: 'addReview', component: AddReviewComponent },
-  { path: 'view-paper/:name'', component: ViewPaperComponent },
+  { path: 'view-paper/:name', component: ViewPaperComponent },
   { path: 'view-review', component: ViewReviewComponent },
   { path: 'assign-review', component: AssignReviewComponent },
   { path: 'paper-list', component: PaperListComponent }

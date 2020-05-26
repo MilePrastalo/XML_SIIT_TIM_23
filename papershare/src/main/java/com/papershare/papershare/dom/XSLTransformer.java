@@ -11,15 +11,20 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.fop.apps.FOUserAgent;
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.MimeConstants;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 @Component
 public class XSLTransformer {
-
+	private String fopPath = "src/main/resources/data/conf/fop.xconf";
 	public String convertXMLtoHTML(String xslFileName, Document xml) {
 		
 		String xmlString = XMLToString(xml);
@@ -57,5 +62,26 @@ public class XSLTransformer {
         } catch (Exception ex) {
             throw new RuntimeException("Error converting to String", ex);
         }
+	}
+	public ByteArrayOutputStream generatePDf(String sourceStr, String xslt_fo_TemplatePath) throws Exception {
+		File xslFile = new File(xslt_fo_TemplatePath);
+
+		StreamSource transformSource = new StreamSource(xslFile);
+
+		StreamSource source = new StreamSource(new StringReader(sourceStr));
+		FopFactory fopFactory = FopFactory.newInstance(new File(fopPath));
+		FOUserAgent userAgent = fopFactory.newFOUserAgent();
+
+		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer xslFoTransformer = tf.newTransformer(transformSource);
+
+		Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, userAgent, outStream);
+
+		Result res = new SAXResult(fop.getDefaultHandler());
+
+		xslFoTransformer.transform(source, res);
+
+		return outStream;
 	}
 }
