@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +47,15 @@ public class PaperController {
 	public ResponseEntity<String> getSciPaperHTML(@PathVariable("name") String name) {
 		String result = paperService.convertXMLtoHTML(name);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/{name}/pdf", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity<Object> getPdf(@PathVariable("name") String name){
+		Resource resource = paperService.getPdf(name);
+		 return ResponseEntity.ok()
+                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                 .body(resource);
 	}
 }
 

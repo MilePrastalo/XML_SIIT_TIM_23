@@ -16,6 +16,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import com.papershare.papershare.DTO.PaperUploadDTO;
@@ -83,5 +84,8 @@ public class PaperService {
 		
 		String coverLetter = "<coverLetter><authorUsername></authorUsername><Content>"+dto.getCoverLetter()+"</Content><title>"+title+"</title></coverLetter>";
 		paperRepository.saveCoverLetter(coverLetter);
+	}
+	public Resource getPdf(String name) {
+		return null;
 	}
 }
