@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<review xmlns:rv="http://ftn.uns.ac.rs/review">
+<review xmlns="https://github.com/MilePrastalo/XML_SIIT_TIM_23" xmlns:rv="https://github.com/MilePrastalo/XML_SIIT_TIM_23">
     <metadata>
      	<reviewer>mira</reviewer>
         <publicationName>publicationName3</publicationName>

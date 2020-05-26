@@ -3,7 +3,7 @@ package com.papershare.papershare.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.w3c.dom.Document;
-import org.xmldb.api.base.Collection;
+import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import com.papershare.papershare.database.ExistManager;
@@ -20,7 +20,7 @@ public class PaperRepository {
 	public Document findScientificPaper(String name) {
 		Document document = null;
 		try {
-			XMLResource xmlResource = existMenager.load(collectionId, name);
+			XMLResource xmlResource = existMenager.load(collectionId, name + ".xml");
 			document = (Document) xmlResource.getContentAsDOM();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,6 +38,17 @@ public class PaperRepository {
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		existMenager.update(1, coverLettercollectionId, "CoverLetters.xml", "/CoverLetters", xmlEntity);
 		return "OK";
+	}
+	
+	public ResourceSet findPapers(String xPathExpression) {
+		ResourceSet result = null;
+		try {
+			result = existMenager.retrieve(collectionId, xPathExpression);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }

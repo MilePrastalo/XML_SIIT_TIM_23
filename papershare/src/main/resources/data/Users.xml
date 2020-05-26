@@ -7,4 +7,11 @@
         <ns2:firstName>Mira</ns2:firstName>
         <ns2:role>ROLE_USER</ns2:role>
     </ns2:user>
+    <ns2:user xmlns:ns2="https://github.com/MilePrastalo/XML_SIIT_TIM_23">
+        <ns2:username>admin</ns2:username>
+        <ns2:password>$2a$10$C4sxgfS9YfhvCq9Yh9VTkubItrOeeQUv9eUNAX5tBprOrfNvrbMua</ns2:password>
+        <ns2:email>admin@mail.com</ns2:email>
+        <ns2:firstName>Admin</ns2:firstName>
+        <ns2:role>ROLE_ADMIN</ns2:role>
+    </ns2:user>
 </Users>

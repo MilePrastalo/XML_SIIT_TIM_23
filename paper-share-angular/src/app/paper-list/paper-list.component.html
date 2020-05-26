@@ -1,0 +1,26 @@
+<div style="margin: 5%;">
+    <div class="papers-container">
+        <h1 style="text-align:center;">Your Papers:</h1><br>
+        <mat-card  *ngFor = "let paper of papers; index as i" class="paper-card">
+            <div style="display: flex">
+                <mat-card-title>
+                    {{paper.title}} 
+                    </mat-card-title>
+                <mat-chip-list >
+                    <mat-chip>{{paper.status}}</mat-chip>
+                </mat-chip-list>
+            </div>
+            <mat-card-content>
+                <span *ngFor = "let author of paper.authors;"> {{author}}, </span>
+                <div>
+                    <button class="paper_btns" (click) = "openPaper(paper.title)" mat-stroked-button color="primary">Open</button>
+                    <button *ngIf = "paper.status == 'not completed'" class="paper_btns" mat-stroked-button color="primary">Edit</button>
+                    <button *ngIf = "paper.status == 'completed'" class="paper_btns" mat-stroked-button color="primary">Publish</button>
+                    <button class="paper_btns" mat-stroked-button color="primary">Delete</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <br>
+    
+    </div>
+</div>

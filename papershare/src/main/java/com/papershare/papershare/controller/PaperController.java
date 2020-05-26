@@ -1,9 +1,6 @@
 package com.papershare.papershare.controller;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import java.util.List;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -17,10 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.xml.sax.SAXException;
-import org.xmldb.api.base.XMLDBException;
 
 import com.papershare.papershare.DTO.PaperUploadDTO;
+import com.papershare.papershare.DTO.PaperViewDTO;
 import com.papershare.papershare.service.PaperService;
 
 
@@ -56,6 +52,11 @@ public class PaperController {
                  .contentType(MediaType.APPLICATION_OCTET_STREAM)
                  .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                  .body(resource);
+	}
+	@GetMapping(value = "/userPapers")
+	public ResponseEntity<List<PaperViewDTO>> test() {
+		List<PaperViewDTO> paperList = paperService.findPapersByUser();
+		return new ResponseEntity<List<PaperViewDTO>>(paperList, HttpStatus.OK);
 	}
 }
 

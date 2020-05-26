@@ -1,0 +1,26 @@
+
+.papers-container {
+    width: 70%;
+    margin: auto;
+}
+
+.paper-card {
+    width: 100%; 
+    margin-bottom: 5%;
+    border: solid 0.5px  gray;
+    box-shadow:  0 0 5px  lightgray;
+    -moz-box-shadow: 0 0 5px  lightgray;
+    -webkit-box-shadow: 0 0 5px  lightgray;
+    -o-box-shadow: 0 0 5px lightgray;
+    flex: 0 1 calc(23.3% - 22px);
+}
+
+.paper-card mat-card-title {
+    width: fit-content;
+    margin-top: auto;
+     margin-right: 1%;
+}
+
+.paper_btns {
+    margin: 1%;
+}
