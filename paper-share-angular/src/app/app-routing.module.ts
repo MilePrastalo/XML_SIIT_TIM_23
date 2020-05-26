@@ -7,6 +7,7 @@ import { CreatePaperComponent } from './create-paper/create-paper.component';
 import { ViewPaperComponent } from './view-paper/view-paper.component';
 import { AddReviewComponent } from './add-review/add-review.component';
 import { ViewReviewComponent } from './view-review/view-review.component';
+import { AssignReviewComponent } from './assign-review/assign-review.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'add', component: CreatePaperComponent },
   { path: 'addReview', component: AddReviewComponent },
   { path: 'view-paper', component: ViewPaperComponent },
-  { path: 'view-review', component: ViewReviewComponent }
+  { path: 'view-review', component: ViewReviewComponent },
+  { path: 'assign-review', component: AssignReviewComponent }
 ];
 
 @NgModule({
