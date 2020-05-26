@@ -1,7 +1,11 @@
 package com.papershare.papershare.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,6 +20,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,6 +48,7 @@ public class PaperService {
 
 	private final String scientificPublicatonXSL = "src/main/resources/data/xsl/scientificPaper.xsl";
 	private final String paperSchema = "src/main/resources/data/scientificPaper.xsd";
+	private static String xslFOPath = "src/main/resources/data/xsl/paperToPDF.xsl";
 	private DOMParser domParser;
 
 	private PaperRepository paperRepository;
@@ -66,7 +73,7 @@ public class PaperService {
 		Element sp = (Element) nodeList.item(0);
 		NodeList ndTitle = document.getElementsByTagName("sci:title");
 		String title = ndTitle.item(0).getTextContent();
-		Element chaptersMain = (Element) (document.getElementsByTagName("Chapters")).item(0);
+		Element chaptersMain = (Element) (document.getElementsByTagName("sci:Chapters")).item(0);
 		NodeList chapters = chaptersMain.getElementsByTagName("sci:Chapter");
 		Long currentMilli = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 		for (int i = 0; i < chapters.getLength(); i++) {
@@ -87,12 +94,30 @@ public class PaperService {
 
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
-		paperRepository.save(sw.toString(), title);
+		paperRepository.save(sw.toString(), title+".xml");
 
 		String coverLetter = "<coverLetter><authorUsername></authorUsername><Content>" + dto.getCoverLetter()
 				+ "</Content><title>" + title + "</title></coverLetter>";
 		paperRepository.saveCoverLetter(coverLetter);
 	}
+	public Resource getPdf(String name) throws Exception {
+		Document document = paperRepository.findScientificPaper(name);
+		StringWriter sw = new StringWriter();
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+		transformer.transform(new DOMSource(document), new StreamResult(sw));
+		ByteArrayOutputStream outputStream = xslTransformer.generatePDf(sw.toString(), xslFOPath);
+
+		Path file = Paths.get(name + ".pdf");
+		Files.write(file, outputStream.toByteArray());
+
+		return new UrlResource(file.toUri());
+	}	
 
 	public void changePaperStatus(String paperName, String status) {
 		String documentId = paperName + ".xml";
