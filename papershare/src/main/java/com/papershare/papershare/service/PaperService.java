@@ -101,6 +101,13 @@ public class PaperService {
 		return paperList;
 	}
 	
+	public ArrayList<PaperViewDTO> findCompletedPapers() {
+		String xPathExpression = "/ScientificPaper[status = 'completed']";
+		ResourceSet result = paperRepository.findPapers(xPathExpression);
+		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
+		return paperList;
+	}
+	
 	public ArrayList<PaperViewDTO> findPapersByUser() {
 		String username = getLoggedUser();
 		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s']",username);

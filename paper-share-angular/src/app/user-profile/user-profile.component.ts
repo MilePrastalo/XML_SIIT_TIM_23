@@ -20,6 +20,9 @@ export class UserProfileComponent implements OnInit {
 
     this.role = localStorage.getItem('role');
     this.getUserPapers();
+    if (this.role === 'EDITOR') {
+      this.getCompletedPapers();
+    }
   }
 
   getUserPapers() {
@@ -27,6 +30,19 @@ export class UserProfileComponent implements OnInit {
       (response => {
         if (response !== null) {
           this.userPapers = response;
+        }
+      }),
+      (error => {
+        alert(error.error.message);
+      })
+    );
+  }
+
+  getCompletedPapers() {
+    this.paperService.getCompletedPapers().subscribe(
+      (response => {
+        if (response !== null) {
+          this.completedPapers = response;
         }
       }),
       (error => {

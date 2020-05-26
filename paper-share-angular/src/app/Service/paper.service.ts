@@ -28,4 +28,8 @@ export class PaperService {
     return this.http.get<Array<PaperView>>(this.path + '/api/papers/userPapers', { headers: this.headers});
   }
 
+  getCompletedPapers(): Observable<Array<PaperView>> {
+    return this.http.get<Array<PaperView>>(this.path + '/api/papers/completedPapers', { headers: this.headers});
+  }
+
 }
