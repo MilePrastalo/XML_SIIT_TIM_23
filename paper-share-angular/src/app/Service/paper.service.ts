@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PaperUpload } from '../model/paperUpload';
 import { Observable } from 'rxjs';
+import { PaperView } from '../model/paperView';
 
 @Injectable({
   providedIn: 'root'
@@ -22,4 +23,9 @@ export class PaperService {
     const x =  this.http.get(this.path + '/api/papers/' + name, { headers: this.headers, responseType: 'text' });
     return x;
   }
+
+  getUserPapers(): Observable<Array<PaperView>> {
+    return this.http.get<Array<PaperView>>(this.path + '/api/papers/userPapers', { headers: this.headers});
+  }
+
 }

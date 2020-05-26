@@ -3,9 +3,9 @@ package com.papershare.papershare.service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,14 +16,22 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.papershare.papershare.DTO.PaperUploadDTO;
+import com.papershare.papershare.DTO.PaperViewDTO;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xmldb.api.base.ResourceIterator;
+import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.XMLResource;
 
 import com.papershare.papershare.dom.DOMParser;
 import com.papershare.papershare.dom.XSLTransformer;
@@ -80,8 +88,54 @@ public class PaperService {
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
 		paperRepository.save(sw.toString(), title);
-		
-		String coverLetter = "<coverLetter><authorUsername></authorUsername><Content>"+dto.getCoverLetter()+"</Content><title>"+title+"</title></coverLetter>";
+
+		String coverLetter = "<coverLetter><authorUsername></authorUsername><Content>" + dto.getCoverLetter()
+				+ "</Content><title>" + title + "</title></coverLetter>";
 		paperRepository.saveCoverLetter(coverLetter);
+	}
+	
+	public ArrayList<PaperViewDTO> getAllPapers() {
+		String xPathExpression = "/ScientificPaper";
+		ResourceSet result = paperRepository.findPapers(xPathExpression);
+		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
+		return paperList;
+	}
+	
+	public ArrayList<PaperViewDTO> findPapersByUser() {
+		String username = getLoggedUser();
+		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s']",username);
+		ResourceSet result = paperRepository.findPapers(xPathExpression);
+		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
+		return paperList;
+	}
+
+	private ArrayList<PaperViewDTO> extractDataFromPapers(ResourceSet resourceSet) {
+		ArrayList<PaperViewDTO> paperList = new ArrayList<PaperViewDTO>();
+		ResourceIterator i;
+		try {
+			i = resourceSet.getIterator();
+			while (i.hasMoreResources()) {
+				XMLResource resource = (XMLResource) i.nextResource();
+				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
+				String id = document.getElementsByTagName("ScientificPaper").item(0).getAttributes().getNamedItem("id")
+						.getTextContent();
+				NodeList authors = document.getElementsByTagName("sci:authorName");
+				NodeList title = document.getElementsByTagName("sci:title");
+				NodeList status = document.getElementsByTagName("sci:status");
+				paperList.add(new PaperViewDTO(authors, title, status, id));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return paperList;
+	}
+
+	private String getLoggedUser() {
+		String username = null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			username = authentication.getName();
+		}
+		return username;
 	}
 }

@@ -7,7 +7,9 @@ import { CreatePaperComponent } from './create-paper/create-paper.component';
 import { ViewPaperComponent } from './view-paper/view-paper.component';
 import { AddReviewComponent } from './add-review/add-review.component';
 import { ViewReviewComponent } from './view-review/view-review.component';
+import { PaperListComponent } from './paper-list/paper-list.component';
 import { AssignReviewComponent } from './assign-review/assign-review.component';
+
 
 
 const routes: Routes = [
@@ -16,9 +18,10 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'add', component: CreatePaperComponent },
   { path: 'addReview', component: AddReviewComponent },
-  { path: 'view-paper', component: ViewPaperComponent },
+  { path: 'view-paper/:name'', component: ViewPaperComponent },
   { path: 'view-review', component: ViewReviewComponent },
-  { path: 'assign-review', component: AssignReviewComponent }
+  { path: 'assign-review', component: AssignReviewComponent },
+  { path: 'paper-list', component: PaperListComponent }
 ];
 
 @NgModule({

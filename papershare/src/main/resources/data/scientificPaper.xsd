@@ -31,6 +31,16 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
+                <xs:element name="status">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="completed"/>
+                            <xs:enumeration value="not completed"/>
+                            <xs:enumeration value="published"/>
+                            <xs:enumeration value="rejected"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
             </xs:sequence>
             <xs:attribute name="recieved_date" type="xs:date"/>
             <xs:attribute name="accepted_date" type="xs:date"/>
@@ -49,11 +59,19 @@
     <xs:element name="Author">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="authorUsername">
+                <xs:element name="authorUsername" minOccurs="0">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:minLength value="3"/>
                             <xs:maxLength value="20"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element minOccurs="1" name="authorName">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:maxLength value="30"/>
+                            <xs:minLength value="2"/>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>

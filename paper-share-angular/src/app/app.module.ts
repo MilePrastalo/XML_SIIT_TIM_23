@@ -18,6 +18,7 @@ import { ViewPaperComponent } from './view-paper/view-paper.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { AddReviewComponent } from './add-review/add-review.component';
 import { ViewReviewComponent } from './view-review/view-review.component';
+import { PaperListComponent } from './paper-list/paper-list.component';
 import { AssignReviewComponent } from './assign-review/assign-review.component';
 
 
@@ -34,6 +35,7 @@ import { AssignReviewComponent } from './assign-review/assign-review.component';
     SafeHtmlPipe,
     AddReviewComponent,
     ViewReviewComponent,
+    PaperListComponent,
     AssignReviewComponent
   ],
   imports: [
