@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -41,7 +42,9 @@ import org.xmldb.api.modules.XMLResource;
 
 import com.papershare.papershare.dom.DOMParser;
 import com.papershare.papershare.dom.XSLTransformer;
+import com.papershare.papershare.exception.NotAnAuthorException;
 import com.papershare.papershare.repository.PaperRepository;
+import com.papershare.papershare.repository.ReviewRepository;
 
 @Service
 public class PaperService {
@@ -52,12 +55,15 @@ public class PaperService {
 	private DOMParser domParser;
 
 	private PaperRepository paperRepository;
+	private ReviewRepository reviewRepository;
 	private XSLTransformer xslTransformer;
 
-	public PaperService(XSLTransformer xslTransformer, PaperRepository sciPaperRepository, DOMParser domParser) {
+	public PaperService(XSLTransformer xslTransformer, PaperRepository sciPaperRepository, DOMParser domParser,
+			ReviewRepository reviewRepository) {
 		this.paperRepository = sciPaperRepository;
 		this.xslTransformer = xslTransformer;
 		this.domParser = domParser;
+		this.reviewRepository = reviewRepository;
 	}
 
 	public String convertXMLtoHTML(String name) {
@@ -94,12 +100,13 @@ public class PaperService {
 
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
-		paperRepository.save(sw.toString(), title+".xml");
+		paperRepository.save(sw.toString(), title + ".xml");
 
 		String coverLetter = "<coverLetter><authorUsername></authorUsername><Content>" + dto.getCoverLetter()
 				+ "</Content><title>" + title + "</title></coverLetter>";
 		paperRepository.saveCoverLetter(coverLetter);
 	}
+
 	public Resource getPdf(String name) throws Exception {
 		Document document = paperRepository.findScientificPaper(name);
 		StringWriter sw = new StringWriter();
@@ -117,10 +124,15 @@ public class PaperService {
 		Files.write(file, outputStream.toByteArray());
 
 		return new UrlResource(file.toUri());
-	}	
+	}
 
 	public void changePaperStatus(String paperName, String status) {
-		String documentId = paperName + ".xml";
+		String documentId;
+		if (!paperName.endsWith(".xml")) {
+			documentId = paperName + ".xml";
+		} else {
+			documentId = paperName;
+		}
 		String targetElement = "/ScientificPaper/status";
 		String xmlFragmet = status;
 		paperRepository.modifyPaper(documentId, targetElement, xmlFragmet);
@@ -142,7 +154,7 @@ public class PaperService {
 
 	public ArrayList<PaperViewDTO> findPapersByUser() {
 		String username = getLoggedUser();
-		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s']", username);
+		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s' and status!='deleted']", username);
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
@@ -167,6 +179,49 @@ public class PaperService {
 			e.printStackTrace();
 		}
 		return paperList;
+	}
+
+	public void deletePaper(String publicationName) {
+
+		if (!publicationName.endsWith(".xml")) {
+			publicationName = publicationName + ".xml";
+		}
+
+		String user = getLoggedUser();
+		Document document = paperRepository.findScientificPaper(publicationName);
+		NodeList authors = document.getElementsByTagName("sci:authorUsername");
+		List<String> listOfAuthors = new ArrayList<String>();
+		for (int idx = 0, len = authors.getLength(); idx < len; idx++) {
+			listOfAuthors.add(authors.item(idx).getTextContent());
+		}
+		if (!listOfAuthors.contains(user)) {
+			throw new NotAnAuthorException("You must be one of the authors of this scientific paper: " + publicationName
+					+ " , to be able to delete it");
+		}
+
+		changePaperStatus(publicationName, "deleted");
+
+		String xPathExpression = String.format("/review[metadata/publicationName='%s']",
+				publicationName.substring(0, publicationName.length() - 4));
+		ResourceSet result = reviewRepository.findReviews(xPathExpression);
+		try {
+			System.out.println(result.getSize());
+		} catch (XMLDBException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ResourceIterator i;
+		try {
+			i = result.getIterator();
+			while (i.hasMoreResources()) {
+				XMLResource resource = (XMLResource) i.nextResource();
+				System.out.println(resource.getDocumentId());
+				reviewRepository.removeReview(resource.getDocumentId());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private String getLoggedUser() {

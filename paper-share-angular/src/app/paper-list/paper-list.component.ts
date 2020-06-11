@@ -68,4 +68,18 @@ export class PaperListComponent implements OnInit {
     this.router.navigate(['/view-paper', name]);
   }
 
+  deletePaper(title: string, index: number) {
+    this.paperService.deletePaper(title).subscribe(
+      (response => {
+        this.snackBar.open('Deleted paper: ' + title);
+        this.papers.splice(index, 1);
+      }),
+      (error => {
+        const err = JSON.parse(error.error);
+        this.snackBar.open(err.message);
+      })
+    );
+
+  }
+
 }

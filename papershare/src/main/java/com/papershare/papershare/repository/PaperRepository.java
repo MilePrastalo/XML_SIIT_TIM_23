@@ -19,8 +19,11 @@ public class PaperRepository {
 
 	public Document findScientificPaper(String name) {
 		Document document = null;
+		if (!name.endsWith(".xml")) {
+			name = name + ".xml";
+		}
 		try {
-			XMLResource xmlResource = existMenager.load(collectionId, name + ".xml");
+			XMLResource xmlResource = existMenager.load(collectionId, name);
 			document = (Document) xmlResource.getContentAsDOM();
 		} catch (Exception e) {
 			e.printStackTrace();
