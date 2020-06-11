@@ -31,5 +31,9 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/register']);
   }
 
+  goToProfile() {
+    this.router.navigate(['/user-profile']);
+  }
+
 
 }
