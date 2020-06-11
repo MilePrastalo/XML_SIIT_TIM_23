@@ -32,7 +32,8 @@ export class AssignReviewComponent implements OnInit {
       this.snackBar.open(response);
     }),
     (error => {
-      this.snackBar.open(error.error.message);
+      const err = JSON.parse(error.error);
+      this.snackBar.open(err.message);
     }));
   }
 

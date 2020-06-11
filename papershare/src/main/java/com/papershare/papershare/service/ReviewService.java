@@ -22,6 +22,7 @@ import com.papershare.papershare.DTO.ReviewDTO;
 import com.papershare.papershare.database.ExistManager;
 import com.papershare.papershare.dom.DOMParser;
 import com.papershare.papershare.dom.XSLTransformer;
+import com.papershare.papershare.exception.UserAlreadyAssignedException;
 import com.papershare.papershare.model.TUser;
 import com.papershare.papershare.model.review.Review;
 import com.papershare.papershare.repository.PaperRepository;
@@ -55,6 +56,10 @@ public class ReviewService {
 
 	public void addReview(AddReviewDTO dto) throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException, XMLDBException, NotFoundException {
+		System.out.println(dto.getPublicationName());
+		if (!dto.getPublicationName().endsWith(".xml")) {
+			dto.setPublicationName(dto.getPublicationName() + ".xml");
+		}
 
 		TUser user = userRepository.findOneByUsername(dto.getUsername());
 		if (user == null) {
@@ -64,6 +69,15 @@ public class ReviewService {
 		Document xml = paperRepository.findScientificPaper(dto.getPublicationName());
 		if (xml == null) {
 			throw new NotFoundException("Scientific paper with name: " + dto.getPublicationName() + " not found.");
+		}
+
+		// Checks if given user is already assigned for the same scientific paper.
+		String xPathExpression = String.format("/review[metadata/publicationName='%s' and metadata/reviewer='%s']",
+				dto.getPublicationName(), dto.getUsername());
+		ResourceSet alreadyAssigned = findReviews(xPathExpression);
+		if (alreadyAssigned.getSize() > 0) {
+			throw new UserAlreadyAssignedException("User with username: " + dto.getUsername()
+					+ " is already assigned for review on paper: " + dto.getPublicationName());
 		}
 
 		long submissionDate = System.currentTimeMillis();
@@ -100,7 +114,7 @@ public class ReviewService {
 		ResourceSet result = reviewRepository.findReviews(xPathExpression);
 		System.out.println(result.getSize());
 		ArrayList<ReviewDTO> reviews = extractDataFromReviews(result);
-		 
+
 		return reviews;
 	}
 
@@ -115,8 +129,8 @@ public class ReviewService {
 				NodeList publicationName = document.getElementsByTagName("publicationName");
 				NodeList reviewer = document.getElementsByTagName("reviewer");
 				NodeList submissionDate = document.getElementsByTagName("submissionDate");
-				reviews.add(new ReviewDTO(resource.getDocumentId() ,publicationName.item(0).getTextContent(), reviewer.item(0).getTextContent(),
-						submissionDate.item(0).getTextContent()));
+				reviews.add(new ReviewDTO(resource.getDocumentId(), publicationName.item(0).getTextContent(),
+						reviewer.item(0).getTextContent(), submissionDate.item(0).getTextContent()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
