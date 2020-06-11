@@ -115,7 +115,7 @@ public class ReviewService {
 				NodeList publicationName = document.getElementsByTagName("publicationName");
 				NodeList reviewer = document.getElementsByTagName("reviewer");
 				NodeList submissionDate = document.getElementsByTagName("submissionDate");
-				reviews.add(new ReviewDTO(publicationName.item(0).getTextContent(), reviewer.item(0).getTextContent(),
+				reviews.add(new ReviewDTO(resource.getDocumentId() ,publicationName.item(0).getTextContent(), reviewer.item(0).getTextContent(),
 						submissionDate.item(0).getTextContent()));
 			}
 		} catch (Exception e) {
