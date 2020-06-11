@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PaperUpload } from '../model/paperUpload';
 import { Observable } from 'rxjs';
 import { AssignReview } from '../model/assignReview';
+import { ReviewView } from '../model/reviewView';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,9 @@ export class ReviewService {
 
   assignReview(assignReviewDto: AssignReview): Observable<string> {
     return this.http.post(this.path + '/api/review', assignReviewDto, { headers: this.headers, responseType: 'text' });
+  }
+
+  getUserReviews(): Observable<ReviewView[]> {
+    return this.http.get<ReviewView[]>(this.path + '/api/review/userReviews', { headers: this.headers });
   }
 }

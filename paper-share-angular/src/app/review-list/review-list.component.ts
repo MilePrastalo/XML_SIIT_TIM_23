@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ReviewView } from '../model/reviewView';
+import { ReviewService } from '../Service/review.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-review-list',
@@ -7,9 +10,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReviewListComponent implements OnInit {
 
-  constructor() { }
+  public userReviews: Array<ReviewView>;
+  public role: string;
+
+  constructor(private reviewService: ReviewService, private router: Router) { }
 
   ngOnInit(): void {
+
+    this.role = localStorage.getItem('role');
+    if (this.role === 'ROLE_USER') {
+      this.getUserPapers();
+    }
+  }
+
+  getUserPapers() {
+    this.reviewService.getUserReviews().subscribe(
+      (response => {
+        if (response !== null) {
+          this.userReviews = response;
+        }
+      }),
+      (error => {
+        alert(error.error.message);
+      })
+    );
   }
 
 }
