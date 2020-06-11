@@ -145,6 +145,11 @@ public class ReviewRepository {
 		return result;
 	}
 
+	public void removeReview(String reviewName)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		existMenager.remove(collectionId, reviewName);
+	}
+
 	public String save(String xmlEntity, String title)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		existMenager.storeXMLFromText(collectionId, title, xmlEntity);

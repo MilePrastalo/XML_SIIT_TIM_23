@@ -41,4 +41,8 @@ export class PaperService {
     return this.http.get<boolean>(this.path + '/api/papers/rejectPaper/' + paperName, { headers: this.headers});
   }
 
+  deletePaper(paperName: string) {
+    return this.http.delete(this.path + '/api/papers/' + paperName, { headers: this.headers});
+  }
+
 }
