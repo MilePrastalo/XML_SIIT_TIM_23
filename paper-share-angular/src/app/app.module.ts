@@ -22,6 +22,7 @@ import { PaperListComponent } from './paper-list/paper-list.component';
 import { AssignReviewComponent } from './assign-review/assign-review.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ReviewListComponent } from './review-list/review-list.component';
+import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { ReviewListComponent } from './review-list/review-list.component';
     PaperListComponent,
     AssignReviewComponent,
     UserProfileComponent,
-    ReviewListComponent
+    ReviewListComponent,
+    PaperReviewsComponent
   ],
   imports: [
     BrowserModule,

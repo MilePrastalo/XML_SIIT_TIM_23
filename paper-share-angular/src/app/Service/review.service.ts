@@ -31,4 +31,9 @@ export class ReviewService {
   getUserReviews(): Observable<ReviewView[]> {
     return this.http.get<ReviewView[]>(this.path + '/api/review/userReviews', { headers: this.headers });
   }
+
+  getPaperReviews( paperName: string ): Observable<ReviewView[]>  {
+    return this.http.get<ReviewView[]>(this.path + '/api/review/paperReviews/' + paperName, { headers: this.headers });
+  }
+
 }

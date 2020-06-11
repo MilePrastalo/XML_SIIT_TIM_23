@@ -51,6 +51,12 @@ public class ReviewController {
 
 		return new ResponseEntity<>(reviews, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/paperReviews/{publicationName}")
+	public ResponseEntity<List<ReviewDTO>> paperReviews(@PathVariable("publicationName") String publicationName) throws XMLDBException {
+		List<ReviewDTO> reviews = reviewService.findReviewsByPaper(publicationName);
+		return new ResponseEntity<>(reviews, HttpStatus.OK);
+	}
 
 	@GetMapping(value = "/{name}")
 	public ResponseEntity<String> getReviewHTML(@PathVariable("name") String name) {

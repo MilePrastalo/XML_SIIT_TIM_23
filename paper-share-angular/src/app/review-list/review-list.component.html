@@ -1,9 +1,9 @@
 <div style="margin: 5%;">
-    <div class="papers-container">
-        <div *ngIf = "userReviews.length === 0">
+    <div  *ngIf = "reviews !== undefined" class="papers-container">
+        <div *ngIf = "reviews.length === 0">
             <h2 style="text-align: center;">No Assigned Reviews</h2>
         </div>
-        <mat-card  *ngFor = "let review of userReviews; index as i" class="paper-card">
+        <mat-card  *ngFor = "let review of reviews; index as i" class="paper-card">
             <div style="display: flex">
                 <mat-card-title>
                     {{review.publicationName}} 

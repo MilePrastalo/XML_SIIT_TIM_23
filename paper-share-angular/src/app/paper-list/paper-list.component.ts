@@ -68,4 +68,8 @@ export class PaperListComponent implements OnInit {
     this.router.navigate(['/view-paper', name]);
   }
 
+  goToPaperReviews( paperName: string) {
+    this.router.navigate(['/paper-reviews', paperName]);
+  }
+
 }
