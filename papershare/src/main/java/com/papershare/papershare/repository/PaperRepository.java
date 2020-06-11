@@ -60,4 +60,10 @@ public class PaperRepository {
 		}
 	}
 
+	public String getCollectionId() {
+		return collectionId;
+	}
+	
+	
+
 }
