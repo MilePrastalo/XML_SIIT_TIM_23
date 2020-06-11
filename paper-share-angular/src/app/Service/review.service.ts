@@ -4,6 +4,7 @@ import { PaperUpload } from '../model/paperUpload';
 import { Observable } from 'rxjs';
 import { AssignReview } from '../model/assignReview';
 import { ReviewView } from '../model/reviewView';
+import { SendReview } from '../model/SendReview';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +17,12 @@ export class ReviewService {
     Authorization: 'Bearer ' + localStorage.getItem('token')
   });
 
-  getReview( name: string) {
+  getReview(name: string) {
     return this.http.get(this.path + '/api/review/' + name, { headers: this.headers, responseType: 'text' });
   }
 
-  sendReview(paper: PaperUpload): Observable<void> {
-    return this.http.post<void>(this.path + '/api/review', paper);
+  sendReview(review: SendReview): Observable<void> {
+    return this.http.post<void>(this.path + '/api/review/send', review);
   }
 
   assignReview(assignReviewDto: AssignReview): Observable<string> {
@@ -30,5 +31,8 @@ export class ReviewService {
 
   getUserReviews(): Observable<ReviewView[]> {
     return this.http.get<ReviewView[]>(this.path + '/api/review/userReviews', { headers: this.headers });
+  }
+  getReviewAsText(name: string): Observable<string> {
+    return this.http.get<string>(this.path + '/api/review/asText/' + name);
   }
 }

@@ -150,4 +150,11 @@ public class ReviewRepository {
 		existMenager.storeXMLFromText(collectionId, title, xmlEntity);
 		return "OK";
 	}
+	
+	//Will replace review with new
+	public String updateReview(String xmlEntity, String title)
+			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		existMenager.update(0, collectionId, title, "/", xmlEntity);
+		return "OK";
+	}
 }
