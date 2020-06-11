@@ -56,7 +56,7 @@ public class ReviewService {
 
 	public void addReview(AddReviewDTO dto) throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException, XMLDBException, NotFoundException {
-		System.out.println(dto.getPublicationName());
+
 		if (!dto.getPublicationName().endsWith(".xml")) {
 			dto.setPublicationName(dto.getPublicationName() + ".xml");
 		}
