@@ -29,6 +29,10 @@ public class ReviewRepository {
 
 	private String collectionId = "/db/paperShare/reviews";
 
+	public String getCollectionId() {
+		return collectionId;
+	}
+
 	public Review findById(String id) {
 
 		String xPathExpression = String.format("/reviews/Review[@id='%s']", id);
@@ -128,6 +132,17 @@ public class ReviewRepository {
 			e.printStackTrace();
 		}
 		return document;
+	}
+
+	public ResourceSet findReviews(String xPathExpression) {
+		ResourceSet result = null;
+		try {
+			result = existMenager.retrieve(collectionId, xPathExpression);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	public String save(String xmlEntity, String title)

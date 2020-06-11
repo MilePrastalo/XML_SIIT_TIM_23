@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://ftn.uns.ac.rs/review" xmlns:rv="http://ftn.uns.ac.rs/review">
+    <xs:element name="review">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="metadata">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="reviewer" type="xs:string"/>
+                            <xs:element name="publicationName" type="xs:string"/>
+                            <xs:element name="submissionDate">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:date"/>
+                                </xs:simpleType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="body">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="criteriaEvaluation">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="relevanceOfResearchProblem"
+                                            type="rv:TCriteriaGrade"/>
+                                        <xs:element name="introduction" type="rv:TCriteriaGrade"/>
+                                        <xs:element name="conceptualQuality"
+                                            type="rv:TCriteriaGrade"/>
+                                        <xs:element name="methodologicalQuality"
+                                            type="rv:TCriteriaGrade"/>
+                                        <xs:element name="results" type="rv:TCriteriaGrade"/>
+                                        <xs:element name="discussion" type="rv:TCriteriaGrade"/>
+                                        <xs:element name="readability" type="rv:TCriteriaGrade"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="overallEvaluation" type="rv:TOverallGrade"/>
+                            <xs:element name="commentsToAuthor" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" minOccurs="0"
+                                            name="proposedChange">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                  <xs:extension base="xs:string">
+                                                  <xs:attribute name="partID">
+                                                  <xs:simpleType>
+                                                  <xs:restriction base="xs:string">
+                                                  <xs:pattern value="(.+\/.+)+"/>
+                                                  </xs:restriction>
+                                                  </xs:simpleType>
+                                                  </xs:attribute>
+                                                  </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="commentsToEditor" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="TCriteriaGrade">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="very good"/>
+            <xs:enumeration value="good"/>
+            <xs:enumeration value="small weaknesses"/>
+            <xs:enumeration value="great weaknesses"/>
+            <xs:enumeration value="absolutely insufficient"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TOverallGrade">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="acceptable without changes"/>
+            <xs:enumeration value="acceptable with minor revisions"/>
+            <xs:enumeration value="acceptable with major revisions"/>
+            <xs:enumeration value="encouraged to resubmit"/>
+            <xs:enumeration value="reject"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

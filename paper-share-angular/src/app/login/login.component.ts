@@ -16,7 +16,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class LoginComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private userService: UserService,
-    private snackBar: MatSnackBar, private router: Router) { }
+              private snackBar: MatSnackBar, private router: Router) { }
 
 
 
@@ -49,12 +49,7 @@ export class LoginComponent implements OnInit {
           const role = info.role[0].authority;
           localStorage.setItem('role', info.role[0].authority);
           this.snackBar.open('Logged In successfully.');
-
-          if (role === 'ROLE_USER') {
-            this.router.navigateByUrl('/user-profile');
-          } else if (role === 'ROLE_ADMIN') {
-            this.router.navigateByUrl('/admin-profile');
-          }
+          this.router.navigateByUrl('/user-profile');
         }
       }),
       (error => {

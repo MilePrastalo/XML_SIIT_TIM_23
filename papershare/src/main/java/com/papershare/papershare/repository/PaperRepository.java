@@ -19,8 +19,11 @@ public class PaperRepository {
 
 	public Document findScientificPaper(String name) {
 		Document document = null;
+		if (!name.endsWith(".xml")) {
+			name = name + ".xml";
+		}
 		try {
-			XMLResource xmlResource = existMenager.load(collectionId, name + ".xml");
+			XMLResource xmlResource = existMenager.load(collectionId, name);
 			document = (Document) xmlResource.getContentAsDOM();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -34,12 +37,13 @@ public class PaperRepository {
 
 		return "OK";
 	}
+
 	public String saveCoverLetter(String xmlEntity)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		existMenager.update(1, coverLettercollectionId, "CoverLetters.xml", "/CoverLetters", xmlEntity);
 		return "OK";
 	}
-	
+
 	public ResourceSet findPapers(String xPathExpression) {
 		ResourceSet result = null;
 		try {
@@ -50,5 +54,19 @@ public class PaperRepository {
 		}
 		return result;
 	}
+
+	public void modifyPaper(String documentId, String targetElement, String xmlFragmet) {
+		try {
+			existMenager.update(0, collectionId, documentId, targetElement, xmlFragmet);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | XMLDBException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String getCollectionId() {
+		return collectionId;
+	}
+	
+	
 
 }

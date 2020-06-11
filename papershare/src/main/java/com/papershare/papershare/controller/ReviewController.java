@@ -1,6 +1,9 @@
 package com.papershare.papershare.controller;
 
 import org.springframework.http.MediaType;
+
+import java.util.List;
+
 import org.exist.http.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.xmldb.api.base.XMLDBException;
 
 import com.papershare.papershare.DTO.AddReviewDTO;
+import com.papershare.papershare.DTO.ReviewDTO;
 import com.papershare.papershare.service.ReviewService;
 
 @RestController
@@ -39,6 +43,13 @@ public class ReviewController {
 		return new ResponseEntity<String>(
 				"Successfully assigned review for: " + dto.getPublicationName() + " to: " + dto.getUsername(),
 				HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/userReviews")
+	public ResponseEntity<List<ReviewDTO>> userPapers() throws XMLDBException {
+		List<ReviewDTO> reviews = reviewService.findReviewsByUser();
+
+		return new ResponseEntity<>(reviews, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{name}")
