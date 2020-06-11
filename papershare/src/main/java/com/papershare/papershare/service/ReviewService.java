@@ -78,5 +78,16 @@ public class ReviewService {
 		Document xml = repository.findByName(id);
 		return xslTransformer.convertXMLtoHTML(reviewXSL, xml);
 	}
+	public void addReviewByReviewer(String review) throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		String id = "rev" + System.currentTimeMillis();
+		repository.save(review,id);
+	}
+	public void acceptReview() {
+		
+	}
+	
+	public void rejectReview() {
+		
+	}
 
 }

@@ -46,4 +46,12 @@ public class ReviewController {
 		String result = reviewService.convertXMLtoHTML(name);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
+	@GetMapping(value="accept/{reviewId}")
+	public void accept_review() {
+		
+	}
+	@GetMapping(value="reject/{reviewId}")
+	public void reject_review() {
+		
+	}
 }
