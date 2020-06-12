@@ -3,15 +3,12 @@ package com.papershare.papershare.service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -28,7 +25,6 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -88,7 +84,7 @@ public class ReviewService {
 		}
 
 		// Checks if given user is already assigned for the same scientific paper.
-		String xPathExpression = String.format("/review[metadata/publicationName='%s' and metadata/reviewer='%s']",
+		String xPathExpression = String.format("/review[metadata/paperName='%s' and metadata/reviewer='%s']",
 				dto.getPublicationName(), dto.getUsername());
 		ResourceSet alreadyAssigned = findReviews(xPathExpression);
 		if (alreadyAssigned.getSize() > 0) {
@@ -104,24 +100,21 @@ public class ReviewService {
 		String review = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "<review xmlns=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\" xmlns:rv=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\">\r\n"
 				+ "    <metadata>\r\n" + "     	<reviewer>" + dto.getUsername() + "</reviewer>\r\n"
-				+ "        <publicationName>" + dto.getPublicationName() + "</publicationName>\r\n"
-				+ "        <submissionDate>" + today + "</submissionDate>\r\n" + "    </metadata>\r\n"
-				+ "    <body>\r\n" + "        <criteriaEvaluation>\r\n"
-				+ "            <relevanceOfResearchProblem></relevanceOfResearchProblem>\r\n"
-				+ "            <introduction></introduction>\r\n"
-				+ "            <conceptualQuality></conceptualQuality>\r\n"
-				+ "            <methodologicalQuality></methodologicalQuality>\r\n"
-				+ "            <results></results>\r\n" + "            <discussion></discussion>\r\n"
-				+ "            <readability></readability>\r\n" + "        </criteriaEvaluation>\r\n"
-				+ "        <overallEvaluation></overallEvaluation>\r\n" + "        <commentsToAuthor>\r\n"
-				+ "        </commentsToAuthor>\r\n" + "        <commentsToEditor></commentsToEditor>\r\n"
+				+ "        <paperName>" + dto.getPublicationName() + "</paperName>\r\n"
+				+ "		   <status>created</status>\r\n" + "        <submissionDate>" + today + "</submissionDate>\r\n"
+				+ "    </metadata>\r\n" + "    <body>\r\n" + "        <criteriaEvaluation>\r\n"
+				+ "            <abstract> </abstract>\r\n" + "            <relevance> </relevance>\r\n"
+				+ "            <readability> </readability>\r\n" + "            <methodology> </methodology>\r\n"
+				+ "            <results> </results>\r\n" + "        </criteriaEvaluation>\r\n"
+				+ "        <overallEvaluation></overallEvaluation>\r\n" + "        <chapterReviews>\r\n"
+				+ "        </chapterReviews>\r\n" + "        <commentsToEditor> </commentsToEditor>\r\n"
 				+ "    </body>\r\n" + "</review>";
 		reviewRepository.save(review, id);
 
 		String xmlPatch = "reviewing";
 
-		existManager.update(0, paperRepository.getCollectionId(), dto.getPublicationName() + ".xml",
-				"/ScientificPaper/status", xmlPatch);
+		existManager.update(0, paperRepository.getCollectionId(), dto.getPublicationName(), "/ScientificPaper/status",
+				xmlPatch);
 	}
 
 	public ArrayList<ReviewDTO> findReviewsByUser() throws XMLDBException {
@@ -133,9 +126,9 @@ public class ReviewService {
 
 		return reviews;
 	}
-	
+
 	public ArrayList<ReviewDTO> findReviewsByPaper(String publicationName) throws XMLDBException {
-		String xPathExpression = String.format("/review[metadata/publicationName='%s']", publicationName);
+		String xPathExpression = String.format("/review[metadata/paperName='%s']", publicationName);
 		ResourceSet result = reviewRepository.findReviews(xPathExpression);
 		ArrayList<ReviewDTO> reviews = extractDataFromReviews(result);
 		return reviews;
@@ -149,7 +142,7 @@ public class ReviewService {
 			while (i.hasMoreResources()) {
 				XMLResource resource = (XMLResource) i.nextResource();
 				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
-				NodeList publicationName = document.getElementsByTagName("publicationName");
+				NodeList publicationName = document.getElementsByTagName("paperName");
 				NodeList reviewer = document.getElementsByTagName("reviewer");
 				NodeList submissionDate = document.getElementsByTagName("submissionDate");
 				reviews.add(new ReviewDTO(resource.getDocumentId(), publicationName.item(0).getTextContent(),
@@ -178,11 +171,25 @@ public class ReviewService {
 	}
 
 	public void acceptReview(String reviewId) {
-		
+
 	}
-	
+
 	public void rejectReview(String reviewId) {
-		
+
+	}
+
+	public void publishReview(String reviewId) {
+
+		String documentId;
+		if (!reviewId.endsWith(".xml")) {
+			documentId = reviewId + ".xml";
+		} else {
+			documentId = reviewId;
+		}
+
+		String targetElement = "/review/metadata/status";
+		String xmlFragmet = "submitted";
+		reviewRepository.modifyReview(documentId, targetElement, xmlFragmet);
 	}
 
 	private String getLoggedUser() {
@@ -193,9 +200,11 @@ public class ReviewService {
 		}
 		return username;
 	}
-	
-	//Reviewer sends changed review
-	public void sendReview(SendReviewDTO review) throws ParserConfigurationException, SAXException, IOException, TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+
+	// Reviewer sends changed review
+	public void sendReview(SendReviewDTO review)
+			throws ParserConfigurationException, SAXException, IOException, TransformerException,
+			ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		System.out.println(review.getText());
 		Document document = domParser.buildDocumentFromText(review.getText());
 		StringWriter sw = new StringWriter();
@@ -210,6 +219,7 @@ public class ReviewService {
 
 		reviewRepository.updateReview(sw.toString(), review.getReviewName());
 	}
+
 	public String getReviewAsText(String reviewName) throws TransformerException {
 		Document xml = reviewRepository.findByName(reviewName);
 		StringWriter sw = new StringWriter();
