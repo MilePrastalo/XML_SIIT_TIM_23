@@ -33,6 +33,6 @@ export class ReviewService {
     return this.http.get<ReviewView[]>(this.path + '/api/review/userReviews', { headers: this.headers });
   }
   getReviewAsText(name: string): Observable<string> {
-    return this.http.get<string>(this.path + '/api/review/asText/' + name);
+    return this.http.get(this.path + '/api/review/asText/' + name, { headers: this.headers, responseType: 'text' });
   }
 }

@@ -189,10 +189,11 @@ public class ReviewService {
 	
 	//Reviewer sends changed review
 	public void sendReview(SendReviewDTO review) throws ParserConfigurationException, SAXException, IOException, TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		System.out.println(review.getText());
 		Document document = domParser.buildDocumentFromText(review.getText());
 		NodeList nodeList = document.getElementsByTagName("metadata");
 		Element metadata = (Element) nodeList.item(0);
-		Element status = (Element) metadata.getElementsByTagName("status");
+		Element status = (Element) metadata.getElementsByTagName("status").item(0);
 		status.setTextContent("submitted");
 		
 		StringWriter sw = new StringWriter();
@@ -212,12 +213,13 @@ public class ReviewService {
 		StringWriter sw = new StringWriter();
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer = tf.newTransformer();
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 
 		transformer.transform(new DOMSource(xml), new StreamResult(sw));
+		System.out.println(sw.toString());
 		return sw.toString();
 	}
 

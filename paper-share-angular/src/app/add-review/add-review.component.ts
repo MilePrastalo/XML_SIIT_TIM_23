@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { XonomyService } from '../Service/xonomy.service';
 import { ReviewService } from '../Service/review.service';
 import { SendReview } from '../model/SendReview';
+import { Router, ActivatedRoute } from '@angular/router';
 declare const Xonomy: any;
 @Component({
   selector: 'app-add-review',
@@ -13,12 +14,12 @@ export class AddReviewComponent implements OnInit {
   fileToUpload: File = null;
   fileString: any;
   paperTitle: string;
-  @Input() reviewName: string;
+  reviewName: string;
   reviewText: string;
-  constructor(private xonomyService: XonomyService, private reviewService: ReviewService) { }
+  constructor(private xonomyService: XonomyService, private reviewService: ReviewService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-
+    this.reviewName = this.route.snapshot.paramMap.get('title');
   }
 
   ngAfterViewInit() {

@@ -159,7 +159,9 @@ public class ReviewRepository {
 	//Will replace review with new
 	public String updateReview(String xmlEntity, String title)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		existMenager.update(0, collectionId, title, "/", xmlEntity);
+		System.out.println(xmlEntity);
+		System.out.println(title);
+		existMenager.update(0, collectionId, title, "", xmlEntity);
 		return "OK";
 	}
 }

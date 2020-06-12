@@ -63,7 +63,7 @@ public class ReviewController {
 		String result = reviewService.convertXMLtoHTML(name);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
-	@GetMapping(value = "/asText/{name}")
+	@GetMapping(value = "/asText/{name}", produces = MediaType.TEXT_XML_VALUE)
 	public ResponseEntity<String> getReviewAsText(@PathVariable("name") String name) throws TransformerException {
 		String result = reviewService.getReviewAsText(name);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
