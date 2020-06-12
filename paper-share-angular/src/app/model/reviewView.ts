@@ -3,4 +3,5 @@ export class ReviewView {
     publicationName: string;
     reviewer: string;
     submissionDate: string;
+    status: string;
 }

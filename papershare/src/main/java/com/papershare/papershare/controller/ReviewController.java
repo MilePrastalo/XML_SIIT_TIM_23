@@ -84,7 +84,7 @@ public class ReviewController {
 	}
 
 	@GetMapping(value = "reject/{reviewId}")
-	public ResponseEntity<String> reject_review(@PathVariable("reviewId") String reviewId) {
+	public ResponseEntity<String> reject_review(@PathVariable("reviewId") String reviewId) throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		reviewService.rejectReview(reviewId);
 		return new ResponseEntity<String>("Review has been rejected successfully", HttpStatus.OK);
 	}

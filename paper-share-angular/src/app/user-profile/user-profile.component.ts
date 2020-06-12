@@ -47,6 +47,7 @@ export class UserProfileComponent implements OnInit {
   getUserReviews() {
     this.reviewService.getUserReviews().subscribe(
       (response => {
+        console.log(response);
         if (response !== null) {
           this.userReviews = response;
         }

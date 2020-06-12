@@ -25,6 +25,7 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -144,9 +145,11 @@ public class ReviewService {
 				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
 				NodeList publicationName = document.getElementsByTagName("paperName");
 				NodeList reviewer = document.getElementsByTagName("reviewer");
+				NodeList status = document.getElementsByTagName("status");
 				NodeList submissionDate = document.getElementsByTagName("submissionDate");
 				reviews.add(new ReviewDTO(resource.getDocumentId(), publicationName.item(0).getTextContent(),
-						reviewer.item(0).getTextContent(), submissionDate.item(0).getTextContent()));
+						reviewer.item(0).getTextContent(), submissionDate.item(0).getTextContent(),
+						status.item(0).getTextContent()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -170,11 +173,22 @@ public class ReviewService {
 		return xslTransformer.convertXMLtoHTML(reviewXSL, xml);
 	}
 
-	public void acceptReview(String reviewId) {
+	public void acceptReview(String name) {
+		String documentId;
+		if (!name.endsWith(".xml")) {
+			documentId = name + ".xml";
+		} else {
+			documentId = name;
+		}
 
+		String targetElement = "/review/metadata/status";
+		String xmlFragmet = "accepted";
+		reviewRepository.modifyReview(documentId, targetElement, xmlFragmet);
 	}
 
-	public void rejectReview(String reviewId) {
+	public void rejectReview(String name)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		reviewRepository.removeReview(name);
 
 	}
 

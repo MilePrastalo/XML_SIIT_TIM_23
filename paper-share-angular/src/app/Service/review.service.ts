@@ -36,8 +36,17 @@ export class ReviewService {
     return this.http.get(this.path + '/api/review/asText/' + name, { headers: this.headers, responseType: 'text' });
   }
 
-  getPaperReviews( paperName: string ): Observable<ReviewView[]>  {
+  getPaperReviews(paperName: string): Observable<ReviewView[]> {
     return this.http.get<ReviewView[]>(this.path + '/api/review/paperReviews/' + paperName, { headers: this.headers });
+  }
+  acceptReview(reviewName: string) {
+    return this.http.get(this.path + '/api/review/accept/' + reviewName, { headers: this.headers, responseType: 'text' });
+  }
+  rejectReview(reviewName: string) {
+    return this.http.get(this.path + '/api/review/reject/' + reviewName, { headers: this.headers, responseType: 'text' });
+  }
+  publishReview(reviewName: string) {
+    return this.http.get(this.path + '/api/review/publish/' + reviewName, { headers: this.headers, responseType: 'text' });
   }
 
 }
