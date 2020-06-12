@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { XonomyService } from '../Service/xonomy.service';
-import { PaperUpload } from '../model/paperUpload';
 import { ReviewService } from '../Service/review.service';
+import { SendReview } from '../model/SendReview';
+import { Router, ActivatedRoute } from '@angular/router';
 declare const Xonomy: any;
 @Component({
   selector: 'app-add-review',
@@ -13,20 +14,23 @@ export class AddReviewComponent implements OnInit {
   fileToUpload: File = null;
   fileString: any;
   paperTitle: string;
-  constructor(private xonomyService: XonomyService, private reviewService: ReviewService) { }
+  reviewName: string;
+  reviewText: string;
+  constructor(private xonomyService: XonomyService, private reviewService: ReviewService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    if (!this.paperTitle) {
-      this.paperTitle = 'Naslov';
-    }
+    this.reviewName = this.route.snapshot.paramMap.get('title');
   }
 
   ngAfterViewInit() {
-    this.scientificPublication = '<Review><Reviewer>' + this.getUsername() +
-      '</Reviewer><ReviewPaper><paperTitle>' + this.paperTitle +
-      '</paperTitle><paperAuthorUsername>Unknown</paperAuthorUsername></ReviewPaper></Review>';
-    let xonomyElement = document.getElementById("editor");
-    Xonomy.render(this.scientificPublication, xonomyElement, this.xonomyService.reviewSpecification);
+    this.reviewService.getReviewAsText(this.reviewName).subscribe(
+      (response: string) => {
+        this.scientificPublication = response;
+        let xonomyElement = document.getElementById("editor");
+        Xonomy.render(this.scientificPublication, xonomyElement, this.xonomyService.reviewSpecification);
+      }
+    )
+
   }
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
@@ -42,16 +46,10 @@ export class AddReviewComponent implements OnInit {
   }
   sendFile() {
     let text = Xonomy.harvest();
-    this.reviewService.sendReview(new PaperUpload(text, '')).subscribe(
+    this.reviewService.sendReview(new SendReview(text, this.reviewName)).subscribe(
       response => {
         console.log("Hello");
       }
     );
   }
-
-  getUsername(): string {
-    return "Pera"
-  }
-
-
 }

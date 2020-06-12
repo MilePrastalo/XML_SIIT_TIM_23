@@ -9,6 +9,7 @@
                         <xs:sequence>
                             <xs:element minOccurs="0" name="reviewer" type="xs:string"/>
                             <xs:element name="publicationName" type="xs:string"/>
+                            <xs:element name="status" type="xs:string"/>
                             <xs:element name="submissionDate">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:date"/>
