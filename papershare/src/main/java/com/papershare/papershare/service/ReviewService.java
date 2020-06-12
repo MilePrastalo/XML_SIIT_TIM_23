@@ -198,11 +198,6 @@ public class ReviewService {
 	public void sendReview(SendReviewDTO review) throws ParserConfigurationException, SAXException, IOException, TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		System.out.println(review.getText());
 		Document document = domParser.buildDocumentFromText(review.getText());
-		NodeList nodeList = document.getElementsByTagName("metadata");
-		Element metadata = (Element) nodeList.item(0);
-		Element status = (Element) metadata.getElementsByTagName("status").item(0);
-		status.setTextContent("submitted");
-		
 		StringWriter sw = new StringWriter();
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer = tf.newTransformer();
