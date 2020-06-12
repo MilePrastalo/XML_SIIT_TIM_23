@@ -14,6 +14,7 @@ export class UserProfileComponent implements OnInit {
 
   public userPapers: Array<PaperView>;
   public completedPapers: Array<PaperView>;
+  public submittedReviews: Array<ReviewView>;
   public userReviews: Array<ReviewView>;
   public role: string;
 
@@ -28,6 +29,8 @@ export class UserProfileComponent implements OnInit {
     }
     if (this.role === 'ROLE_ADMIN') {
       this.getCompletedPapers();
+      this.getSubmittedReviews();
+      this.getUserReviews();
     }
   }
 
@@ -63,6 +66,20 @@ export class UserProfileComponent implements OnInit {
       (response => {
         if (response !== null) {
           this.completedPapers = response;
+        }
+      }),
+      (error => {
+        alert(error.error.message);
+      })
+    );
+  }
+
+  getSubmittedReviews() {
+    this.reviewService.getSubmittedReviews().subscribe(
+      (response => {
+        console.log(response);
+        if (response !== null) {
+          this.submittedReviews = response;
         }
       }),
       (error => {

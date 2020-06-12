@@ -25,7 +25,6 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -112,15 +111,21 @@ public class ReviewService {
 				+ "    </body>\r\n" + "</review>";
 		reviewRepository.save(review, id);
 
-		String xmlPatch = "reviewing";
-
-		existManager.update(0, paperRepository.getCollectionId(), dto.getPublicationName(), "/ScientificPaper/status",
-				xmlPatch);
+		paperRepository.modifyPaper(dto.getPublicationName(), "/ScientificPaper/status", "reviewing");
 	}
 
 	public ArrayList<ReviewDTO> findReviewsByUser() throws XMLDBException {
 		String username = getLoggedUser();
 		String xPathExpression = String.format("/review[metadata/reviewer='%s']", username);
+		ResourceSet result = reviewRepository.findReviews(xPathExpression);
+		System.out.println(result.getSize());
+		ArrayList<ReviewDTO> reviews = extractDataFromReviews(result);
+
+		return reviews;
+	}
+
+	public ArrayList<ReviewDTO> findSubmittedReviews() throws XMLDBException {
+		String xPathExpression = String.format("/review[metadata/status='submitted']");
 		ResourceSet result = reviewRepository.findReviews(xPathExpression);
 		System.out.println(result.getSize());
 		ArrayList<ReviewDTO> reviews = extractDataFromReviews(result);
@@ -247,6 +252,46 @@ public class ReviewService {
 		transformer.transform(new DOMSource(xml), new StreamResult(sw));
 		System.out.println(sw.toString());
 		return sw.toString();
+	}
+
+	public void sendReviewsToAuthor(String paperName) {
+		String xPathExpression = String.format("/review[metadata/paperName='%s']", paperName);
+		ResourceSet result = reviewRepository.findReviews(xPathExpression);
+		String reviews = "";
+		ResourceIterator i;
+		try {
+			i = result.getIterator();
+			while (i.hasMoreResources()) {
+				XMLResource resource = (XMLResource) i.nextResource();
+				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
+				String status = document.getElementsByTagName("status").item(0).getTextContent();
+				NodeList body = document.getElementsByTagName("body");
+				
+				String unitedReview = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+						+ "<unitedReviews xmlns=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\" xmlns:rv=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\">\r\n"
+						+ "<paperName>" + paperName + "</paperName>\r\n"
+						+ "<reviews>\r\n"   
+						+ "</reviews>\r\n"
+						+ "</unitedReviews>";
+				reviewRepository.save(unitedReview, paperName);
+				
+				if (status.equals("submitted")) {
+					StringWriter sw = new StringWriter();
+					Transformer serializer = TransformerFactory.newInstance().newTransformer();
+					serializer.transform(new DOMSource(body.item(0)), new StreamResult(sw));
+					reviews += sw.toString().replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "") + "\r\n";
+					sw.close();
+				}
+				
+				reviewRepository.removeReview(resource.getDocumentId());
+			}
+	
+			reviewRepository.uniteReviews(paperName, reviews);
+			
+			paperRepository.modifyPaper(paperName, "/ScientificPaper/status", "not completed");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

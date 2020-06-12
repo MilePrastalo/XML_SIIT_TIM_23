@@ -16,6 +16,7 @@ export class ReviewListComponent implements OnInit {
   constructor(private reviewService: ReviewService, private router: Router) { }
 
   ngOnInit(): void {
+    this.role = localStorage.getItem('role');
   }
 
   accept(name: string) {
@@ -73,7 +74,33 @@ export class ReviewListComponent implements OnInit {
           }
         }
       }
-    )
+    );
+  }
+
+  sendReviewsToAuthor(paperName: string) {
+    this.reviewService.sendReviewsToAuthor(paperName).subscribe(
+      (response => {
+        console.log('Done!');
+        this.getSubmittedReviews();
+      }),
+      (error => {
+        alert(error.error.message);
+      })
+    );
+  }
+
+  getSubmittedReviews() {
+    this.reviewService.getSubmittedReviews().subscribe(
+      (response => {
+        console.log(response);
+        if (response !== null) {
+          this.reviews = response;
+        }
+      }),
+      (error => {
+        alert(error.error.message);
+      })
+    );
   }
 
 }

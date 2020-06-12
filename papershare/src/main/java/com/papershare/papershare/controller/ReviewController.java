@@ -52,8 +52,15 @@ public class ReviewController {
 	}
 
 	@GetMapping(value = "/userReviews")
-	public ResponseEntity<List<ReviewDTO>> userPapers() throws XMLDBException {
+	public ResponseEntity<List<ReviewDTO>> userReviews() throws XMLDBException {
 		List<ReviewDTO> reviews = reviewService.findReviewsByUser();
+
+		return new ResponseEntity<>(reviews, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/submittedReviews")
+	public ResponseEntity<List<ReviewDTO>> submittedReviews() throws XMLDBException {
+		List<ReviewDTO> reviews = reviewService.findSubmittedReviews();
 
 		return new ResponseEntity<>(reviews, HttpStatus.OK);
 	}
@@ -84,7 +91,8 @@ public class ReviewController {
 	}
 
 	@GetMapping(value = "reject/{reviewId}")
-	public ResponseEntity<String> reject_review(@PathVariable("reviewId") String reviewId) throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+	public ResponseEntity<String> reject_review(@PathVariable("reviewId") String reviewId)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		reviewService.rejectReview(reviewId);
 		return new ResponseEntity<String>("Review has been rejected successfully", HttpStatus.OK);
 	}
@@ -102,5 +110,11 @@ public class ReviewController {
 			SAXException, IOException, TransformerException, XMLDBException {
 		reviewService.sendReview(dto);
 		return new ResponseEntity<String>("Review has been sent successfully", HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/sendReviewsToAuthor/{paperName}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> sendReviewsToAuthor(@PathVariable("paperName") String paperName) {
+		reviewService.sendReviewsToAuthor(paperName);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
