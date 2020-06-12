@@ -161,7 +161,8 @@ public class ReviewRepository {
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		System.out.println(xmlEntity);
 		System.out.println(title);
-		existMenager.update(0, collectionId, title, "", xmlEntity);
+		removeReview(title);
+		save(xmlEntity,title);
 		return "OK";
 	}
 }
