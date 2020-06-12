@@ -23,10 +23,11 @@ export class UserProfileComponent implements OnInit {
 
     this.role = localStorage.getItem('role');
     this.getUserPapers();
-    if (this.role === 'USER') {
+    if (this.role === 'ROLE_USER') {
+      console.log("HERE");
       this.getUserReviews();
     }
-    if (this.role === 'EDITOR') {
+    if (this.role === 'ROLE_EDITOR') {
       this.getCompletedPapers();
     }
   }
@@ -47,6 +48,7 @@ export class UserProfileComponent implements OnInit {
   getUserReviews() {
     this.reviewService.getUserReviews().subscribe(
       (response => {
+        console.log(response);
         if (response !== null) {
           this.userReviews = response;
         }

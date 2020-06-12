@@ -151,9 +151,10 @@ public class ReviewService {
 				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
 				NodeList publicationName = document.getElementsByTagName("publicationName");
 				NodeList reviewer = document.getElementsByTagName("reviewer");
+				NodeList status = document.getElementsByTagName("status");
 				NodeList submissionDate = document.getElementsByTagName("submissionDate");
 				reviews.add(new ReviewDTO(resource.getDocumentId(), publicationName.item(0).getTextContent(),
-						reviewer.item(0).getTextContent(), submissionDate.item(0).getTextContent()));
+						reviewer.item(0).getTextContent(), submissionDate.item(0).getTextContent(),status.item(0).getTextContent()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -177,12 +178,16 @@ public class ReviewService {
 		return xslTransformer.convertXMLtoHTML(reviewXSL, xml);
 	}
 
-	public void acceptReview(String reviewId) {
-		
+	public void acceptReview(String name) {
+		Document document = reviewRepository.findByName(name);
+		NodeList nodeList = document.getElementsByTagName("metadata");
+		Element metadata = (Element) nodeList.item(0);
+		Element status = (Element) metadata.getElementsByTagName("status").item(0);
+		status.setTextContent("accepted");
 	}
 	
-	public void rejectReview(String reviewId) {
-		
+	public void rejectReview(String name) throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		reviewRepository.removeReview(name);
 	}
 
 	private String getLoggedUser() {

@@ -10,14 +10,37 @@ import { Router } from '@angular/router';
 })
 export class ReviewListComponent implements OnInit {
 
-  @Input()  reviews: Array<ReviewView>;
+  @Input() reviews: Array<ReviewView>;
   public role: string;
-
+  public accepted: boolean;
   constructor(private reviewService: ReviewService, private router: Router) { }
 
   ngOnInit(): void {
+  }
 
-    this.role = localStorage.getItem('role');
+  accept(name: string) {
+    this.reviewService.acceptReview(name).subscribe(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+  reject(name: string) {
+    this.reviewService.rejectReview(name).subscribe(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  edit(name: string) {
+    this.router.navigateByUrl("/addReview" + name);
   }
 
 }
