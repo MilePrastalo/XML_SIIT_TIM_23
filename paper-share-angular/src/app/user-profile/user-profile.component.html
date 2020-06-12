@@ -1,4 +1,4 @@
-<app-navbar loggedIn="False"></app-navbar>
+<app-navbar loggedIn= true></app-navbar>
 <div style="margin-top: 5%;">
     <mat-tab-group mat-align-tabs="center" >
         
@@ -9,7 +9,7 @@
             <app-paper-list [papers] = 'userPapers' [forUser] = true></app-paper-list>
         </mat-tab>
         <mat-tab label="Your Reviews">
-            <app-review-list></app-review-list>
+            <app-review-list [reviews] = 'userReviews'></app-review-list>
         </mat-tab>
     
     </mat-tab-group>

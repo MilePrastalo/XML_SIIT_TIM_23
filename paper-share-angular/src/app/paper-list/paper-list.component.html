@@ -1,5 +1,5 @@
 <div style="margin: 5%;">
-    <div class="papers-container">
+    <div *ngIf = "papers !== undefined" class="papers-container">
         <div *ngIf = "papers.length === 0">
             <h2 style="text-align: center;">No Scientific Papers</h2>
         </div>
@@ -12,11 +12,16 @@
                     <mat-chip>{{paper.status}}</mat-chip>
                 </mat-chip-list>
             </div>
+            
             <mat-card-content>
+                <!--Authors-->
                 <span *ngFor = "let author of paper.authors;"> {{author}}, </span>
+
+                <!--Actions-->
                 <div *ngIf = "forUser === true">
                     <button class="paper_btns" (click) = "openPaper(paper.title)" mat-stroked-button color="primary">Open</button>
                     <button *ngIf = "paper.status == 'not completed'" class="paper_btns" mat-stroked-button color="primary">Edit</button>
+                    <button  class="paper_btns" (click) = "goToPaperReviews(paper.title)" mat-stroked-button color="primary">Reviews</button>
                     <button *ngIf = "paper.status == 'completed'" class="paper_btns" mat-stroked-button color="primary">Publish</button>
                     <button class="paper_btns" (click) = "deletePaper(paper.title, i)" mat-stroked-button color="primary">Delete</button>
                 </div>

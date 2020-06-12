@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PaperService } from '../Service/paper.service';
 import { PaperView } from '../model/paperView';
 import { Router } from '@angular/router';
+import { ReviewService } from '../Service/review.service';
+import { ReviewView } from '../model/reviewView';
 
 @Component({
   selector: 'app-user-profile',
@@ -12,14 +14,18 @@ export class UserProfileComponent implements OnInit {
 
   public userPapers: Array<PaperView>;
   public completedPapers: Array<PaperView>;
+  public userReviews: Array<ReviewView>;
   public role: string;
 
-  constructor(private paperService: PaperService, private router: Router) { }
+  constructor(private paperService: PaperService, private router: Router, private reviewService: ReviewService) { }
 
   ngOnInit(): void {
 
     this.role = localStorage.getItem('role');
     this.getUserPapers();
+    if (this.role === 'USER') {
+      this.getUserReviews();
+    }
     if (this.role === 'EDITOR') {
       this.getCompletedPapers();
     }
@@ -30,6 +36,19 @@ export class UserProfileComponent implements OnInit {
       (response => {
         if (response !== null) {
           this.userPapers = response;
+        }
+      }),
+      (error => {
+        alert(error.error.message);
+      })
+    );
+  }
+
+  getUserReviews() {
+    this.reviewService.getUserReviews().subscribe(
+      (response => {
+        if (response !== null) {
+          this.userReviews = response;
         }
       }),
       (error => {
@@ -50,5 +69,4 @@ export class UserProfileComponent implements OnInit {
       })
     );
   }
-
 }

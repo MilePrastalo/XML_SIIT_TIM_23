@@ -1,0 +1,8 @@
+<app-navbar loggedIn="True"></app-navbar>
+<div style="margin-top: 5%;">
+    <div class="center">
+        <h1>{{paperName}}</h1>
+        <h3>Reviews:</h3>
+    </div>
+    <app-review-list [reviews] = 'paperReviews'></app-review-list>
+</div>
