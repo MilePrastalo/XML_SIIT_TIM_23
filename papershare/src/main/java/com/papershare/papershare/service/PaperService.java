@@ -201,7 +201,7 @@ public class PaperService {
 
 		changePaperStatus(publicationName, "deleted");
 
-		String xPathExpression = String.format("/review[metadata/publicationName='%s']",
+		String xPathExpression = String.format("/review[metadata/paperName='%s']",
 				publicationName.substring(0, publicationName.length() - 4));
 		ResourceSet result = reviewRepository.findReviews(xPathExpression);
 		try {
