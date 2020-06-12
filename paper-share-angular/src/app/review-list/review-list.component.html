@@ -4,7 +4,7 @@
             <h2 style="text-align: center;">No Assigned Reviews</h2>
         </div>
         <div *ngFor="let review of reviews; index as i">
-            <mat-card *ngIf="review.status != 'submitted'" class="paper-card">
+            <mat-card *ngIf="review.status != 'submitted' || role == 'ROLE_ADMIN'" class="paper-card">
                 <div style="display: flex">
                     <mat-card-title>
                         {{review.publicationName}}
@@ -18,6 +18,7 @@
                 <button (click)="reject(review.reviewName)" *ngIf="review.status === 'created'" mat-button color="primary">reject</button>
                 <button (click)="edit(review.reviewName)" *ngIf="review.status === 'accepted'" mat-button color="primary">edit</button>
                 <button (click)="publish(review.reviewName)" *ngIf="review.status === 'accepted'" mat-button color="primary">publish</button>
+                <button (click)="sendReviewsToAuthor(review.publicationName)" *ngIf="review.status === 'submitted'" mat-button color="primary">send reviews to author</button>
                 <button mat-button color="primary">view paper</button>
             </mat-card>
         </div>

@@ -29,6 +29,11 @@ export class ReviewService {
   getUserReviews(): Observable<ReviewView[]> {
     return this.http.get<ReviewView[]>(this.path + '/api/review/userReviews', );
   }
+
+  getSubmittedReviews(): Observable<ReviewView[]> {
+    return this.http.get<ReviewView[]>(this.path + '/api/review/submittedReviews');
+  }
+
   getReviewAsText(name: string): Observable<string> {
     return this.http.get(this.path + '/api/review/asText/' + name, { responseType: 'text' });
   }
@@ -44,6 +49,10 @@ export class ReviewService {
   }
   publishReview(reviewName: string) {
     return this.http.get(this.path + '/api/review/publish/' + reviewName, { responseType: 'text' });
+  }
+
+  sendReviewsToAuthor(paperName: string) {
+    return this.http.post(this.path + '/api/review/sendReviewsToAuthor/' + paperName, {}, { responseType: 'text' });
   }
 
 }
