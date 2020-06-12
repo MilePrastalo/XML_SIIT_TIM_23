@@ -21,26 +21,59 @@ export class ReviewListComponent implements OnInit {
   accept(name: string) {
     this.reviewService.acceptReview(name).subscribe(
       response => {
-        console.log(response);
+        for (let review of this.reviews) {
+          if (review.reviewName === name) {
+            review.status = 'accepted';
+          }
+        }
       },
       error => {
-        console.log(error);
+        if (error.status == 200) {
+          for (let review of this.reviews) {
+            if (review.reviewName === name) {
+              review.status = 'accepted';
+            }
+          }
+        }
       }
     );
   }
   reject(name: string) {
     this.reviewService.rejectReview(name).subscribe(
       response => {
-        console.log(response);
+        for (let i = 0; i < this.reviews.length; i++) {
+          if (this.reviews[i].reviewName === name) {
+            this.reviews.splice(i, 1);
+            break;
+          }
+        }
       },
       error => {
-        console.log(error);
+        if (error.status == 200) {
+          for (let i = 0; i < this.reviews.length; i++) {
+            if (this.reviews[i].reviewName === name) {
+              this.reviews.splice(i, 1);
+              break;
+            }
+          }
+        }
       }
     );
   }
 
   edit(name: string) {
-    this.router.navigateByUrl("/addReview" + name);
+    this.router.navigateByUrl("/addReview/" + name);
+  }
+  publish(name: string) {
+    this.reviewService.publishReview(name).subscribe(
+      response => {
+        for (let review of this.reviews) {
+          if (review.reviewName === name) {
+            review.status = 'submitted';
+          }
+        }
+      }
+    )
   }
 
 }

@@ -14,10 +14,10 @@
                     <span> {{review.reviewer}}, {{review.submissionDate}} </span>
 
                 </mat-card-content>
-                <button (click)="accept(review.paperName)" *ngIf="review.status === 'created'" mat-button color="primary">accept</button>
-                <button (click)="reject(review.paperName)" *ngIf="review.status === 'created'" mat-button color="primary">reject</button>
-                <button (click)="edit(review.paperName)" *ngIf="review.status === 'accepted'" mat-button color="primary">edit</button>
-                <button *ngIf="review.status === 'accepted'" mat-button color="primary">publish</button>
+                <button (click)="accept(review.reviewName)" *ngIf="review.status === 'created'" mat-button color="primary">accept</button>
+                <button (click)="reject(review.reviewName)" *ngIf="review.status === 'created'" mat-button color="primary">reject</button>
+                <button (click)="edit(review.reviewName)" *ngIf="review.status === 'accepted'" mat-button color="primary">edit</button>
+                <button (click)="publish(review.reviewName)" *ngIf="review.status === 'accepted'" mat-button color="primary">publish</button>
                 <button mat-button color="primary">view paper</button>
             </mat-card>
         </div>

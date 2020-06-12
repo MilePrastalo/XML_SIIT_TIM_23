@@ -174,11 +174,16 @@ public class ReviewService {
 	}
 
 	public void acceptReview(String name) {
-		Document document = reviewRepository.findByName(name);
-		NodeList nodeList = document.getElementsByTagName("metadata");
-		Element metadata = (Element) nodeList.item(0);
-		Element status = (Element) metadata.getElementsByTagName("status").item(0);
-		status.setTextContent("accepted");
+		String documentId;
+		if (!name.endsWith(".xml")) {
+			documentId = name + ".xml";
+		} else {
+			documentId = name;
+		}
+
+		String targetElement = "/review/metadata/status";
+		String xmlFragmet = "accepted";
+		reviewRepository.modifyReview(documentId, targetElement, xmlFragmet);
 	}
 
 	public void rejectReview(String name)
