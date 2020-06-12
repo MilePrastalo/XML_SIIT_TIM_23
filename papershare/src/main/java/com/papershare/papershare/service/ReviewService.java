@@ -133,6 +133,13 @@ public class ReviewService {
 
 		return reviews;
 	}
+	
+	public ArrayList<ReviewDTO> findReviewsByPaper(String publicationName) throws XMLDBException {
+		String xPathExpression = String.format("/review[metadata/publicationName='%s']", publicationName);
+		ResourceSet result = reviewRepository.findReviews(xPathExpression);
+		ArrayList<ReviewDTO> reviews = extractDataFromReviews(result);
+		return reviews;
+	}
 
 	private ArrayList<ReviewDTO> extractDataFromReviews(ResourceSet resourceSet) {
 		ArrayList<ReviewDTO> reviews = new ArrayList<ReviewDTO>();

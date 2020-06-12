@@ -10,6 +10,7 @@ import { ViewReviewComponent } from './view-review/view-review.component';
 import { PaperListComponent } from './paper-list/paper-list.component';
 import { AssignReviewComponent } from './assign-review/assign-review.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
 
 
 
@@ -23,7 +24,8 @@ const routes: Routes = [
   { path: 'view-review', component: ViewReviewComponent },
   { path: 'assign-review', component: AssignReviewComponent },
   { path: 'paper-list', component: PaperListComponent },
-  { path: 'user-profile', component: UserProfileComponent }
+  { path: 'user-profile', component: UserProfileComponent },
+  { path: 'paper-reviews/:paperName', component: PaperReviewsComponent }
 ];
 
 @NgModule({
