@@ -23,10 +23,10 @@ export class UserProfileComponent implements OnInit {
 
     this.role = localStorage.getItem('role');
     this.getUserPapers();
-    if (this.role === 'USER') {
+    if (this.role === 'ROLE_USER') {
       this.getUserReviews();
     }
-    if (this.role === 'EDITOR') {
+    if (this.role === 'ROLE_ADMIN') {
       this.getCompletedPapers();
     }
   }
