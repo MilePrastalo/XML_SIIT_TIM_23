@@ -13,12 +13,9 @@ export class ReviewService {
 
   constructor(private http: HttpClient) { }
   path = 'http://localhost:8080';
-  headers: HttpHeaders = new HttpHeaders({
-    Authorization: 'Bearer ' + localStorage.getItem('token')
-  });
 
   getReview(name: string) {
-    return this.http.get(this.path + '/api/review/' + name, { headers: this.headers, responseType: 'text' });
+    return this.http.get(this.path + '/api/review/' + name, { responseType: 'text' });
   }
 
   sendReview(review: SendReview): Observable<void> {
@@ -26,27 +23,27 @@ export class ReviewService {
   }
 
   assignReview(assignReviewDto: AssignReview): Observable<string> {
-    return this.http.post(this.path + '/api/review', assignReviewDto, { headers: this.headers, responseType: 'text' });
+    return this.http.post(this.path + '/api/review', assignReviewDto, { responseType: 'text' });
   }
 
   getUserReviews(): Observable<ReviewView[]> {
-    return this.http.get<ReviewView[]>(this.path + '/api/review/userReviews', { headers: this.headers });
+    return this.http.get<ReviewView[]>(this.path + '/api/review/userReviews', );
   }
   getReviewAsText(name: string): Observable<string> {
-    return this.http.get(this.path + '/api/review/asText/' + name, { headers: this.headers, responseType: 'text' });
+    return this.http.get(this.path + '/api/review/asText/' + name, { responseType: 'text' });
   }
 
   getPaperReviews(paperName: string): Observable<ReviewView[]> {
-    return this.http.get<ReviewView[]>(this.path + '/api/review/paperReviews/' + paperName, { headers: this.headers });
+    return this.http.get<ReviewView[]>(this.path + '/api/review/paperReviews/' + paperName, );
   }
   acceptReview(reviewName: string) {
-    return this.http.get(this.path + '/api/review/accept/' + reviewName, { headers: this.headers, responseType: 'text' });
+    return this.http.get(this.path + '/api/review/accept/' + reviewName, { responseType: 'text' });
   }
   rejectReview(reviewName: string) {
-    return this.http.get(this.path + '/api/review/reject/' + reviewName, { headers: this.headers, responseType: 'text' });
+    return this.http.get(this.path + '/api/review/reject/' + reviewName, { responseType: 'text' });
   }
   publishReview(reviewName: string) {
-    return this.http.get(this.path + '/api/review/publish/' + reviewName, { headers: this.headers, responseType: 'text' });
+    return this.http.get(this.path + '/api/review/publish/' + reviewName, { responseType: 'text' });
   }
 
 }

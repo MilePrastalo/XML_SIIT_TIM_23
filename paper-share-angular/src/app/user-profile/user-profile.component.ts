@@ -20,7 +20,7 @@ export class UserProfileComponent implements OnInit {
   constructor(private paperService: PaperService, private router: Router, private reviewService: ReviewService) { }
 
   ngOnInit(): void {
-
+    console.log(localStorage.getItem('token'));
     this.role = localStorage.getItem('role');
     this.getUserPapers();
     if (this.role === 'ROLE_USER') {
