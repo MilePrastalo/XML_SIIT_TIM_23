@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
       (response => {
         console.log(response);
         if (response != null) {
+          console.log(localStorage.getItem('token'));
           localStorage.setItem('token', response.token);
           const jwt: JwtHelperService = new JwtHelperService();
           const info = jwt.decodeToken(response.token);
@@ -49,6 +50,7 @@ export class LoginComponent implements OnInit {
           const role = info.role[0].authority;
           localStorage.setItem('role', info.role[0].authority);
           this.snackBar.open('Logged In successfully.');
+          console.log(localStorage.getItem('token'));
           this.router.navigateByUrl('/user-profile');
         }
       }),
