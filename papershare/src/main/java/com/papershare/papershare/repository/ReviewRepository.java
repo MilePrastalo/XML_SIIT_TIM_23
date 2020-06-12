@@ -165,4 +165,12 @@ public class ReviewRepository {
 		save(xmlEntity,title);
 		return "OK";
 	}
+	
+	public void modifyReview(String documentId, String targetElement, String xmlFragmet) {
+		try {
+			existMenager.update(0, collectionId, documentId, targetElement, xmlFragmet);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | XMLDBException e) {
+			e.printStackTrace();
+		}
+	}
 }

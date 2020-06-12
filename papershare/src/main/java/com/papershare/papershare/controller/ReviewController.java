@@ -57,9 +57,10 @@ public class ReviewController {
 
 		return new ResponseEntity<>(reviews, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/paperReviews/{publicationName}")
-	public ResponseEntity<List<ReviewDTO>> paperReviews(@PathVariable("publicationName") String publicationName) throws XMLDBException {
+	public ResponseEntity<List<ReviewDTO>> paperReviews(@PathVariable("publicationName") String publicationName)
+			throws XMLDBException {
 		List<ReviewDTO> reviews = reviewService.findReviewsByPaper(publicationName);
 		return new ResponseEntity<>(reviews, HttpStatus.OK);
 	}
@@ -69,6 +70,7 @@ public class ReviewController {
 		String result = reviewService.convertXMLtoHTML(name);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
+
 	@GetMapping(value = "/asText/{name}", produces = MediaType.TEXT_XML_VALUE)
 	public ResponseEntity<String> getReviewAsText(@PathVariable("name") String name) throws TransformerException {
 		String result = reviewService.getReviewAsText(name);
@@ -87,9 +89,17 @@ public class ReviewController {
 		return new ResponseEntity<String>("Review has been rejected successfully", HttpStatus.OK);
 	}
 
+	@GetMapping(value = "publish/{reviewId}")
+	public ResponseEntity<String> publish_review(@PathVariable("reviewId") String reviewId) {
+		reviewService.publishReview(reviewId);
+		return new ResponseEntity<String>("Review has been published successfully", HttpStatus.OK);
+	}
+
 	// Reviewer sending review
 	@PostMapping(value = "/send", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> sendReview(@RequestBody SendReviewDTO dto) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, SAXException, IOException, TransformerException, XMLDBException{
+	public ResponseEntity<String> sendReview(@RequestBody SendReviewDTO dto)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException,
+			SAXException, IOException, TransformerException, XMLDBException {
 		reviewService.sendReview(dto);
 		return new ResponseEntity<String>("Review has been sent successfully", HttpStatus.OK);
 	}
