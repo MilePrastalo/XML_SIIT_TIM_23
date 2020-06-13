@@ -2,6 +2,8 @@ package com.papershare.papershare.controller;
 
 import java.util.List;
 
+import javax.xml.transform.TransformerException;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,14 @@ public class PaperController {
 	@CrossOrigin
 	public ResponseEntity<PaperUploadDTO> uploadPaper(@RequestBody PaperUploadDTO dto) throws Exception {
 		paperService.savePaper(dto);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+
+	}
+	
+	@PostMapping(value = "update/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin
+	public ResponseEntity<PaperUploadDTO> updatePaper(@RequestBody PaperUploadDTO dto, @PathVariable("name") String name) throws Exception {
+		paperService.updatePaper(dto,name);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 
 	}
@@ -81,5 +91,16 @@ public class PaperController {
 	public ResponseEntity<Void> deletePaper(@PathVariable("publicationName") String publicationName) {
 		paperService.deletePaper(publicationName);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping(value="asText/{paperName}")
+	public ResponseEntity<String> getPaperAsText(@PathVariable("paperName") String paperName) throws TransformerException{
+		String result = paperService.getPaperAsText(paperName);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
+	}
+	@GetMapping(value="coverLetter/{paperName}")
+	public ResponseEntity<String> getCoverLetter(@PathVariable("paperName") String paperName) throws TransformerException{
+		String result = paperService.getCoverLetter(paperName);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 }

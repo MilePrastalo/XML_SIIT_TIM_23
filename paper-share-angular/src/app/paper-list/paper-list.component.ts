@@ -85,5 +85,11 @@ export class PaperListComponent implements OnInit {
     );
 
   }
+  addPaper(){
+    this.router.navigateByUrl('add');
+  }
+  edit(name: string) {
+    this.router.navigateByUrl('add/' + name);
+  }
 
 }

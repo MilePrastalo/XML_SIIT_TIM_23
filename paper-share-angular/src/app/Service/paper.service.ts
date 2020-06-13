@@ -16,9 +16,19 @@ export class PaperService {
     return this.http.post<void>(this.path + '/api/papers', paper);
   }
 
-  getPaper( name: string) {
-    const x =  this.http.get(this.path + '/api/papers/' + name, {responseType: 'text' });
+  updatePaper(paper: PaperUpload, paperName: string): Observable<void> {
+    return this.http.post<void>(this.path + '/api/papers/update/' + paperName, paper);
+  }
+
+  getPaper(name: string) {
+    const x = this.http.get(this.path + '/api/papers/' + name, { responseType: 'text' });
     return x;
+  }
+  getPaperAsText(name: string): Observable<string> {
+    return this.http.get(this.path + '/api/papers/asText/' + name, { responseType: 'text' });
+  }
+  getCoverLetter(name: string): Observable<string> {
+    return this.http.get(this.path + '/api/papers/coverLetter/' + name, { responseType: 'text' });
   }
 
   getUserPapers(): Observable<Array<PaperView>> {
@@ -30,11 +40,11 @@ export class PaperService {
   }
 
 
-  acceptPaper( paperName: string): Observable<boolean> {
+  acceptPaper(paperName: string): Observable<boolean> {
     return this.http.get<boolean>(this.path + '/api/papers/acceptPaper/' + paperName);
   }
 
-  rejectPaper( paperName: string): Observable<boolean> {
+  rejectPaper(paperName: string): Observable<boolean> {
     return this.http.get<boolean>(this.path + '/api/papers/rejectPaper/' + paperName);
   }
 
