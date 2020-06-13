@@ -41,10 +41,10 @@ public class PaperController {
 
 	}
 	
-	@PostMapping(value = "update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "update/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin
-	public ResponseEntity<PaperUploadDTO> updatePaper(@RequestBody PaperUploadDTO dto) throws Exception {
-		paperService.updatePaper(dto);
+	public ResponseEntity<PaperUploadDTO> updatePaper(@RequestBody PaperUploadDTO dto, @PathVariable("name") String name) throws Exception {
+		paperService.updatePaper(dto,name);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 
 	}
@@ -96,6 +96,11 @@ public class PaperController {
 	@GetMapping(value="asText/{paperName}")
 	public ResponseEntity<String> getPaperAsText(@PathVariable("paperName") String paperName) throws TransformerException{
 		String result = paperService.getPaperAsText(paperName);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
+	}
+	@GetMapping(value="coverLetter/{paperName}")
+	public ResponseEntity<String> getCoverLetter(@PathVariable("paperName") String paperName) throws TransformerException{
+		String result = paperService.getCoverLetter(paperName);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 }

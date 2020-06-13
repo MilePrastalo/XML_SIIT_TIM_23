@@ -75,9 +75,9 @@ public class PaperService {
 		return xslTransformer.convertXMLtoHTML(scientificPublicatonXSL, xml);
 	}
 
-	public void savePaper(PaperUploadDTO dto)
-			throws ParserConfigurationException, SAXException, IOException, TransformerException,
-			ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException, PaperAlreadyExistException {
+	public void savePaper(PaperUploadDTO dto) throws ParserConfigurationException, SAXException, IOException,
+			TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException,
+			XMLDBException, PaperAlreadyExistException {
 		Document document = domParser.buildDocumentFromText(dto.getText());
 		NodeList nodeList = document.getElementsByTagName("ScientificPaper");
 		Element sp = (Element) nodeList.item(0);
@@ -86,18 +86,16 @@ public class PaperService {
 		Document prev = null;
 		try {
 			prev = paperRepository.findScientificPaper(title);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("caught");
 		}
-		if(prev != null) {
+		if (prev != null) {
 			throw new PaperAlreadyExistException("Paper already exist");
 		}
 		Element status = document.createElement("sci:status");
 		status.appendChild(document.createTextNode("not completed"));
 		sp.appendChild(status);
-		
-		System.out.println(dto.getText());
+
 		Element chaptersMain = (Element) (document.getElementsByTagName("sci:Chapters")).item(0);
 		NodeList chapters = chaptersMain.getElementsByTagName("sci:Chapter");
 		Long currentMilli = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
@@ -120,27 +118,29 @@ public class PaperService {
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
 		paperRepository.save(sw.toString(), title + ".xml");
-
-		String coverLetter = "<coverLetter><authorUsername></authorUsername><Content>" + dto.getCoverLetter()
-				+ "</Content><title>" + title + "</title></coverLetter>";
+		String user = getLoggedUser();
+		String coverLetter = "<coverLetter><authorUsername>" + user + "</authorUsername><Content>"
+				+ dto.getCoverLetter() + "</Content><title>" + title + "</title></coverLetter>";
 		paperRepository.saveCoverLetter(coverLetter);
 	}
-	
-	public void updatePaper(PaperUploadDTO dto) throws ParserConfigurationException, SAXException, IOException, TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+
+	public void updatePaper(PaperUploadDTO dto, String name) throws ParserConfigurationException, SAXException,
+			IOException, TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException,
+			XMLDBException, PaperAlreadyExistException {
 		System.out.println(dto.getText());
 		Document document = domParser.buildDocumentFromText(dto.getText());
 		NodeList nodeList = document.getElementsByTagName("ScientificPaper");
 		Element sp = (Element) nodeList.item(0);
 		NodeList ndTitle = document.getElementsByTagName("sci:title");
 		String title = ndTitle.item(0).getTextContent();
-		
+
 		System.out.println(dto.getText());
 		Element chaptersMain = (Element) (document.getElementsByTagName("sci:Chapters")).item(0);
 		NodeList chapters = chaptersMain.getElementsByTagName("sci:Chapter");
 		Long currentMilli = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 		for (int i = 0; i < chapters.getLength(); i++) {
 			Element chapter = (Element) chapters.item(i);
-			if(chapter.getAttribute("id").equals("")) {
+			if (chapter.getAttribute("id").equals("")) {
 				chapter.setAttribute("id", currentMilli + "" + i);
 			}
 		}
@@ -153,14 +153,35 @@ public class PaperService {
 		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
-		
 		System.out.println(sw.toString());
 		String xmlFragmet = sw.toString();
-		if(!title.endsWith(".xml")) {
+		if (!title.endsWith(".xml")) {
 			title += ".xml";
 		}
-		paperRepository.removePaper(title);
+		if (!name.endsWith(".xml")) {
+			name += ".xml";
+		}
+		if (!name.equals(title)) {
+			// title has been changed
+			// if new title exists throw exception
+			Document prev = null;
+			try {
+				prev = paperRepository.findScientificPaper(title);
+			} catch (Exception e) {
+				System.out.println("caught");
+			}
+			if (prev != null) {
+				throw new PaperAlreadyExistException("Paper already exist");
+			}
+		}
+		paperRepository.removePaper(name);
 		paperRepository.save(xmlFragmet, title);
+		String user = getLoggedUser();
+		String title_raw = ndTitle.item(0).getTextContent();
+
+		String coverLetter = "<authorUsername>" + user + "</authorUsername><Content>"
+				+ dto.getCoverLetter() + "</Content><title>" + title_raw + "</title>";
+		paperRepository.updateCoverLetter(coverLetter, title_raw);
 	}
 
 	public Resource getPdf(String name) throws Exception {
@@ -210,7 +231,8 @@ public class PaperService {
 
 	public ArrayList<PaperViewDTO> findPapersByUser() {
 		String username = getLoggedUser();
-		String xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername='%s' and status!='deleted']", username);
+		String xPathExpression = String
+				.format("/ScientificPaper[Authors/Author/authorUsername='%s' and status!='deleted']", username);
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
@@ -288,6 +310,7 @@ public class PaperService {
 		}
 		return username;
 	}
+
 	public String getPaperAsText(String name) throws TransformerException {
 		Document xml = paperRepository.findScientificPaper(name);
 		StringWriter sw = new StringWriter();
@@ -301,5 +324,20 @@ public class PaperService {
 		transformer.transform(new DOMSource(xml), new StreamResult(sw));
 		System.out.println(sw.toString());
 		return sw.toString();
+	}
+	public String getCoverLetter(String paperName) throws TransformerException {
+		Document xml = paperRepository.findCoverLetter();
+		
+		NodeList nodes = xml.getElementsByTagName("coverLetter");
+		for(int i = 0; i<nodes.getLength(); i++) {
+			Element el = (Element) nodes.item(i);
+			Element title =(Element) el.getElementsByTagName("title").item(0);
+			if(title.getTextContent().equals(paperName)) {
+				Element content =(Element) el.getElementsByTagName("Content").item(0);
+				return content.getTextContent();
+			}
+		}
+
+		return "";
 	}
 }

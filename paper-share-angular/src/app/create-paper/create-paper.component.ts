@@ -18,6 +18,7 @@ export class CreatePaperComponent implements OnInit {
   fileToUpload: File = null;
   fileString: any;
   paperName: string;
+  coverLetter:string;
   ngOnInit(): void {
     this.paperName = this.route.snapshot.paramMap.get('title');
     console.log(this.paperName);
@@ -30,6 +31,12 @@ export class CreatePaperComponent implements OnInit {
         response => { 
           this.scientificPublication = response;
           Xonomy.render(this.scientificPublication, xonomyElement, this.xonomyService.scientificPublicationSpecification);
+         }
+      );
+      this.paperService.getCoverLetter(this.paperName).subscribe(
+        response => { 
+          this.coverLetter = response;
+          (document.getElementById("cover") as HTMLTextAreaElement).value = response;
          }
       );
     }
@@ -67,7 +74,7 @@ export class CreatePaperComponent implements OnInit {
   updateFile(){
     let text = Xonomy.harvest();
     let cover = (document.getElementById("cover") as HTMLTextAreaElement).value;
-    this.paperService.updatePaper(new PaperUpload(text, cover)).subscribe(
+    this.paperService.updatePaper(new PaperUpload(text, cover), this.paperName).subscribe(
       response => {
         console.log("Hello");
       },
