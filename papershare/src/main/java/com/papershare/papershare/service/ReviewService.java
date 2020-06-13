@@ -288,7 +288,7 @@ public class ReviewService {
 	
 			reviewRepository.uniteReviews(paperName, reviews);
 			
-			paperRepository.modifyPaper(paperName, "/ScientificPaper/status", "not completed");
+			paperRepository.modifyPaper(paperName, "/ScientificPaper/status", "revision");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

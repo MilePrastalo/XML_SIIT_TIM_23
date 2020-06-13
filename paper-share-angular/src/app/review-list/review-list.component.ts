@@ -103,4 +103,9 @@ export class ReviewListComponent implements OnInit {
     );
   }
 
+  viewReview(name: string) {
+    // this.router.navigate(['/review', name]);
+    window.open('/review/' + name);
+  }
+
 }

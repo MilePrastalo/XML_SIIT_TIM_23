@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'add', component: CreatePaperComponent },
   { path: 'addReview/:title', component: AddReviewComponent },
   { path: 'view-paper/:name', component: ViewPaperComponent },
-  { path: 'view-review', component: ViewReviewComponent },
+  { path: 'review/:name', component: ViewReviewComponent },
   { path: 'assign-review', component: AssignReviewComponent },
   { path: 'paper-list', component: PaperListComponent },
   { path: 'user-profile', component: UserProfileComponent },
