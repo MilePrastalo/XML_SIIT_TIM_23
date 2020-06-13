@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ReviewService } from '../Service/review.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-review',
@@ -8,14 +9,19 @@ import { ReviewService } from '../Service/review.service';
 })
 export class ViewReviewComponent implements OnInit {
 
-  @Input() name: string;
+  name: string;
   public html: string;
-  constructor(private reviewService: ReviewService) { }
+  constructor(private reviewService: ReviewService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.name = 'rev1590438540062.xml';
+    console.log('Here!');
+    this.route.params.subscribe(params => {
+      this.name = params['name'];
+    });
     this.getReview();
   }
+
+  
 
   getReview() {
     this.reviewService.getReview(this.name).subscribe(
