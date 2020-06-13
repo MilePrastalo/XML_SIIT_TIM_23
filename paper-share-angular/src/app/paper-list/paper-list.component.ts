@@ -69,7 +69,7 @@ export class PaperListComponent implements OnInit {
   }
 
   goToPaperReviews( paperName: string) {
-    this.router.navigate(['/paper-reviews', paperName]);
+    window.open('/united-reviews/' + paperName);
   }
 
   deletePaper(title: string, index: number) {

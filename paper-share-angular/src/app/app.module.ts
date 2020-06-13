@@ -24,6 +24,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ReviewListComponent } from './review-list/review-list.component';
 import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
 import { TokenInterceptorService } from './Service/token-interceptor.service';
+import { UnitedReviewsComponent } from './united-reviews/united-reviews.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { TokenInterceptorService } from './Service/token-interceptor.service';
     AssignReviewComponent,
     UserProfileComponent,
     ReviewListComponent,
-    PaperReviewsComponent
+    PaperReviewsComponent,
+    UnitedReviewsComponent
   ],
   imports: [
     BrowserModule,

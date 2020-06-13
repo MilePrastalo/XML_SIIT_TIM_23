@@ -44,6 +44,7 @@ import com.papershare.papershare.repository.UserRepository;
 @Service
 public class ReviewService {
 	private final String reviewXSL = "src/main/resources/data/xsl/review.xsl";
+	private final String unitedReviewXSL = "src/main/resources/data/xsl/unitedReview.xsl";
 
 	private ReviewRepository reviewRepository;
 	private XSLTransformer xslTransformer;
@@ -177,6 +178,15 @@ public class ReviewService {
 		Document xml = reviewRepository.findByName(id);
 		return xslTransformer.convertXMLtoHTML(reviewXSL, xml);
 	}
+	
+	public String convertUnitedReviewToHTML(String paperName) {
+		if (!paperName.endsWith(".xml")) {
+			paperName = paperName + ".xml";
+		}
+		
+		Document xml = reviewRepository.findByName(paperName);
+		return xslTransformer.convertXMLtoHTML(unitedReviewXSL, xml);
+	}
 
 	public void acceptReview(String name) {
 		String documentId;
@@ -288,7 +298,7 @@ public class ReviewService {
 	
 			reviewRepository.uniteReviews(paperName, reviews);
 			
-			paperRepository.modifyPaper(paperName, "/ScientificPaper/status", "not completed");
+			paperRepository.modifyPaper(paperName, "/ScientificPaper/status", "revision");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

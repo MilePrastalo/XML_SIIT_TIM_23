@@ -1,13 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReviewService } from '../Service/review.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-view-review',
-  templateUrl: './view-review.component.html',
-  styleUrls: ['./view-review.component.css']
+  selector: 'app-united-reviews',
+  templateUrl: './united-reviews.component.html',
+  styleUrls: ['./united-reviews.component.css']
 })
-export class ViewReviewComponent implements OnInit {
+export class UnitedReviewsComponent implements OnInit {
 
   name: string;
   public html: string;
@@ -22,7 +22,7 @@ export class ViewReviewComponent implements OnInit {
   }
 
   getReview() {
-    this.reviewService.getReview(this.name).subscribe(
+    this.reviewService.getUnitedReview(this.name).subscribe(
       (response => {
         this.html = response;
       }),
@@ -32,5 +32,4 @@ export class ViewReviewComponent implements OnInit {
       })
     );
   }
-
 }
