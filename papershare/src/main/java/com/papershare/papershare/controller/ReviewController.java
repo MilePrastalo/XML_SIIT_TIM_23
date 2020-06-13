@@ -74,8 +74,14 @@ public class ReviewController {
 
 	@GetMapping(value = "/{name}")
 	public ResponseEntity<String> getReviewHTML(@PathVariable("name") String name) {
-		System.out.println("Rev Name: " + name);
 		String result = reviewService.convertXMLtoHTML(name);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/united/{name}")
+	public ResponseEntity<String> getUnitedReviewHTML(@PathVariable("name") String name) {
+		System.out.println("Rev Name: " + name);
+		String result = reviewService.convertUnitedReviewToHTML(name);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 

@@ -18,6 +18,10 @@ export class ReviewService {
     return this.http.get(this.path + '/api/review/' + name, { responseType: 'text' });
   }
 
+  getUnitedReview(name: string) {
+    return this.http.get(this.path + '/api/review/united/' + name, { responseType: 'text' });
+  }
+
   sendReview(review: SendReview): Observable<void> {
     return this.http.post<void>(this.path + '/api/review/send', review);
   }
