@@ -16,9 +16,16 @@ export class PaperService {
     return this.http.post<void>(this.path + '/api/papers', paper);
   }
 
+  updatePaper(paper: PaperUpload): Observable<void> {
+    return this.http.post<void>(this.path + '/api/papers/update', paper);
+  }
+
   getPaper( name: string) {
     const x =  this.http.get(this.path + '/api/papers/' + name, {responseType: 'text' });
     return x;
+  }
+  getPaperAsText(name: string): Observable<string> {
+    return this.http.get(this.path + '/api/papers/asText/' + name, { responseType: 'text' });
   }
 
   getUserPapers(): Observable<Array<PaperView>> {

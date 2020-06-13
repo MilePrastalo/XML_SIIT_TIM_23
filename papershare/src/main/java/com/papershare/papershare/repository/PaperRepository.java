@@ -66,6 +66,10 @@ public class PaperRepository {
 	public String getCollectionId() {
 		return collectionId;
 	}
+	public void removePaper(String paperName)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		existMenager.remove(collectionId, paperName);
+	}
 	
 	
 
