@@ -1,6 +1,5 @@
 package com.papershare.papershare.service;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -14,11 +13,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -26,6 +23,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,8 +45,10 @@ import com.papershare.papershare.dom.DOMParser;
 import com.papershare.papershare.dom.XSLTransformer;
 import com.papershare.papershare.exception.NotAnAuthorException;
 import com.papershare.papershare.exception.PaperAlreadyExistException;
+import com.papershare.papershare.model.TUser;
 import com.papershare.papershare.repository.PaperRepository;
 import com.papershare.papershare.repository.ReviewRepository;
+import com.papershare.papershare.repository.UserRepository;
 
 @Service
 public class PaperService {
@@ -61,13 +61,17 @@ public class PaperService {
 	private PaperRepository paperRepository;
 	private ReviewRepository reviewRepository;
 	private XSLTransformer xslTransformer;
+	private EmailService emailService;
+	private UserRepository userRepository;
 
 	public PaperService(XSLTransformer xslTransformer, PaperRepository sciPaperRepository, DOMParser domParser,
-			ReviewRepository reviewRepository) {
+			ReviewRepository reviewRepository, EmailService emailService, UserRepository userRepository) {
 		this.paperRepository = sciPaperRepository;
 		this.xslTransformer = xslTransformer;
 		this.domParser = domParser;
 		this.reviewRepository = reviewRepository;
+		this.emailService = emailService;
+		this.userRepository = userRepository;
 	}
 
 	public String convertXMLtoHTML(String name) {
@@ -179,8 +183,8 @@ public class PaperService {
 		String user = getLoggedUser();
 		String title_raw = ndTitle.item(0).getTextContent();
 
-		String coverLetter = "<authorUsername>" + user + "</authorUsername><Content>"
-				+ dto.getCoverLetter() + "</Content><title>" + title_raw + "</title>";
+		String coverLetter = "<authorUsername>" + user + "</authorUsername><Content>" + dto.getCoverLetter()
+				+ "</Content><title>" + title_raw + "</title>";
 		paperRepository.updateCoverLetter(coverLetter, title_raw);
 	}
 
@@ -259,6 +263,30 @@ public class PaperService {
 		return paperList;
 	}
 
+	public List<String> findAuthorsByPaper(String paperName) {
+		List<String> authorsUsernames = new ArrayList<>();
+
+		String xPathExpression = String.format("/ScientificPaper[title='%s']", paperName);
+		ResourceSet result = paperRepository.findPapers(xPathExpression);
+
+		ResourceIterator i;
+		try {
+			i = result.getIterator();
+			while (i.hasMoreResources()) {
+				XMLResource resource = (XMLResource) i.nextResource();
+				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
+				NodeList authors = document.getElementsByTagName("sci:authorUsername");
+				for (int idx = 0, len = authors.getLength(); idx < len; idx++) {
+					authorsUsernames.add(authors.item(idx).getTextContent());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return authorsUsernames;
+	}
+
 	public void deletePaper(String publicationName) {
 
 		if (!publicationName.endsWith(".xml")) {
@@ -325,19 +353,55 @@ public class PaperService {
 		System.out.println(sw.toString());
 		return sw.toString();
 	}
+
 	public String getCoverLetter(String paperName) throws TransformerException {
 		Document xml = paperRepository.findCoverLetter();
-		
+
 		NodeList nodes = xml.getElementsByTagName("coverLetter");
-		for(int i = 0; i<nodes.getLength(); i++) {
+		for (int i = 0; i < nodes.getLength(); i++) {
 			Element el = (Element) nodes.item(i);
-			Element title =(Element) el.getElementsByTagName("title").item(0);
-			if(title.getTextContent().equals(paperName)) {
-				Element content =(Element) el.getElementsByTagName("Content").item(0);
+			Element title = (Element) el.getElementsByTagName("title").item(0);
+			if (title.getTextContent().equals(paperName)) {
+				Element content = (Element) el.getElementsByTagName("Content").item(0);
 				return content.getTextContent();
 			}
 		}
 
 		return "";
+	}
+
+	public void sendToAutor(String paperName) throws MailException, InterruptedException {
+		changePaperStatus(paperName, "completed");
+
+		String author = getLoggedUser();
+		emailService.sendPaperSubmissionToEditor(author, paperName);
+	}
+
+	public Boolean acceptPaper(String name) throws MailException, InterruptedException {
+		changePaperStatus(name, "published");
+
+		List<String> authorsUsernames = findAuthorsByPaper(name);
+
+		for (String username : authorsUsernames) {
+
+			TUser user = userRepository.findOneByUsername(username);
+			emailService.publishedPaper(name, user.getEmail());
+		}
+
+		return true;
+	}
+
+	public Boolean rejectPaper(String name) throws MailException, InterruptedException {
+		changePaperStatus(name, "rejected");
+
+		List<String> authorsUsernames = findAuthorsByPaper(name);
+
+		for (String username : authorsUsernames) {
+
+			TUser user = userRepository.findOneByUsername(username);
+			emailService.rejectedPaper(name, user.getEmail());
+		}
+
+		return true;
 	}
 }

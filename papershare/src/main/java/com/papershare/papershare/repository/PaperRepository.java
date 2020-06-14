@@ -89,7 +89,4 @@ public class PaperRepository {
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
 		existMenager.remove(collectionId, paperName);
 	}
-	
-	
-
 }

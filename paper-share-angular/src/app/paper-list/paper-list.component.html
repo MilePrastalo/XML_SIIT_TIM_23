@@ -25,7 +25,7 @@
 
                     <button (click)="edit(paper.title)" *ngIf = "paper.status == 'not completed'" class="paper_btns" mat-stroked-button color="primary">Edit</button>
                     <button *ngIf = "paper.status == 'revision'" class="paper_btns" (click) = "goToPaperReviews(paper.title)" mat-stroked-button color="primary">Reviews</button>
-                    <button *ngIf = "paper.status == 'completed'" class="paper_btns" mat-stroked-button color="primary">Publish</button>
+                    <button *ngIf = "paper.status == 'revision' || paper.status == 'not completed'" (click) = "sendToEditor(i)" class="paper_btns" mat-stroked-button color="primary">Send to editor</button>
                     <button class="paper_btns" (click) = "deletePaper(paper.title, i)" mat-stroked-button color="primary">Delete</button>
                 </div>
                 <div *ngIf = "forUser === false">

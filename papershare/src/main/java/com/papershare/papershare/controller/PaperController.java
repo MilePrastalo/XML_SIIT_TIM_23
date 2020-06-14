@@ -9,11 +9,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,11 +42,12 @@ public class PaperController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping(value = "update/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin
-	public ResponseEntity<PaperUploadDTO> updatePaper(@RequestBody PaperUploadDTO dto, @PathVariable("name") String name) throws Exception {
-		paperService.updatePaper(dto,name);
+	public ResponseEntity<PaperUploadDTO> updatePaper(@RequestBody PaperUploadDTO dto,
+			@PathVariable("name") String name) throws Exception {
+		paperService.updatePaper(dto, name);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 
 	}
@@ -76,14 +79,16 @@ public class PaperController {
 	}
 
 	@GetMapping(value = "acceptPaper/{name}")
-	public ResponseEntity<Boolean> acceptPaper(@PathVariable("name") String name) {
-		paperService.changePaperStatus(name, "published");
+	public ResponseEntity<Boolean> acceptPaper(@PathVariable("name") String name)
+			throws MailException, InterruptedException {
+		paperService.acceptPaper(name);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "rejectPaper/{name}")
-	public ResponseEntity<Boolean> rejectPaper(@PathVariable("name") String name) {
-		paperService.changePaperStatus(name, "rejected");
+	public ResponseEntity<Boolean> rejectPaper(@PathVariable("name") String name)
+			throws MailException, InterruptedException {
+		paperService.rejectPaper(name);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
@@ -92,15 +97,25 @@ public class PaperController {
 		paperService.deletePaper(publicationName);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
-	@GetMapping(value="asText/{paperName}")
-	public ResponseEntity<String> getPaperAsText(@PathVariable("paperName") String paperName) throws TransformerException{
+
+	@GetMapping(value = "asText/{paperName}")
+	public ResponseEntity<String> getPaperAsText(@PathVariable("paperName") String paperName)
+			throws TransformerException {
 		String result = paperService.getPaperAsText(paperName);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
-	@GetMapping(value="coverLetter/{paperName}")
-	public ResponseEntity<String> getCoverLetter(@PathVariable("paperName") String paperName) throws TransformerException{
+
+	@GetMapping(value = "coverLetter/{paperName}")
+	public ResponseEntity<String> getCoverLetter(@PathVariable("paperName") String paperName)
+			throws TransformerException {
 		String result = paperService.getCoverLetter(paperName);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
+	}
+
+	@PutMapping(value = "/sendToEditor/{paperName}")
+	public ResponseEntity<Void> sendToAuthor(@PathVariable("paperName") String paperName)
+			throws MailException, InterruptedException {
+		paperService.sendToAutor(paperName);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
