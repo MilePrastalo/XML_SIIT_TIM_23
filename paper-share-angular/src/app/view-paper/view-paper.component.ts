@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PaperService } from '../Service/paper.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-paper',
@@ -11,7 +11,7 @@ export class ViewPaperComponent implements OnInit {
 
   @Input() name: string;
   public html: string;
-  constructor(private paperService: PaperService, private route: ActivatedRoute) { }
+  constructor(private paperService: PaperService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.name = this.route.snapshot.paramMap.get('name');
@@ -21,6 +21,10 @@ export class ViewPaperComponent implements OnInit {
   getPaper() {
     this.paperService.getPaper(this.name).subscribe(
       (response => {
+        if (!response) {
+          alert('File not exist or is empty');
+          this.router.navigateByUrl('');
+        }
         this.html = response;
       }),
       (error => {

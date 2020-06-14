@@ -299,7 +299,7 @@ export class XonomyService {
         }, {
           caption: 'Add <Chapter>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Chapter></Chapter>'
+          actionParameter: '<sci:Chapter xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></sci:Chapter>'
         }, {
           caption: 'Delete element',
           action: Xonomy.deleteElement
