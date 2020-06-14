@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { PaperService } from '../Service/paper.service';
+import { PaperView } from '../model/paperView';
+import { MatSnackBar } from '@angular/material';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-search-dialog',
@@ -7,20 +11,48 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchDialogComponent implements OnInit {
 
-  constructor() { }
-  dialog = false;
+  dialog: boolean;
+  foundPapers: Array<PaperView>;
+  private searchForm: FormGroup;
+
+
+  constructor( private paperService: PaperService, private snackBar: MatSnackBar, private formBuilder: FormBuilder) { }
+
+
   ngOnInit(): void {
+    this.dialog = false;
   }
 
   openDialogue() {
     this.dialog = true;
   }
+
   closeQuestionDialog() {
     this.dialog = false;
-
   }
-  search() {
 
+  search() {
+    this.paperService.search(null).subscribe(
+      (response => {
+        if (response !== null) {
+          this.foundPapers = response;
+        }
+      }),
+      (error => {
+        this.snackBar.open(error.error.message);
+      })
+    );
+  }
+
+  buildForm() {
+    this.searchForm = this.formBuilder.group({
+      title: ['', []],
+      date: ['', []],
+      language: ['', []],
+      author: ['', []],
+      keyword: ['', []],
+      text: ['', []]
+    });
   }
 
 }

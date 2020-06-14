@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PaperUpload } from '../model/paperUpload';
 import { Observable } from 'rxjs';
 import { PaperView } from '../model/paperView';
+import { SearchDto } from '../model/searchDto';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,10 @@ export class PaperService {
 
   rejectPaper( paperName: string): Observable<boolean> {
     return this.http.get<boolean>(this.path + '/api/papers/rejectPaper/' + paperName, { headers: this.headers});
+  }
+
+  search( dto: SearchDto ): Observable<Array<PaperView>> {
+    return this.http.post<Array<PaperView>>(this.path + '/api/papers/search', dto, { headers: this.headers});
   }
 
 }
