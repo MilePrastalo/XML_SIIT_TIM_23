@@ -55,7 +55,18 @@ export class SearchDialogComponent implements OnInit {
   }
 
   basicSearch() {
-    alert('to do');
+    const dto: SearchDto = this.getSearchData();
+    this.paperService.searchByText(dto).subscribe(
+      (response => {
+        if (response !== null) {
+          this.foundPapers = response;
+          this.searchResult.emit(response);
+        }
+      }),
+      (error => {
+        this.snackBar.open(error.error.message);
+      })
+    );
   }
 
   getSearchData() {
@@ -69,6 +80,7 @@ export class SearchDialogComponent implements OnInit {
     dto.authors = this.searchForm.controls.author.value;
     dto.forUser = this.forUser;
     dto.keywords = this.searchForm.controls.keyword.value;
+    dto.text = this.searchForm.controls.text.value;
     return dto;
   }
 

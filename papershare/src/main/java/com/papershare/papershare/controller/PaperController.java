@@ -90,6 +90,12 @@ public class PaperController {
 		List<PaperViewDTO> result = paperService.searhByMetadata(dto);
 		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/searchByText")
+	public ResponseEntity<List<PaperViewDTO>> searchByText(@RequestBody SearchDTO dto) throws IOException {
+		List<PaperViewDTO> result = paperService.searchByText(dto);
+		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
+	}
 
 	@DeleteMapping(value = "/{publicationName}")
 	public ResponseEntity<Void> deletePaper(@PathVariable("publicationName") String publicationName) {

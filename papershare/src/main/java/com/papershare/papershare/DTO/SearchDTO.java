@@ -8,6 +8,7 @@ public class SearchDTO {
 	private String keywords;
 	private String date;
 	private String language;
+	private String text;
 	private boolean forUser;
 	
 	public SearchDTO() {
@@ -60,6 +61,14 @@ public class SearchDTO {
 
 	public void setForUser(boolean forUser) {
 		this.forUser = forUser;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 	
 	

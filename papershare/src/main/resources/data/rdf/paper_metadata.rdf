@@ -3,13 +3,13 @@
          xmlns:pred="http://www.ftn.uns.ac.rs/rdf/examples/predicate/">
          
          <!-- Subject is defined with rdf:about attribute -->
-		  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/scientific_papers/paper1">
-		    <pred:id>50</pred:id>
-		    <pred:title>EtikaAI</pred:title>
-		    <pred:language>Serbian</pred:language>
-		    <pred:date>10-06-2019</pred:date>
-		    <pred:authors>Mile</pred:authors>
-		    <pred:keywords>etika</pred:keywords>
+		  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/scientific_papers/51">
+		    <pred:id> 51 </pred:id>
+		    <pred:title> EtikaAI </pred:title>
+		    <pred:language> Serbian </pred:language>
+		    <pred:date> 10-06-2019 </pred:date>
+		    <pred:authors> Jelena Cuk Mile Prastalo Nikola Saric </pred:authors>
+		    <pred:keywords> veštačka inteligencija etika bezbednost privatnost nezaposlenost roboti rasizam </pred:keywords>
 		  </rdf:Description>  
          
 </rdf:RDF>

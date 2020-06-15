@@ -170,6 +170,20 @@ public class PaperService {
 		return paperList;
 	}
 	
+	public ArrayList<PaperViewDTO> searchByText( SearchDTO dto) {
+		String xPathExpression = "";
+		if (dto.isForUser()) {
+			String username = getLoggedUser();
+			xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername = '%s' and   Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]", username ,dto.getText(), dto.getText());
+		}
+		else {
+			xPathExpression = String.format("/ScientificPaper[status = 'published' and  Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]", dto.getText());
+		}
+		ResourceSet result = paperRepository.findPapers(xPathExpression);
+		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
+		return paperList;
+	} 
+	
 	public ArrayList<PaperViewDTO> searhByMetadata( SearchDTO dto) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("title", dto.getTitle());
