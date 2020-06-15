@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,6 @@ import com.papershare.papershare.DTO.PaperViewDTO;
 import com.papershare.papershare.DTO.SearchDTO;
 import com.papershare.papershare.service.PaperService;
 
-
 @RestController()
 @RequestMapping(value = "api/papers")
 @CrossOrigin()
@@ -33,46 +33,46 @@ public class PaperController {
 		this.paperService = paperService;
 	}
 
-	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin
 	public ResponseEntity<PaperUploadDTO> uploadPaper(@RequestBody PaperUploadDTO dto) throws Exception {
 		paperService.savePaper(dto);
-		return new ResponseEntity<>(dto,HttpStatus.OK);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 
 	}
-	
+
 	@GetMapping(value = "/{name}", produces = MediaType.TEXT_HTML_VALUE)
 	public ResponseEntity<String> getSciPaperHTML(@PathVariable("name") String name) {
 		String result = paperService.convertXMLtoHTML(name);
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
-	
-	@GetMapping(value="/{name}/pdf", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public ResponseEntity<Object> getPdf(@PathVariable("name") String name) throws Exception{
+
+	@GetMapping(value = "/{name}/pdf", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity<Object> getPdf(@PathVariable("name") String name) throws Exception {
 		Resource resource = paperService.getPdf(name);
-		 return ResponseEntity.ok()
-                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                 .body(resource);
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+				.body(resource);
 	}
+
 	@GetMapping(value = "/userPapers")
 	public ResponseEntity<List<PaperViewDTO>> userPapers() {
 		List<PaperViewDTO> paperList = paperService.findPapersByUser();
 		return new ResponseEntity<List<PaperViewDTO>>(paperList, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/completedPapers")
 	public ResponseEntity<List<PaperViewDTO>> completedPapers() {
 		List<PaperViewDTO> paperList = paperService.findCompletedPapers();
 		return new ResponseEntity<List<PaperViewDTO>>(paperList, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "acceptPaper/{name}")
 	public ResponseEntity<Boolean> acceptPaper(@PathVariable("name") String name) {
 		paperService.changePaperStatus(name, "published");
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "rejectPaper/{name}")
 	public ResponseEntity<Boolean> rejectPaper(@PathVariable("name") String name) {
 		paperService.changePaperStatus(name, "rejected");
@@ -90,7 +90,11 @@ public class PaperController {
 		List<PaperViewDTO> result = paperService.searhByMetadata(dto);
 		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
 	}
+
+	@DeleteMapping(value = "/{publicationName}")
+	public ResponseEntity<Void> deletePaper(@PathVariable("publicationName") String publicationName) {
+		paperService.deletePaper(publicationName);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+	}
 }
-
-	
-

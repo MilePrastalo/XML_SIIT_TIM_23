@@ -49,5 +49,8 @@ export class PaperService {
   search( dto: SearchDto ): Observable<Array<PaperView>> {
     return this.http.post<Array<PaperView>>(this.path + '/api/papers/searchByMetadata', dto, { headers: this.headers});
   }
+  deletePaper(paperName: string) {
+    return this.http.delete(this.path + '/api/papers/' + paperName, { headers: this.headers});
+  }
 
 }
