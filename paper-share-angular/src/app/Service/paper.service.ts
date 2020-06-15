@@ -52,4 +52,8 @@ export class PaperService {
     return this.http.delete(this.path + '/api/papers/' + paperName);
   }
 
+  sendToEditor(paperName: string) {
+    return this.http.put(this.path + '/api/papers/sendToEditor/' + paperName, {});
+  }
+
 }

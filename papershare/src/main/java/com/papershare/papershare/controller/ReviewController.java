@@ -11,6 +11,7 @@ import javax.xml.transform.TransformerException;
 import org.exist.http.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,8 +44,9 @@ public class ReviewController {
 	}
 
 	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> addReview(@RequestBody AddReviewDTO dto) throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException, XMLDBException, NotFoundException {
+	public ResponseEntity<String> addReview(@RequestBody AddReviewDTO dto)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException,
+			NotFoundException, MailException, InterruptedException {
 		reviewService.addReview(dto);
 		return new ResponseEntity<String>(
 				"Successfully assigned review for: " + dto.getPublicationName() + " to: " + dto.getUsername(),
@@ -92,20 +94,23 @@ public class ReviewController {
 	}
 
 	@GetMapping(value = "accept/{reviewId}")
-	public ResponseEntity<String> accept_review(@PathVariable("reviewId") String reviewId) {
+	public ResponseEntity<String> accept_review(@PathVariable("reviewId") String reviewId)
+			throws MailException, InterruptedException {
 		reviewService.acceptReview(reviewId);
 		return new ResponseEntity<String>("Review has been accepted successfully", HttpStatus.OK);
 	}
 
 	@GetMapping(value = "reject/{reviewId}")
 	public ResponseEntity<String> reject_review(@PathVariable("reviewId") String reviewId)
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException,
+			MailException, InterruptedException {
 		reviewService.rejectReview(reviewId);
 		return new ResponseEntity<String>("Review has been rejected successfully", HttpStatus.OK);
 	}
 
 	@GetMapping(value = "publish/{reviewId}")
-	public ResponseEntity<String> publish_review(@PathVariable("reviewId") String reviewId) {
+	public ResponseEntity<String> publish_review(@PathVariable("reviewId") String reviewId)
+			throws MailException, InterruptedException {
 		reviewService.publishReview(reviewId);
 		return new ResponseEntity<String>("Review has been published successfully", HttpStatus.OK);
 	}
@@ -120,7 +125,8 @@ public class ReviewController {
 	}
 
 	@PostMapping(value = "/sendReviewsToAuthor/{paperName}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> sendReviewsToAuthor(@PathVariable("paperName") String paperName) {
+	public ResponseEntity<Void> sendReviewsToAuthor(@PathVariable("paperName") String paperName)
+			throws MailException, InterruptedException {
 		reviewService.sendReviewsToAuthor(paperName);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

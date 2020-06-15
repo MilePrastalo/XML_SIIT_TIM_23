@@ -96,4 +96,17 @@ export class PaperListComponent implements OnInit {
     return 'http://localhost:8080/api/papers/' + name + '/pdf';
   }
 
+  sendToEditor(index: number) {
+    this.paperService.sendToEditor(this.papers[index].title).subscribe(
+      (response => {
+        this.snackBar.open(this.papers[index].title + ' has been sent to editor.');
+        this.papers[index].status = 'completed';
+      }),
+      (error => {
+        const err = JSON.parse(error.error);
+        this.snackBar.open(err.message);
+      })
+    );
+  }
+
 }
