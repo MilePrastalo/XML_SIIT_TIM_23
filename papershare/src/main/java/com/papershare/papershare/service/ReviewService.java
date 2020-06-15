@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -15,6 +16,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.exist.http.NotFoundException;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +46,7 @@ import com.papershare.papershare.repository.UserRepository;
 @Service
 public class ReviewService {
 	private final String reviewXSL = "src/main/resources/data/xsl/review.xsl";
+	private final String unitedReviewXSL = "src/main/resources/data/xsl/unitedReview.xsl";
 
 	private ReviewRepository reviewRepository;
 	private XSLTransformer xslTransformer;
@@ -51,15 +54,19 @@ public class ReviewService {
 	private PaperRepository paperRepository;
 	private ExistManager existManager;
 	private DOMParser domParser;
+	private EmailService emailService;
+	private PaperService paperService;
 
 	public ReviewService(ReviewRepository repository, XSLTransformer xslTransformer, UserRepository userRepository,
-			PaperRepository paperRepository, ExistManager existManager, DOMParser domParser) {
+			PaperRepository paperRepository, ExistManager existManager, DOMParser domParser, EmailService emailService, PaperService paperService) {
 		this.reviewRepository = repository;
 		this.xslTransformer = xslTransformer;
 		this.userRepository = userRepository;
 		this.paperRepository = paperRepository;
 		this.existManager = existManager;
 		this.domParser = domParser;
+		this.emailService = emailService;
+		this.paperService = paperService;
 	}
 
 	public Review findById(String id) {
@@ -67,7 +74,7 @@ public class ReviewService {
 	}
 
 	public void addReview(AddReviewDTO dto) throws ClassNotFoundException, InstantiationException,
-			IllegalAccessException, XMLDBException, NotFoundException {
+			IllegalAccessException, XMLDBException, NotFoundException, MailException, InterruptedException {
 
 		if (!dto.getPublicationName().endsWith(".xml")) {
 			dto.setPublicationName(dto.getPublicationName() + ".xml");
@@ -111,15 +118,23 @@ public class ReviewService {
 				+ "    </body>\r\n" + "</review>";
 		reviewRepository.save(review, id);
 
-		String xmlPatch = "reviewing";
-
-		existManager.update(0, paperRepository.getCollectionId(), dto.getPublicationName(), "/ScientificPaper/status",
-				xmlPatch);
+		paperRepository.modifyPaper(dto.getPublicationName(), "/ScientificPaper/status", "reviewing");
+		
+		emailService.assignReviewForPaper(dto.getUsername(), dto.getPublicationName(), user.getEmail());
 	}
 
 	public ArrayList<ReviewDTO> findReviewsByUser() throws XMLDBException {
 		String username = getLoggedUser();
 		String xPathExpression = String.format("/review[metadata/reviewer='%s']", username);
+		ResourceSet result = reviewRepository.findReviews(xPathExpression);
+		System.out.println(result.getSize());
+		ArrayList<ReviewDTO> reviews = extractDataFromReviews(result);
+
+		return reviews;
+	}
+
+	public ArrayList<ReviewDTO> findSubmittedReviews() throws XMLDBException {
+		String xPathExpression = String.format("/review[metadata/status='submitted']");
 		ResourceSet result = reviewRepository.findReviews(xPathExpression);
 		System.out.println(result.getSize());
 		ArrayList<ReviewDTO> reviews = extractDataFromReviews(result);
@@ -144,9 +159,11 @@ public class ReviewService {
 				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
 				NodeList publicationName = document.getElementsByTagName("paperName");
 				NodeList reviewer = document.getElementsByTagName("reviewer");
+				NodeList status = document.getElementsByTagName("status");
 				NodeList submissionDate = document.getElementsByTagName("submissionDate");
 				reviews.add(new ReviewDTO(resource.getDocumentId(), publicationName.item(0).getTextContent(),
-						reviewer.item(0).getTextContent(), submissionDate.item(0).getTextContent()));
+						reviewer.item(0).getTextContent(), submissionDate.item(0).getTextContent(),
+						status.item(0).getTextContent()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -169,27 +186,54 @@ public class ReviewService {
 		Document xml = reviewRepository.findByName(id);
 		return xslTransformer.convertXMLtoHTML(reviewXSL, xml);
 	}
+	
+	public String convertUnitedReviewToHTML(String paperName) {
+		if (!paperName.endsWith(".xml")) {
+			paperName = paperName + ".xml";
+		}
+		
+		Document xml = reviewRepository.findByName(paperName);
+		return xslTransformer.convertXMLtoHTML(unitedReviewXSL, xml);
+	}
 
-	public void acceptReview(String reviewId) {
+	public void acceptReview(String name) throws MailException, InterruptedException {
+		if (!name.endsWith(".xml")) {
+			name = name + ".xml";
+		}
+
+		String targetElement = "/review/metadata/status";
+		String xmlFragmet = "accepted";
+		reviewRepository.modifyReview(name, targetElement, xmlFragmet);
+		
+		String reviewer = getLoggedUser();
+		this.emailService.acceptReviewForPaper(reviewer, name);
+	}
+
+	public void rejectReview(String name)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+			XMLDBException, MailException, InterruptedException {
+		if (!name.endsWith(".xml")) {
+			name = name + ".xml";
+		}
+		reviewRepository.removeReview(name);
+		
+		String reviewer = getLoggedUser();
+		emailService.rejectReviewForPaper(reviewer, name);
 
 	}
 
-	public void rejectReview(String reviewId) {
+	public void publishReview(String reviewId) throws MailException, InterruptedException {
 
-	}
-
-	public void publishReview(String reviewId) {
-
-		String documentId;
 		if (!reviewId.endsWith(".xml")) {
-			documentId = reviewId + ".xml";
-		} else {
-			documentId = reviewId;
+			reviewId = reviewId + ".xml";
 		}
 
 		String targetElement = "/review/metadata/status";
 		String xmlFragmet = "submitted";
-		reviewRepository.modifyReview(documentId, targetElement, xmlFragmet);
+		reviewRepository.modifyReview(reviewId, targetElement, xmlFragmet);
+		
+		String reviewer = getLoggedUser();
+		emailService.finisheddReviewForPaper(reviewer, reviewId);
 	}
 
 	private String getLoggedUser() {
@@ -233,6 +277,56 @@ public class ReviewService {
 		transformer.transform(new DOMSource(xml), new StreamResult(sw));
 		System.out.println(sw.toString());
 		return sw.toString();
+	}
+
+	public void sendReviewsToAuthor(String paperName) throws MailException, InterruptedException {
+		String xPathExpression = String.format("/review[metadata/paperName='%s']", paperName);
+		ResourceSet result = reviewRepository.findReviews(xPathExpression);
+		String reviews = "";
+		ResourceIterator i;
+		try {
+			i = result.getIterator();
+			while (i.hasMoreResources()) {
+				XMLResource resource = (XMLResource) i.nextResource();
+				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
+				String status = document.getElementsByTagName("status").item(0).getTextContent();
+				NodeList body = document.getElementsByTagName("body");
+				
+				String unitedReview = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+						+ "<unitedReviews xmlns=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\" xmlns:rv=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\">\r\n"
+						+ "<paperName>" + paperName + "</paperName>\r\n"
+						+ "<reviews>\r\n"   
+						+ "</reviews>\r\n"
+						+ "</unitedReviews>";
+				reviewRepository.save(unitedReview, paperName);
+				
+				if (status.equals("submitted")) {
+					StringWriter sw = new StringWriter();
+					Transformer serializer = TransformerFactory.newInstance().newTransformer();
+					serializer.transform(new DOMSource(body.item(0)), new StreamResult(sw));
+					reviews += sw.toString().replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "") + "\r\n";
+					sw.close();
+				}
+				
+				reviewRepository.removeReview(resource.getDocumentId());
+			}
+	
+			reviewRepository.uniteReviews(paperName, reviews);
+			
+			paperRepository.modifyPaper(paperName, "/ScientificPaper/status", "revision");
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		List<String> authorsUsernames = paperService.findAuthorsByPaper(paperName);
+
+		for (String username : authorsUsernames) {
+
+			TUser user = userRepository.findOneByUsername(username);
+			emailService.unitedReviewForPaper(paperName, user.getEmail());
+		}
 	}
 
 }

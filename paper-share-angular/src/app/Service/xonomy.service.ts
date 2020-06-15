@@ -8,23 +8,23 @@ export class XonomyService {
 
   constructor() { }
 
-  TCriteriaGrade = ["very good", "good", "small weaknesses", "great weaknesses", "absolutely insufficient"]
-  TOverallGrade = ["acceptable without changes", "acceptable with minor revisions", "acceptable with major revisions", "encouraged to resubmit", "reject"]
+  TCriteriaGrade = ["excellent", "very good", "good", "bad", "insufficient"]
+  TOverallGrade = ["acceptable without changes", "needs minor changes", "needs major changess", "reject"]
 
   public scientificPublicationSpecification = {
     elements: {
       ScientificPaper: {
         menu: [{
-          caption: "Add @language=\"english\"",
-          action: Xonomy.newAttribute,
-          actionParameter: { name: "language", value: "english" },
+          caption: 'Add <language>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<sci:language xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23" property="pred:language"></sci:language>',
           hideIf: function (jsElement) {
-            return jsElement.hasAttribute("language");
+            return jsElement.hasChildElement("sci:language");
           }
         }, {
           caption: 'Add <sci:title>',
           action: Xonomy.newElementChild,
-          actionParameter: '<sci:title xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:title>',
+          actionParameter: '<sci:title xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23" property="pred:title"></sci:title>',
           hideIf: function (jsElement) {
             return jsElement.hasChildElement("sci:title");
           }
@@ -38,24 +38,24 @@ export class XonomyService {
         }, {
           caption: 'Add <sci:Abstract>',
           action: Xonomy.newElementChild,
-          actionParameter: '<sci:Abstract xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:Abstract>',
+          actionParameter: '<sci:Abstract xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></sci:Abstract>',
           hideIf: function (jsElement) {
             return jsElement.hasChildElement("sci:Abstract");
           }
         }, {
           caption: 'Add <Keywords>',
           action: Xonomy.newElementChild,
-          actionParameter: '<sci:Keywords xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:Keywords>',
+          actionParameter: '<sci:Keywords xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></sci:Keywords>',
           hideIf: function (jsElement) {
             return jsElement.hasChildElement("sci:Keywords");
           }
         },
         {
-          caption: 'Add <Chapters>',
+          caption: 'Add <sci:Chapters>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Chapters></Chapters>',
+          actionParameter: '<sci:Chapters xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></sci:Chapters>',
           hideIf: function (jsElement) {
-            return jsElement.hasChildElement("Chapters");
+            return jsElement.hasChildElement("sci:Chapters");
           }
         },
         {
@@ -77,8 +77,18 @@ export class XonomyService {
           }
         }
       },
+      "sci:language": {
+        mustBeBefore: ['sci:title', 'Abstract', 'Keywords', 'sci:Chapters', 'References'],
+        hasText: true,
+        oneliner: true,
+        asker: Xonomy.askString,
+        menu: [{
+          caption: 'Delete element',
+          action: Xonomy.deleteElement
+        }],
+      },
       "sci:title": {
-        mustBeBefore: ['Authors', 'Abstract', 'Keywords', 'Chapters', 'References'],
+        mustBeBefore: ['Authors', 'Abstract', 'Keywords', 'sci:Chapters', 'References'],
         hasText: true,
         oneliner: true,
         asker: Xonomy.askString,
@@ -88,33 +98,33 @@ export class XonomyService {
         }],
       },
       Authors: {
-        mustBeBefore: ['Abstract', 'Keywords', 'Chapters', 'References'],
+        mustBeBefore: ['Abstract', 'Keywords', 'sci:Chapters', 'References'],
         menu: [{
           caption: 'Add <sci:Author>',
           action: Xonomy.newElementChild,
-          actionParameter: '<sci:Author  xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:Author>'
+          actionParameter: '<sci:Author  xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></sci:Author>'
         }, {
           caption: 'Delete element',
           action: Xonomy.deleteElement
         }]
       },
       "sci:Keywords": {
-        mustBeBefore: ['Chapters', 'References'],
+        mustBeBefore: ['sci:Chapters', 'References'],
         menu: [{
           caption: 'Add <Keyword>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Keyword></Keyword>'
+          actionParameter: '<Keyword property="pred:keywords"></Keyword>'
         }, {
           caption: 'Delete element',
           action: Xonomy.deleteElement
         }]
       },
-      Chapters: {
+      "sci:Chapters": {
         mustBeBefore: ['References'],
         menu: [{
           caption: 'Add <sci:Chapter>',
           action: Xonomy.newElementChild,
-          actionParameter: '<sci:Chapter xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"></sci:Chapter>'
+          actionParameter: '<sci:Chapter xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></sci:Chapter>'
         }]
       },
       "sci:Author": {
@@ -124,6 +134,13 @@ export class XonomyService {
           actionParameter: '<authorUsername></authorUsername>',
           hideIf: function (jsElement) {
             return jsElement.hasChildElement("authorUsername");
+          }
+        }, {
+          caption: 'Add <authorName>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<authorName  property="pred:authors"></authorName>',
+          hideIf: function (jsElement) {
+            return jsElement.hasChildElement("authorName");
           }
         }, {
           caption: 'Add <University>',
@@ -137,6 +154,16 @@ export class XonomyService {
         }
       },
       authorUsername: {
+        mustBeBefore: ['authorName'],
+        hasText: true,
+        oneliner: true,
+        asker: Xonomy.askString,
+        menu: [{
+          caption: 'Delete element',
+          action: Xonomy.deleteElement
+        }],
+      },
+      authorName: {
         mustBeBefore: ['University'],
         hasText: true,
         oneliner: true,
@@ -172,7 +199,7 @@ export class XonomyService {
         ]
       },
       "sci:Abstract": {
-        mustBeBefore: ['Keywords', 'Chapters', 'References'],
+        mustBeBefore: ['Keywords', 'sci:Chapters', 'References'],
         menu: [{
           caption: 'Add <Paragraph>',
           action: Xonomy.newElementChild,
@@ -276,41 +303,19 @@ export class XonomyService {
       },
       ChapterBody: {
         menu: [{
-          caption: 'Add <MixedContent>',
+          caption: 'Add <ChapterContent>',
           action: Xonomy.newElementChild,
-          actionParameter: '<MixedContent></MixedContent>'
+          actionParameter: '<ChapterContent></ChapterContent>'
         }, {
           caption: 'Add <Chapter>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Chapter></Chapter>'
+          actionParameter: '<sci:Chapter xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></sci:Chapter>'
         }, {
           caption: 'Delete element',
           action: Xonomy.deleteElement
         }]
       },
-      MixedContent: {
-        menu: [{
-          caption: 'Add <chapterText>',
-          action: Xonomy.newElementChild,
-          actionParameter: '<chapterText></chapterText>'
-        }, {
-          caption: 'Add <chapterImage>',
-          action: Xonomy.newElementChild,
-          actionParameter: '<chapterImage></chapterImage>'
-        }, {
-          caption: 'Delete element',
-          action: Xonomy.deleteElement
-        }]
-      },
-      chapterText: {
-        asker: Xonomy.askString,
-        hasText: true,
-        menu: [{
-          caption: 'Delete element',
-          action: Xonomy.deleteElement
-        }]
-      },
-      chapterImage: {
+      ChapterContent: {
         asker: Xonomy.askString,
         hasText: true,
         menu: [{
@@ -445,11 +450,11 @@ export class XonomyService {
         mustBeBefore: ['body'],
         menu: [{
           mustBeBefore: ['submissionDate'],
-          caption: 'Add <publicationName>',
+          caption: 'Add <paperName>',
           action: Xonomy.newElementChild,
-          actionParameter: '<publicationName></publicationName>',
+          actionParameter: '<paperName></paperName>',
           hideIf(jsElement) {
-            return jsElement.hasChildElement('publicationName');
+            return jsElement.hasChildElement('paperName');
           }
         }, {
           caption: 'Add <submissionDate>',
@@ -478,11 +483,11 @@ export class XonomyService {
           }
         },
         {
-          caption: 'Add <commentsToAuthor>',
+          caption: 'Add <chapterReviews>',
           action: Xonomy.newElementChild,
-          actionParameter: '<commentsToAuthor></commentsToAuthor>',
+          actionParameter: '<chapterReviews></chapterReviews>',
           hideIf(jsElement) {
-            return jsElement.hasChildElement('commentsToAuthor');
+            return jsElement.hasChildElement('chapterReviews');
           }
         },
         {
@@ -497,43 +502,19 @@ export class XonomyService {
       criteriaEvaluation: {
         mustBeBefore: ['overallEvaluation'],
         menu: [{
-          caption: 'Add <relevanceOfResearchProblem>',
+          caption: 'Add <abstract>',
           action: Xonomy.newElementChild,
-          actionParameter: '<relevanceOfResearchProblem> </relevanceOfResearchProblem>',
+          actionParameter: '<abstract> </abstract>',
           hideIf(jsElement) {
-            return jsElement.hasChildElement('relevanceOfResearchProblem');
+            return jsElement.hasChildElement('abstract');
           }
         },
         {
-          caption: 'Add <introduction>',
+          caption: 'Add <relevance>',
           action: Xonomy.newElementChild,
-          actionParameter: '<introduction> </introduction>',
+          actionParameter: '<relevance> </relevance>',
           hideIf(jsElement) {
-            return jsElement.hasChildElement('introduction');
-          }
-        },
-        {
-          caption: 'Add <conceptualQuality>',
-          action: Xonomy.newElementChild,
-          actionParameter: '<conceptualQuality> </conceptualQuality>',
-          hideIf(jsElement) {
-            return jsElement.hasChildElement('conceptualQuality');
-          }
-        },
-        {
-          caption: 'Add <results>',
-          action: Xonomy.newElementChild,
-          actionParameter: '<results> </results>',
-          hideIf(jsElement) {
-            return jsElement.hasChildElement('results');
-          }
-        },
-        {
-          caption: 'Add <discussion>',
-          action: Xonomy.newElementChild,
-          actionParameter: '<discussion> </discussion>',
-          hideIf(jsElement) {
-            return jsElement.hasChildElement('discussion');
+            return jsElement.hasChildElement('relevance');
           }
         },
         {
@@ -543,76 +524,81 @@ export class XonomyService {
           hideIf(jsElement) {
             return jsElement.hasChildElement('readability');
           }
+        },
+        {
+          caption: 'Add <methodology>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<methodology> </methodology>',
+          hideIf(jsElement) {
+            return jsElement.hasChildElement('methodology');
+          }
+        },
+        {
+          caption: 'Add <results>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<results> </results>',
+          hideIf(jsElement) {
+            return jsElement.hasChildElement('results');
+          }
         }]
       },
-      relevanceOfResearchProblem: {
-        mustBeBefore: ['introduction'],
+      abstract: {
+        mustBeBefore: ['relevance'],
         oneliner: true,
         asker: Xonomy.askPicklist,
         askerParameter: this.TCriteriaGrade
       },
-      introduction: {
-        mustBeBefore: ['conceptualQuality'],
-        oneliner: true,
-        asker: Xonomy.askPicklist,
-        askerParameter: this.TCriteriaGrade
-      },
-      conceptualQuality: {
-        mustBeBefore: ['methodologicalQuality'],
-        oneliner: true,
-        asker: Xonomy.askPicklist,
-        askerParameter: this.TCriteriaGrade
-      },
-      methodologicalQuality: {
-        mustBeBefore: ['results'],
-        oneliner: true,
-        asker: Xonomy.askPicklist,
-        askerParameter: this.TCriteriaGrade
-      },
-      results: {
-        mustBeBefore: ['discussion'],
-        asker: Xonomy.askPicklist,
-        oneliner: true,
-        askerParameter: this.TCriteriaGrade
-      },
-      discussion: {
+      relevance: {
         mustBeBefore: ['readability'],
         oneliner: true,
         asker: Xonomy.askPicklist,
         askerParameter: this.TCriteriaGrade
       },
       readability: {
+        mustBeBefore: ['methodology'],
         oneliner: true,
         asker: Xonomy.askPicklist,
         askerParameter: this.TCriteriaGrade
       },
+      methodology: {
+        mustBeBefore: ['results'],
+        oneliner: true,
+        asker: Xonomy.askPicklist,
+        askerParameter: this.TCriteriaGrade
+      },
+      results: {
+        mustBeBefore: ['methodology'],
+        asker: Xonomy.askPicklist,
+        oneliner: true,
+        askerParameter: this.TCriteriaGrade
+      },
       overallEvaluation: {
-        mustBeBefore: ['commentsToAuthor'],
+        mustBeBefore: ['chapterReviews'],
         oneliner: true,
         asker: Xonomy.askPicklist,
         askerParameter: this.TOverallGrade
       },
-      commentsToAuthor: {
+      chapterReviews: {
         mustBeBefore: ['commentsToEditor'],
         menu: [{
-          caption: 'Add <proposedChange>',
+          caption: 'Add <chapterReview>',
           action: Xonomy.newElementChild,
-          actionParameter: '<proposedChange></proposedChange>'
+          actionParameter: '<chapterReview></chapterReview>'
         }]
       },
-      commentsToEditor:{
+      commentsToEditor: {
         asker: Xonomy.askString,
         hasText: true,
       },
-      proposedChange: {
+      chapterReview: {
         asker: Xonomy.askString,
         hasText: true,
         menu: [{
-          caption: 'Add @partID',
+          caption: 'Add @chapterID',
           action: Xonomy.newAttribute,
-          actionParameter: { name: 'partID', value: '' },
+          actionParameter: { name: 'chapterID', value: '' },
           hideIf(jsElement) {
-            return jsElement.hasAttribute('partID');
+            return jsElement.hasAttribute('chapterID');
           }
         }]
       }

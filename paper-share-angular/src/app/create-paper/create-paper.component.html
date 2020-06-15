@@ -11,6 +11,9 @@
         <textarea rows="5" cols="50" id="cover"></textarea>
     </div>
     <div>
-        <button (click)="sendFile()">Send file</button>
+        <button *ngIf="!paperName" mat-raised-button color="primary" (click)="sendFile()">Send file</button>
+        <button *ngIf="paperName" mat-raised-button color="primary" (click)="updateFile()">Update file</button>
+        <button mat-raised-button color="primary" (click)="back()">Back</button>
+
     </div>
 </div>

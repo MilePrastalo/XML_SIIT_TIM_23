@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 	}
 
 	@ResponseStatus(HttpStatus.CONFLICT)
-	@ExceptionHandler(value = { ConstraintViolationException.class, UserAlreadyAssignedException.class })
+	@ExceptionHandler(value = { ConstraintViolationException.class, UserAlreadyAssignedException.class, PaperAlreadyExistException.class })
 	public ResponseEntity<ErrorDetailsDTO> handleConflictExceptions(Exception exception) {
 		return genericHandler(exception, HttpStatus.CONFLICT);
 	}

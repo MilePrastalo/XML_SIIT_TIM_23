@@ -23,6 +23,8 @@ import { AssignReviewComponent } from './assign-review/assign-review.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ReviewListComponent } from './review-list/review-list.component';
 import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
+import { TokenInterceptorService } from './Service/token-interceptor.service';
+import { UnitedReviewsComponent } from './united-reviews/united-reviews.component';
 
 
 @NgModule({
@@ -42,7 +44,8 @@ import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
     AssignReviewComponent,
     UserProfileComponent,
     ReviewListComponent,
-    PaperReviewsComponent
+    PaperReviewsComponent,
+    UnitedReviewsComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,11 @@ import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
     HttpClientModule,
 
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptorService,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -11,7 +11,7 @@ import { PaperListComponent } from './paper-list/paper-list.component';
 import { AssignReviewComponent } from './assign-review/assign-review.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
-
+import { UnitedReviewsComponent } from './united-reviews/united-reviews.component';
 
 
 const routes: Routes = [
@@ -19,9 +19,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'add', component: CreatePaperComponent },
+  { path: 'add/:title', component: CreatePaperComponent },
   { path: 'addReview/:title', component: AddReviewComponent },
   { path: 'view-paper/:name', component: ViewPaperComponent },
-  { path: 'view-review', component: ViewReviewComponent },
+  { path: 'review/:name', component: ViewReviewComponent },
+  { path: 'united-reviews/:name', component: UnitedReviewsComponent },
   { path: 'assign-review', component: AssignReviewComponent },
   { path: 'paper-list', component: PaperListComponent },
   { path: 'user-profile', component: UserProfileComponent },

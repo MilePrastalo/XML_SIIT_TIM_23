@@ -2,7 +2,7 @@
 <div style="margin-top: 5%;">
     <mat-tab-group mat-align-tabs="center" >
         
-        <mat-tab *ngIf= "role === 'EDITOR'" label="New Papers">
+        <mat-tab *ngIf= "role === 'ROLE_ADMIN'" label="New Papers">
             <app-paper-list [papers] = 'completedPapers' [forUser] = false></app-paper-list>
         </mat-tab>
         <mat-tab label="Your Papers">
@@ -13,6 +13,9 @@
         </mat-tab>
         <mat-tab label="Your Reviews">
             <app-review-list [reviews] = 'userReviews'></app-review-list>
+        </mat-tab>
+        <mat-tab *ngIf= "role === 'ROLE_ADMIN'" label="Submitted Reviews">
+            <app-review-list [reviews] = 'submittedReviews'></app-review-list>
         </mat-tab>
     
     </mat-tab-group>

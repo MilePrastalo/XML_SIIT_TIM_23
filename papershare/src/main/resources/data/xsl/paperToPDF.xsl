@@ -4,7 +4,7 @@
 	xmlns:fo="http://www.w3.org/1999/XSL/Format"
 	xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"
 	version="2.0">
-	    <xsl:import href="templates.xsl"/>
+	<xsl:import href="templates.xsl" />
 	<xsl:template match="/">
 		<fo:root>
 			<fo:layout-master-set>
@@ -78,15 +78,28 @@
 						</xsl:for-each>
 					</fo:block>
 
-					<xsl:for-each
-						select="//sci:Chapter">
+					<xsl:for-each select="//sci:Chapter">
 						<xsl:call-template name="Chapter" />
-					</xsl:for-each>
-
-
-
-
-
+					</xsl:for-each>					
+					
+					<fo:block space-after="14px" space-before="16px">
+						<fo:block font-size="14px" space-after="5px"
+							font-weight="bold">
+							References
+						</fo:block>
+						<xsl:for-each
+							select="sci:ScientificPaper/sci:References/sci:Reference">
+							<xsl:value-of select="sci:AuthorInformation" />
+							,
+							<xsl:value-of select="sci:year" />
+							,
+							<xsl:value-of select="sci:magazine" />
+							,
+							<xsl:value-of select="sci:article" />
+							,
+							<xsl:value-of select="sci:publisher" />
+						</xsl:for-each>
+					</fo:block>
 				</fo:flow>
 			</fo:page-sequence>
 		</fo:root>

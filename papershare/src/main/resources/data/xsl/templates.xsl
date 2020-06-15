@@ -15,22 +15,14 @@
 					<xsl:apply-templates />
 				</fo:block>
 			</xsl:for-each>
-			<xsl:for-each select="./sci:ChapterBody/sci:ChapterContent">
+			<xsl:for-each
+				select="./sci:ChapterBody/sci:ChapterContent">
 				<fo:block>
-					<xsl:apply-templates />
+					<fo:block font-size="18px" space-after="7px">
+						<xsl:value-of select="." />
+					</fo:block>
 				</fo:block>
 			</xsl:for-each>
-		</fo:block>
-	</xsl:template>
-
-	<xsl:template name="sci:chapterText">
-		<fo:block font-size="18px" space-after="7px">
-			<xsl:value-of select="." />
-		</fo:block>
-	</xsl:template>
-	<xsl:template name="sci:chapterImage">
-		<fo:block font-size="18px" space-after="7px">
-			<xsl:value-of select="." />
 		</fo:block>
 	</xsl:template>
 

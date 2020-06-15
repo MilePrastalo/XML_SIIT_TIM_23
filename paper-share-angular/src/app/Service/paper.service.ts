@@ -12,34 +12,41 @@ export class PaperService {
 
   constructor(private http: HttpClient) { }
   path = 'http://localhost:8080';
-  headers: HttpHeaders = new HttpHeaders({
-    Authorization: 'Bearer ' + localStorage.getItem('token')
-  });
 
   sendPaper(paper: PaperUpload): Observable<void> {
     return this.http.post<void>(this.path + '/api/papers', paper);
   }
 
-  getPaper( name: string) {
-    const x =  this.http.get(this.path + '/api/papers/' + name, { headers: this.headers, responseType: 'text' });
+  updatePaper(paper: PaperUpload, paperName: string): Observable<void> {
+    return this.http.post<void>(this.path + '/api/papers/update/' + paperName, paper);
+  }
+
+  getPaper(name: string) {
+    const x = this.http.get(this.path + '/api/papers/' + name, { responseType: 'text' });
     return x;
+  }
+  getPaperAsText(name: string): Observable<string> {
+    return this.http.get(this.path + '/api/papers/asText/' + name, { responseType: 'text' });
+  }
+  getCoverLetter(name: string): Observable<string> {
+    return this.http.get(this.path + '/api/papers/coverLetter/' + name, { responseType: 'text' });
   }
 
   getUserPapers(): Observable<Array<PaperView>> {
-    return this.http.get<Array<PaperView>>(this.path + '/api/papers/userPapers', { headers: this.headers});
+    return this.http.get<Array<PaperView>>(this.path + '/api/papers/userPapers');
   }
 
   getCompletedPapers(): Observable<Array<PaperView>> {
-    return this.http.get<Array<PaperView>>(this.path + '/api/papers/completedPapers', { headers: this.headers});
+    return this.http.get<Array<PaperView>>(this.path + '/api/papers/completedPapers');
   }
 
 
-  acceptPaper( paperName: string): Observable<boolean> {
-    return this.http.get<boolean>(this.path + '/api/papers/acceptPaper/' + paperName, { headers: this.headers});
+  acceptPaper(paperName: string): Observable<boolean> {
+    return this.http.get<boolean>(this.path + '/api/papers/acceptPaper/' + paperName);
   }
 
-  rejectPaper( paperName: string): Observable<boolean> {
-    return this.http.get<boolean>(this.path + '/api/papers/rejectPaper/' + paperName, { headers: this.headers});
+  rejectPaper(paperName: string): Observable<boolean> {
+    return this.http.get<boolean>(this.path + '/api/papers/rejectPaper/' + paperName);
   }
 
   getAllPublishedPapers(): Observable<Array<PaperView>> {
@@ -55,7 +62,11 @@ export class PaperService {
   }
 
   deletePaper(paperName: string) {
-    return this.http.delete(this.path + '/api/papers/' + paperName, { headers: this.headers});
+    return this.http.delete(this.path + '/api/papers/' + paperName);
+  }
+
+  sendToEditor(paperName: string) {
+    return this.http.put(this.path + '/api/papers/sendToEditor/' + paperName, {});
   }
 
 }

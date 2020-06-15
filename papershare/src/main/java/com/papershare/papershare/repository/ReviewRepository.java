@@ -155,22 +155,27 @@ public class ReviewRepository {
 		existMenager.storeXMLFromText(collectionId, title, xmlEntity);
 		return "OK";
 	}
-	
-	//Will replace review with new
+
+	// Will replace review with new
 	public String updateReview(String xmlEntity, String title)
 			throws XMLDBException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		System.out.println(xmlEntity);
 		System.out.println(title);
 		removeReview(title);
-		save(xmlEntity,title);
+		save(xmlEntity, title);
 		return "OK";
 	}
-	
+
 	public void modifyReview(String documentId, String targetElement, String xmlFragmet) {
 		try {
 			existMenager.update(0, collectionId, documentId, targetElement, xmlFragmet);
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | XMLDBException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void uniteReviews(String documentId, String review)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException {
+		existMenager.update(1, collectionId, documentId, "/unitedReviews/reviews", review);
 	}
 }

@@ -15,7 +15,7 @@ export class PaperListComponent implements OnInit {
   @Input() forUser: boolean;
   @Input() homePage: boolean;
 
-  constructor(private paperService: PaperService, private router: Router,  private snackBar: MatSnackBar) { }
+  constructor(private paperService: PaperService, private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -69,8 +69,8 @@ export class PaperListComponent implements OnInit {
     this.router.navigate(['/view-paper', name]);
   }
 
-  goToPaperReviews( paperName: string) {
-    this.router.navigate(['/paper-reviews', paperName]);
+  goToPaperReviews(paperName: string) {
+    window.open('/united-reviews/' + paperName);
   }
 
   deletePaper(title: string, index: number) {
@@ -85,6 +85,29 @@ export class PaperListComponent implements OnInit {
       })
     );
 
+  }
+  addPaper() {
+    this.router.navigateByUrl('add');
+  }
+  edit(name: string) {
+    this.router.navigateByUrl('add/' + name);
+  }
+
+  getHref(name: string) {
+    return 'http://localhost:8080/api/papers/' + name + '/pdf';
+  }
+
+  sendToEditor(index: number) {
+    this.paperService.sendToEditor(this.papers[index].title).subscribe(
+      (response => {
+        this.snackBar.open(this.papers[index].title + ' has been sent to editor.');
+        this.papers[index].status = 'completed';
+      }),
+      (error => {
+        const err = JSON.parse(error.error);
+        this.snackBar.open(err.message);
+      })
+    );
   }
 
 }

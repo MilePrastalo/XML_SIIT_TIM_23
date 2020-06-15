@@ -1,103 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:sci="https://XML_SIIT_TIM_23/Review"
-    version="2.0">
-    
-    <xsl:template match="/">
-        <html>
-            <head>
-                <style>
-                    h1 { text-align:center }
-                </style>
-            </head>
-            
-            <body>
-                <h1>Reviewer</h1>
-                    <p>
-                        <xsl:value-of select="/review/metadata/reviewer"/>,
-                        <xsl:value-of select="/review/metadata/publicationName"/>,
-                        <xsl:value-of select="/review/metadata/submissionDate"/>,
-                    </p>
-                
-                <h2>Criterial of evaluation: </h2>
-                <table>
-                	<tr>
-                		<td>
-                			Relevance of research problem
-                		</td>
-                		<td>
-                			<xsl:value-of select="/review/body/criteriaEvaluation/relevanceOfResearchProblem"/>
-                		</td>
-                	</tr>
-                	<tr>
-                		<td>
-                			Introduction
-                		</td>
-                		<td>
-                			<xsl:value-of select="/review/body/criteriaEvaluation/introduction"/>
-                		</td>
-                	</tr>
-                	<tr>
-                		<td>
-                			Conceptual Quality
-                		</td>
-                		<td>
-                			<xsl:value-of select="/review/body/criteriaEvaluation/conceptualQuality"/>
-                		</td>
-                	</tr>
-                	<tr>
-                		<td>
-                			Methodological Quality
-                		</td>
-                		<td>
-                			<xsl:value-of select="/review/body/criteriaEvaluation/methodologicalQuality"/>
-                		</td>
-                	</tr>
-                	<tr>
-                		<td>
-                			Results
-                		</td>
-                		<td>
-                			<xsl:value-of select="/review/body/criteriaEvaluation/results"/>
-                		</td>
-                	</tr>
-                	<tr>
-                		<td>
-                			Discussion
-                		</td>
-                		<td>
-                			<xsl:value-of select="/review/body/criteriaEvaluation/discussion"/>
-                		</td>
-                	</tr>
-                	<tr>
-                		<td>
-                			Readability
-                		</td>
-                		<td>
-                			<xsl:value-of select="/review/body/criteriaEvaluation/readability"/>
-                		</td>
-                	</tr>
-                </table>
-                
-                <h2>Overall Evaluation</h2>
-                <p>
-                	<xsl:value-of select="/review/body/overallEvaluation"/>
-                </p>
-                
-                <h2>Comments to Author</h2>
-                <xsl:for-each select="/review/body/commentsToAuthor/proposedChange">
-	         		<p class = "center">
-	 					Paragraph ID: <xsl:value-of select="@partID"/>
-	 					Comment: <xsl:value-of select="current()"/>
-	         		</p>
-	         	</xsl:for-each>
-	         	
-	         	<h2>Comments to Editor</h2>
-	         	<p>
-                	<xsl:value-of select="/review/body/commentsToEditor"/>
-                </p>
-            </body>
-        </html>
-    </xsl:template>
-    
+<xsl:stylesheet
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:x="https://github.com/MilePrastalo/XML_SIIT_TIM_23"
+	xmlns:rv="https://github.com/MilePrastalo/XML_SIIT_TIM_23"
+	version="2.0">
+
+	<xsl:template match="/">
+		<html>
+			<head>
+				<style>
+					.center {
+					width: 500px;
+					margin: 0 auto;
+					padding: 5px;
+					font-size:
+					16px;
+					}
+
+					.tab {
+					margin-left: 2.5em
+					}
+				</style>
+			</head>
+
+			<body>
+				<div class="center">
+					<h1>Review</h1>
+					<p>
+						<b>Scientific Paper:	</b>
+						<xsl:value-of
+							select="/x:review/x:metadata/x:paperName" />
+						<br />
+
+						<b>Reviewer:</b>
+						<xsl:value-of
+							select="/x:review/x:metadata/x:reviewer" />
+						<br />
+
+						<b>Status:  </b>
+						<xsl:value-of select="/x:review/x:metadata/x:status" />
+						<br />
+
+						<b>Created on:  </b>
+						<xsl:value-of
+							select="/x:review/x:metadata/x:submissionDate" />
+						<br />
+					</p>
+
+					<h2>Criteria of evaluation: </h2>
+					<table>
+						<tr>
+							<td>
+								<b>Abstract:</b>
+							</td>
+							<td>
+								<xsl:value-of
+									select="/x:review/x:body/x:criteriaEvaluation/x:abstract" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>Relevance:</b>
+							</td>
+							<td>
+								<xsl:value-of
+									select="/x:review/x:body/x:criteriaEvaluation/x:relevance" />
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<b>Readability:</b>
+							</td>
+							<td>
+								<xsl:value-of
+									select="/x:review/x:body/x:criteriaEvaluation/x:readability" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>Methodology:</b>
+							</td>
+							<td>
+								<xsl:value-of
+									select="/x:review/x:body/x:criteriaEvaluation/x:methodology" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>Results</b>
+							</td>
+							<td>
+								<xsl:value-of
+									select="/x:review/x:body/x:criteriaEvaluation/x:results" />
+							</td>
+						</tr>
+					</table>
+					<br />
+
+					<h2>Overall Evaluation</h2>
+					<p>
+						<xsl:value-of
+							select="/x:review/x:body/x:overallEvaluation" />
+					</p>
+
+					<h2>Comments to Author</h2>
+					<xsl:for-each
+						select="/x:review/x:body/x:chapterReviews/x:chapterReview">
+						<p class="center">
+							<b>Paragraph ID:</b>
+							<xsl:value-of select="@partID" />
+							<br />
+							<b>Comment:</b>
+							<xsl:value-of select="current()" />
+						</p>
+					</xsl:for-each>
+
+					<h2>Comments to Editor</h2>
+					<p>
+						<xsl:value-of
+							select="/x:review/x:body/x:commentsToEditor" />
+					</p>
+				</div>
+			</body>
+		</html>
+	</xsl:template>
+
 </xsl:stylesheet>
