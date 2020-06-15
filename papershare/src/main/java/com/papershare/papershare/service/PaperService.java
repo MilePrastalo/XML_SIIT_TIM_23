@@ -110,6 +110,12 @@ public class PaperService {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String recievedDate = sdf.format(new Date());
 		sp.setAttribute("id", currentMilli.toString());
+		
+		sp.setAttribute("about", "https://github.com/MilePrastalo/XML_SIIT_TIM_23/"+title);
+		Element recDateElement = document.createElement("sci:recievedDate");
+		recDateElement.appendChild(document.createTextNode(recievedDate));
+		recDateElement.setAttribute("property", "pred:recievedDate");
+		sp.appendChild(recDateElement);
 
 		StringWriter sw = new StringWriter();
 		TransformerFactory tf = TransformerFactory.newInstance();
@@ -374,7 +380,22 @@ public class PaperService {
 		changePaperStatus(paperName, "completed");
 
 		String author = getLoggedUser();
-		emailService.sendPaperSubmissionToEditor(author, paperName);
+		
+		//Send cover letter content in email
+		Document coverLetterXml = paperRepository.findCoverLetter();
+		NodeList nodes = coverLetterXml.getElementsByTagName("coverLetter");
+		String coverLetter = "";
+		for (int i = 0; i < nodes.getLength(); i++) {
+			Element el = (Element) nodes.item(i);
+			Element title = (Element) el.getElementsByTagName("title").item(0);
+			if (title.getTextContent().equals(paperName)) {
+				Element content = (Element) el.getElementsByTagName("Content").item(0);
+				coverLetter = content.getTextContent();
+				break;
+			}
+		}
+		System.out.println(coverLetter);
+		emailService.sendPaperSubmissionToEditor(author, paperName,coverLetter);
 	}
 
 	public Boolean acceptPaper(String name) throws MailException, InterruptedException {

@@ -21,7 +21,7 @@ public class EmailService {
 	}
 
 	@Async
-	public void sendPaperSubmissionToEditor(String author, String paperName)
+	public void sendPaperSubmissionToEditor(String author, String paperName, String coverLetterText)
 			throws MailException, InterruptedException {
 
 		System.out.println("Sending sendPaperSubmissionToEditor e-mail from " + author);
@@ -29,8 +29,8 @@ public class EmailService {
 		mail.setTo(editorsMail);
 		mail.setFrom("papershare.xml@gmail.com");
 		mail.setSubject("Scientific paper submission by: " + author + ", paper title: " + paperName);
-		mail.setText(
-				"You have new scientific paper submission by: " + author + ", tile of the paper: " + paperName + ".");
+		mail.setText("You have new scientific paper submission by: " + author + ", tile of the paper: " + paperName
+				+ "." + "\nCover letter:\n" + coverLetterText);
 		javaMailSender.send(mail);
 		System.out.println("E-mail endPaperSubmissionToEditor sent!");
 	}
