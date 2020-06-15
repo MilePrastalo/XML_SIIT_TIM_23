@@ -25,7 +25,7 @@ export class CreatePaperComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.scientificPublication = '<ScientificPaper xmlns="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></ScientificPaper>';
+    this.scientificPublication = '<ScientificPaper xmlns="https://github.com/MilePrastalo/XML_SIIT_TIM_23"' + ' xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate"></ScientificPaper>';
     if (this.paperName) {
       this.paperService.getPaperAsText(this.paperName).subscribe(
         response => { 

@@ -15,16 +15,16 @@ export class XonomyService {
     elements: {
       ScientificPaper: {
         menu: [{
-          caption: "Add @language=\"english\"",
-          action: Xonomy.newAttribute,
-          actionParameter: { name: "language", value: "english" },
+          caption: 'Add <language>',
+          action: Xonomy.newElementChild,
+          actionParameter: '<sci:language xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23" property="pred:language"></sci:language>',
           hideIf: function (jsElement) {
-            return jsElement.hasAttribute("language");
+            return jsElement.hasChildElement("sci:language");
           }
         }, {
           caption: 'Add <sci:title>',
           action: Xonomy.newElementChild,
-          actionParameter: '<sci:title xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23"></sci:title>',
+          actionParameter: '<sci:title xmlns:sci="https://github.com/MilePrastalo/XML_SIIT_TIM_23" property="pred:title"></sci:title>',
           hideIf: function (jsElement) {
             return jsElement.hasChildElement("sci:title");
           }
@@ -77,6 +77,16 @@ export class XonomyService {
           }
         }
       },
+      "sci:language": {
+        mustBeBefore: ['sci:title', 'Abstract', 'Keywords', 'sci:Chapters', 'References'],
+        hasText: true,
+        oneliner: true,
+        asker: Xonomy.askString,
+        menu: [{
+          caption: 'Delete element',
+          action: Xonomy.deleteElement
+        }],
+      },
       "sci:title": {
         mustBeBefore: ['Authors', 'Abstract', 'Keywords', 'sci:Chapters', 'References'],
         hasText: true,
@@ -103,7 +113,7 @@ export class XonomyService {
         menu: [{
           caption: 'Add <Keyword>',
           action: Xonomy.newElementChild,
-          actionParameter: '<Keyword></Keyword>'
+          actionParameter: '<Keyword property="pred:keywords"></Keyword>'
         }, {
           caption: 'Delete element',
           action: Xonomy.deleteElement
@@ -128,7 +138,7 @@ export class XonomyService {
         }, {
           caption: 'Add <authorName>',
           action: Xonomy.newElementChild,
-          actionParameter: '<authorName></authorName>',
+          actionParameter: '<authorName  property="pred:authors"></authorName>',
           hideIf: function (jsElement) {
             return jsElement.hasChildElement("authorName");
           }
