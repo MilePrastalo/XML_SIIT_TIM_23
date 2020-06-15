@@ -9,14 +9,15 @@ import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
 import org.apache.jena.update.UpdateRequest;
+import org.springframework.stereotype.Component;
 
 import com.papershare.papershare.rdf.FusekiAuthenticationUtilities.ConnectionProperties;
 
-
+@Component
 public class FusekiWriter {
 	
-	private final String RDF_FILEPATH = "src/main/resources/rdf/paper_metadata.rdf";
-	private final String PAPERS_METADATA_GRAPH_URI = "scientificPapers/metadata";
+	private final String RDF_FILEPATH = "src/main/resources/data/rdf/paper_metadata.rdf";
+	private final String PAPERS_METADATA_GRAPH_URI = "/papersMetadata";
 	
 	public void saveRDF() throws IOException {
 		
@@ -44,7 +45,7 @@ public class FusekiWriter {
 		//TODO Remove this later
 		// This will delete all of the triples in all of the named graphs 
 		// request.add(SparqlUtil.dropAll()); 
-		
+		System.out.println("EEEJ => " + conn.updateEndpoint);
 		UpdateProcessor processor = UpdateExecutionFactory.createRemote(request, conn.updateEndpoint);
 		processor.execute();
 

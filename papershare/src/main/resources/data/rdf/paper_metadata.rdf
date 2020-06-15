@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:pred="http://www.ftn.uns.ac.rs/rdf/examples/predicate/">
+         
+         <!-- Subject is defined with rdf:about attribute -->
+		  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/scientific_papers/paper1">
+		    <pred:id>50</pred:id>
+		    <pred:title>EtikaAI</pred:title>
+		    <pred:language>Serbian</pred:language>
+		    <pred:date>10-06-2019</pred:date>
+		    <pred:authors>Mile</pred:authors>
+		    <pred:keywords>etika</pred:keywords>
+		  </rdf:Description>  
+         
+</rdf:RDF>

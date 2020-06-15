@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import com.papershare.papershare.DTO.PaperUploadDTO;
 import com.papershare.papershare.DTO.PaperViewDTO;
+import com.papershare.papershare.DTO.SearchDTO;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,23 +44,28 @@ import org.xmldb.api.modules.XMLResource;
 
 import com.papershare.papershare.dom.DOMParser;
 import com.papershare.papershare.dom.XSLTransformer;
+import com.papershare.papershare.model.TUser;
+import com.papershare.papershare.rdf.FusekiReader;
 import com.papershare.papershare.repository.PaperRepository;
+import com.papershare.papershare.repository.UserRepository;
 
 @Service
 public class PaperService {
 
 	private final String scientificPublicatonXSL = "src/main/resources/data/xsl/scientificPaper.xsl";
-	private final String paperSchema = "src/main/resources/data/scientificPaper.xsd";
+	//private final String paperSchema = "src/main/resources/data/scientificPaper.xsd";
 	private static String xslFOPath = "src/main/resources/data/xsl/paperToPDF.xsl";
 	private DOMParser domParser;
 
 	private PaperRepository paperRepository;
+	private UserRepository userRepository;
 	private XSLTransformer xslTransformer;
 
-	public PaperService(XSLTransformer xslTransformer, PaperRepository sciPaperRepository, DOMParser domParser) {
+	public PaperService(XSLTransformer xslTransformer, PaperRepository sciPaperRepository, DOMParser domParser, UserRepository userRepository) {
 		this.paperRepository = sciPaperRepository;
 		this.xslTransformer = xslTransformer;
 		this.domParser = domParser;
+		this.userRepository = userRepository;
 	}
 
 	public String convertXMLtoHTML(String name) {
@@ -126,8 +134,8 @@ public class PaperService {
 		paperRepository.modifyPaper(documentId, targetElement, xmlFragmet);
 	}
 
-	public ArrayList<PaperViewDTO> getAllPapers() {
-		String xPathExpression = "/ScientificPaper";
+	public ArrayList<PaperViewDTO> getPublishedPapers() {
+		String xPathExpression = "/ScientificPaper[status = 'published']";
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
@@ -147,6 +155,29 @@ public class PaperService {
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
 	}
+	
+	public ArrayList<PaperViewDTO> searhByMetadata( SearchDTO dto) throws IOException {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("title", dto.getTitle());
+		params.put("language", dto.getLanguage());
+		params.put("date", dto.getDate());
+		if (dto.isForUser()) {
+			String username = getLoggedUser();
+			TUser user = userRepository.findOneByUsername(username);
+			params.put("author", user.getFirstName() + " " + user.getLastName());
+		}else {
+			params.put("author", dto.getAuthors());
+		}
+		params.put("keyword", dto.getKeywords());
+		ArrayList<String> idsOfPapers = FusekiReader.executeQuery(params);
+		ArrayList<PaperViewDTO> paperList = new ArrayList<PaperViewDTO>();
+		if (idsOfPapers.size() != 0) {
+			String xPathExpression = createQXPathForIDs(idsOfPapers, dto.isForUser());
+			ResourceSet result = paperRepository.findPapers(xPathExpression);
+			paperList = extractDataFromPapers(result);
+		}
+		return paperList;
+	}
 
 	private ArrayList<PaperViewDTO> extractDataFromPapers(ResourceSet resourceSet) {
 		ArrayList<PaperViewDTO> paperList = new ArrayList<PaperViewDTO>();
@@ -159,9 +190,10 @@ public class PaperService {
 				String id = document.getElementsByTagName("ScientificPaper").item(0).getAttributes().getNamedItem("id")
 						.getTextContent();
 				NodeList authors = document.getElementsByTagName("sci:authorName");
+				NodeList keywords = document.getElementsByTagName("sci:Keyword");
 				NodeList title = document.getElementsByTagName("sci:title");
 				NodeList status = document.getElementsByTagName("sci:status");
-				paperList.add(new PaperViewDTO(authors, title, status, id));
+				paperList.add(new PaperViewDTO(authors, title, status, id, keywords));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -176,5 +208,23 @@ public class PaperService {
 			username = authentication.getName();
 		}
 		return username;
+	}
+	
+	private String createQXPathForIDs(ArrayList<String> idsOfPapers, boolean forUser) {
+		String xPathExpression = "/ScientificPaper[";
+		for (int i = 0; i < idsOfPapers.size(); i++) {
+			if (i == 0) {
+				xPathExpression += "(@id = " + idsOfPapers.get(i);
+			}
+			else {
+				xPathExpression += " or @id = "+ idsOfPapers.get(i);
+			}
+		}
+		xPathExpression += ")";
+		if (!forUser) {
+			xPathExpression += " and status = 'published'";
+		}
+		xPathExpression += "]";
+		return xPathExpression;
 	}
 }

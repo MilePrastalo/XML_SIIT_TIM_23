@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -21,11 +22,11 @@ import com.papershare.papershare.rdf.FusekiAuthenticationUtilities.ConnectionPro
 
 public class FusekiReader {
 	
-	private static final String QUERY_FILEPATH = "src/main/resources/rdf/searchQuery.rq";
+	private static final String QUERY_FILEPATH = "src/main/resources/data/rdf/searchQuery.rq";
 	
 	private FusekiReader() {}
 
-	public static void run( Map<String, String> params) throws IOException {
+	public static ArrayList<String> executeQuery( Map<String, String> params) throws IOException {
 		
 		ConnectionProperties conn = FusekiAuthenticationUtilities.loadProperties();
 		
@@ -41,6 +42,7 @@ public class FusekiReader {
 		
 		String varName;
 		RDFNode varValue;
+		ArrayList<String> idsOfPapers = new ArrayList<String>();
 		
 		while(results.hasNext()) {
 		    
@@ -53,17 +55,18 @@ public class FusekiReader {
 		   
 		    	varName = variableBindings.next();
 		    	varValue = querySolution.get(varName);
-		    	
 		    	System.out.println(varName + ": " + varValue);
+		    	if (varName.equals("id")) {
+		    		idsOfPapers.add(varValue.toString());
+		    	}
 		    }
 		    System.out.println();
 		}
 		
 	    ResultSetFormatter.outputAsXML(System.out, results);
-		
 		query.close() ;
-		
 		System.out.println("[INFO] SPARQL Query End.");
+		return idsOfPapers;
 	}
 	
 	public static String readFile(String path, Charset encoding) throws IOException {

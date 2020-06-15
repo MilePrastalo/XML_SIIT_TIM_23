@@ -1,5 +1,6 @@
 package com.papershare.papershare.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.papershare.papershare.DTO.PaperUploadDTO;
 import com.papershare.papershare.DTO.PaperViewDTO;
+import com.papershare.papershare.DTO.SearchDTO;
 import com.papershare.papershare.service.PaperService;
 
 
@@ -75,6 +77,18 @@ public class PaperController {
 	public ResponseEntity<Boolean> rejectPaper(@PathVariable("name") String name) {
 		paperService.changePaperStatus(name, "rejected");
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/publishedPapers")
+	public ResponseEntity<List<PaperViewDTO>> getPublishedPapers() {
+		List<PaperViewDTO> result = paperService.getPublishedPapers();
+		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/searchByMetadata")
+	public ResponseEntity<List<PaperViewDTO>> searchByMetadata(@RequestBody SearchDTO dto) throws IOException {
+		List<PaperViewDTO> result = paperService.searhByMetadata(dto);
+		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
 	}
 }
 

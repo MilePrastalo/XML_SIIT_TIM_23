@@ -6,7 +6,7 @@ public class UserDTO {
 	private String password;
 	private String email;
 	private String firstName;
-	private String lastNAme;
+	private String lastName;
 	private String title;
 	
 	public UserDTO() {
@@ -20,7 +20,7 @@ public class UserDTO {
 		this.password = password;
 		this.email = email;
 		this.firstName = firstName;
-		this.lastNAme = lastNAme;
+		this.lastName = lastNAme;
 		this.title = title;
 	}
 
@@ -57,12 +57,12 @@ public class UserDTO {
 		this.firstName = firstName;
 	}
 
-	public String getLastNAme() {
-		return lastNAme;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLastNAme(String lastNAme) {
-		this.lastNAme = lastNAme;
+	public void setLastName(String lastNAme) {
+		this.lastName = lastNAme;
 	}
 
 	public String getTitle() {

@@ -47,7 +47,7 @@ public class UserService {
 			return false;
 		}
 		TUser newUser = new TUser(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail(), dto.getFirstName(),
-				dto.getLastNAme(), dto.getTitle());
+				dto.getLastName(), dto.getTitle());
 		newUser.setRole("ROLE_USER");
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		newUser.setPassword(bc.encode(dto.getPassword()));

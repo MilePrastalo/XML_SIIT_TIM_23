@@ -1,0 +1,16 @@
+
+SELECT * FROM <http://localhost:8081/fuseki/ScientificPapers/data/papersMetadata> WHERE {
+  ?paper <http://www.ftn.uns.ac.rs/rdf/examples/predicate/title> ?title .
+  ?paper <http://www.ftn.uns.ac.rs/rdf/examples/predicate/language> ?language .
+  ?paper <http://www.ftn.uns.ac.rs/rdf/examples/predicate/date> ?date .
+  ?paper <http://www.ftn.uns.ac.rs/rdf/examples/predicate/id> ?id .
+  ?paper <http://www.ftn.uns.ac.rs/rdf/examples/predicate/keywords> ?keywords .
+  ?paper <http://www.ftn.uns.ac.rs/rdf/examples/predicate/authors> ?authors .
+  FILTER( CONTAINS(UCASE(str(?title)), UCASE("{{title}}"))
+    && CONTAINS(UCASE(str(?language)), UCASE("{{language}}"))
+    && CONTAINS(UCASE(str(?authors)), UCASE("{{author}}"))
+    && CONTAINS(UCASE(str(?keywords)), UCASE("{{keyword}}"))
+    && CONTAINS(UCASE(str(?date)), UCASE("{{date}}"))
+  ) .
+} 
+LIMIT 10

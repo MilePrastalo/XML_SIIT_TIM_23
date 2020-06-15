@@ -1,14 +1,14 @@
 package com.papershare.papershare.DTO;
 
-import java.util.List;
 
 public class SearchDTO {
 
 	private String title;
-	private List<String> authors;
-	private List<String> keywords;
+	private String authors;
+	private String keywords;
 	private String date;
 	private String language;
+	private boolean forUser;
 	
 	public SearchDTO() {
 		// TODO Auto-generated constructor stub
@@ -22,20 +22,20 @@ public class SearchDTO {
 		this.title = title;
 	}
 
-	public List<String> getAuthors() {
+	public String getAuthors() {
 		return authors;
 	}
 
-	public void setAuthors(List<String> authors) {
+	public void setAuthors(String authors) {
 		this.authors = authors;
 	}
 
-	public List<String> getKeywords() {
+	public String getKeywords() {
 		return keywords;
 	}
 
-	public void setKeywords(List<String> words) {
-		this.keywords = words;
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
 	}
 
 	public String getDate() {
@@ -52,6 +52,14 @@ public class SearchDTO {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public boolean isForUser() {
+		return forUser;
+	}
+
+	public void setForUser(boolean forUser) {
+		this.forUser = forUser;
 	}
 	
 	

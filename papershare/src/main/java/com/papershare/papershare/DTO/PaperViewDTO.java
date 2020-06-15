@@ -11,13 +11,17 @@ public class PaperViewDTO {
 	private String title;
 	private List<String> authors = new ArrayList<String>();
 	private String status;
+	private List<String> keywords = new ArrayList<String>();
 	
 	public PaperViewDTO() {
 	}
 	
-	public PaperViewDTO(NodeList authors, NodeList title, NodeList status, String id) {
+	public PaperViewDTO(NodeList authors, NodeList title, NodeList status, String id, NodeList keywords) {
 		for (int idx = 0, len = authors.getLength(); idx < len; idx++) {
 			this.authors.add(authors.item(idx).getTextContent());
+		}
+		for (int idx = 0, len = keywords.getLength(); idx < len; idx++) {
+			this.keywords.add(keywords.item(idx).getTextContent());
 		}
 		this.title = title.item(0).getTextContent();
 		this.status = status.item(0).getTextContent();
@@ -54,6 +58,14 @@ public class PaperViewDTO {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public List<String> getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(List<String> keywords) {
+		this.keywords = keywords;
 	}
 
 	
