@@ -42,8 +42,12 @@ export class PaperService {
     return this.http.get<boolean>(this.path + '/api/papers/rejectPaper/' + paperName, { headers: this.headers});
   }
 
+  getAllPublishedPapers(): Observable<Array<PaperView>> {
+    return this.http.get<Array<PaperView>>(this.path + '/api/papers/publishedPapers', { headers: this.headers});
+  }
+
   search( dto: SearchDto ): Observable<Array<PaperView>> {
-    return this.http.post<Array<PaperView>>(this.path + '/api/papers/search', dto, { headers: this.headers});
+    return this.http.post<Array<PaperView>>(this.path + '/api/papers/searchByMetadata', dto, { headers: this.headers});
   }
 
 }

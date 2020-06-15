@@ -69,4 +69,8 @@ export class UserProfileComponent implements OnInit {
       })
     );
   }
+
+  showSearchResult($event) {
+    this.userPapers = $event;
+  }
 }

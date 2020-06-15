@@ -15,9 +15,14 @@
             
             <mat-card-content>
                 <!--Authors-->
-                <span *ngFor = "let author of paper.authors;"> {{author}}, </span>
+                <span *ngFor = "let author of paper.authors;"> {{author}}, </span><br>
+                <!--Keywords-->
+                <strong>Keywords:</strong><i> {{paper.keywords}} </i>
 
                 <!--Actions-->
+                <div *ngIf = "homePage === true">
+                    <button class="paper_btns" (click) = "openPaper(paper.title)" mat-stroked-button color="primary">Open</button>
+                </div>
                 <div *ngIf = "forUser === true">
                     <button class="paper_btns" (click) = "openPaper(paper.title)" mat-stroked-button color="primary">Open</button>
                     <button *ngIf = "paper.status == 'not completed'" class="paper_btns" mat-stroked-button color="primary">Edit</button>

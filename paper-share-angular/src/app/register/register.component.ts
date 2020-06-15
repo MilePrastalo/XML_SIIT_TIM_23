@@ -34,6 +34,7 @@ export class RegisterComponent implements OnInit {
 
   onRegisterSubmit() {
     const user = this.userData;
+    alert(JSON.stringify(user));
     if (user.password !== user.repeatedPassword) {
       this.snackBar.open('Wrong repeated password.');
       return;

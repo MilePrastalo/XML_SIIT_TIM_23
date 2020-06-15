@@ -3,7 +3,7 @@
     <button mat-stroked-button color="primary" (click)="openDialogue()" >Search&nbsp;&nbsp;<i class="fa fa-search fa-2x" aria-hidden="true"> </i></button>
     
     <div  *ngIf="dialog" class="dialog">
-        <form action="" *ngIf="dialog">
+        <form *ngIf="dialog" [formGroup]="searchForm" >
 
             <mat-form-field class="field-full-width">
                 <input id="title"
@@ -27,35 +27,35 @@
                     placeholder="Language" />
                 </mat-form-field>
             </div>
-
-            <span>Authors:</span><br>
-            <div style="display: inline;">
-                <mat-form-field  style="width: 85%;" >
+            <div *ngIf= "!forUser" style="display: inline;">
+                <mat-form-field class="field-full-width" >
                     <input id="author"
                     matInput
                     formControlName="author"
                     placeholder="Author" />
                 </mat-form-field>
-                <button style="width: 15%;">Add</button>
             </div>
             
-            <span>Keywords:</span><br>
             <div style="display: inline;">
-                <mat-form-field  style="width: 85%;" >
+                <mat-form-field class="field-full-width" >
                     <input id="keyword"
                     matInput
                     formControlName="keyword"
                     placeholder="Keyword" />
                 </mat-form-field>
-                <button style="width: 15%;">Add</button>
             </div>
 
-            <mat-form-field  class="field-full-width" >
-                <textarea id="text"
-                matInput
-                formControlName="text"
-                placeholder="Text"></textarea>
-            </mat-form-field>
+            <div style="display: inline;">
+                <mat-form-field  style="width: 85%;" >
+                    <textarea id="text"
+                    matInput
+                    formControlName="text"
+                    placeholder="Text"></textarea>
+                </mat-form-field>
+                <button style="width: 15%;" (click) = "basicSearch()">Search By Text</button>
+            </div>
+            
+          
             
             <button mat-button color="primary" (click)="closeQuestionDialog()">Close</button>
             <button mat-button color="primary" (click)="search()">Apply</button>
