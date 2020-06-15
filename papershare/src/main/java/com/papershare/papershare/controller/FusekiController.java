@@ -14,15 +14,11 @@ import com.papershare.papershare.rdf.FusekiWriter;
 @CrossOrigin
 public class FusekiController {
 	
-	private FusekiWriter fusekiWriter;
-	
-	public FusekiController(FusekiWriter fusekiWriter) {
-		this.fusekiWriter = fusekiWriter;
-	}
+
 
 	@GetMapping(value = "/saveRDF")
 	public void saveRdf() throws IOException {
-		fusekiWriter.saveRDF();
+		FusekiWriter.saveRDF();
 	}
 	
 }

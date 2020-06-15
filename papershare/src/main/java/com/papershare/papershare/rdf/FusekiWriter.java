@@ -9,17 +9,15 @@ import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
 import org.apache.jena.update.UpdateRequest;
-import org.springframework.stereotype.Component;
 
 import com.papershare.papershare.rdf.FusekiAuthenticationUtilities.ConnectionProperties;
 
-@Component
 public class FusekiWriter {
 	
-	private final String RDF_FILEPATH = "src/main/resources/data/rdf/paper_metadata.rdf";
-	private final String PAPERS_METADATA_GRAPH_URI = "/papersMetadata";
+	private static final String RDF_FILEPATH = "src/main/resources/data/rdf/paper_metadata.rdf";
+	private static final String PAPERS_METADATA_GRAPH_URI = "/papersMetadata";
 	
-	public void saveRDF() throws IOException {
+	public static void saveRDF() throws IOException {
 		
 		System.out.println("[INFO] Loading triples from an RDF/XML to a model...");
 		ConnectionProperties conn = FusekiAuthenticationUtilities.loadProperties();

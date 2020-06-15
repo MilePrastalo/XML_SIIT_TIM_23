@@ -47,6 +47,8 @@ import com.papershare.papershare.dom.DOMParser;
 import com.papershare.papershare.dom.XSLTransformer;
 import com.papershare.papershare.model.TUser;
 import com.papershare.papershare.rdf.FusekiReader;
+import com.papershare.papershare.rdf.FusekiWriter;
+import com.papershare.papershare.rdf.MetadataExtractor;
 import com.papershare.papershare.exception.NotAnAuthorException;
 import com.papershare.papershare.repository.PaperRepository;
 import com.papershare.papershare.repository.UserRepository;
@@ -64,16 +66,18 @@ public class PaperService {
 	private UserRepository userRepository;
 	private ReviewRepository reviewRepository;
 	private XSLTransformer xslTransformer;
+	private MetadataExtractor metadataExtractor;
 
 	
 
 	public PaperService(XSLTransformer xslTransformer, PaperRepository sciPaperRepository, DOMParser domParser,
-			ReviewRepository reviewRepository, UserRepository userRepository) {
+			ReviewRepository reviewRepository, UserRepository userRepository, MetadataExtractor metadataExtractor) {
 		this.paperRepository = sciPaperRepository;
 		this.xslTransformer = xslTransformer;
 		this.domParser = domParser;
 		this.userRepository = userRepository;
 		this.reviewRepository = reviewRepository;
+		this.metadataExtractor = metadataExtractor;
 	}
 
 	public String convertXMLtoHTML(String name) {
@@ -111,6 +115,8 @@ public class PaperService {
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
 		paperRepository.save(sw.toString(), title + ".xml");
+		metadataExtractor.extractMetadata(sw.toString());
+		FusekiWriter.saveRDF();
 
 		String coverLetter = "<coverLetter><authorUsername></authorUsername><Content>" + dto.getCoverLetter()
 				+ "</Content><title>" + title + "</title></coverLetter>";
@@ -197,10 +203,10 @@ public class PaperService {
 			params.put("author", dto.getAuthors());
 		}
 		params.put("keyword", dto.getKeywords());
-		ArrayList<String> idsOfPapers = FusekiReader.executeQuery(params);
+		ArrayList<String> titles = FusekiReader.executeQuery(params);
 		ArrayList<PaperViewDTO> paperList = new ArrayList<PaperViewDTO>();
-		if (idsOfPapers.size() != 0) {
-			String xPathExpression = createQXPathForIDs(idsOfPapers, dto.isForUser());
+		if (titles.size() != 0) {
+			String xPathExpression = createQXPathForIDs(titles, dto.isForUser());
 			ResourceSet result = paperRepository.findPapers(xPathExpression);
 			paperList = extractDataFromPapers(result);
 		}
@@ -281,14 +287,14 @@ public class PaperService {
 		return username;
 	}
 	
-	private String createQXPathForIDs(ArrayList<String> idsOfPapers, boolean forUser) {
+	private String createQXPathForIDs(ArrayList<String> titles, boolean forUser) {
 		String xPathExpression = "/ScientificPaper[";
-		for (int i = 0; i < idsOfPapers.size(); i++) {
+		for (int i = 0; i < titles.size(); i++) {
 			if (i == 0) {
-				xPathExpression += "(@id = " + idsOfPapers.get(i);
+				xPathExpression += "(title = '"+ titles.get(i) + "'";
 			}
 			else {
-				xPathExpression += " or @id = "+ idsOfPapers.get(i);
+				xPathExpression += " or title = '"+ titles.get(i) + "'";
 			}
 		}
 		xPathExpression += ")";
