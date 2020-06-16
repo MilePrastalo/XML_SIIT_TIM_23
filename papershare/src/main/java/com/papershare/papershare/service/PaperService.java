@@ -54,19 +54,14 @@ import com.papershare.papershare.exception.NotAnAuthorException;
 import com.papershare.papershare.repository.PaperRepository;
 import com.papershare.papershare.repository.UserRepository;
 import com.papershare.papershare.repository.ReviewRepository;
-import com.papershare.papershare.dom.XSLTransformer;
-import com.papershare.papershare.exception.NotAnAuthorException;
 import com.papershare.papershare.exception.PaperAlreadyExistException;
-import com.papershare.papershare.model.TUser;
-import com.papershare.papershare.repository.PaperRepository;
-import com.papershare.papershare.repository.ReviewRepository;
-import com.papershare.papershare.repository.UserRepository;
 
 @Service
 public class PaperService {
 
 	private final String scientificPublicatonXSL = "src/main/resources/data/xsl/scientificPaper.xsl";
-	//private final String paperSchema = "src/main/resources/data/scientificPaper.xsd";
+	// private final String paperSchema =
+	// "src/main/resources/data/scientificPaper.xsd";
 	private static String xslFOPath = "src/main/resources/data/xsl/paperToPDF.xsl";
 	private DOMParser domParser;
 
@@ -76,10 +71,11 @@ public class PaperService {
 	private XSLTransformer xslTransformer;
 	private MetadataExtractor metadataExtractor;
 	private EmailService emailService;
-	
+
 	public PaperService(XSLTransformer xslTransformer, PaperRepository sciPaperRepository, DOMParser domParser,
 
-			ReviewRepository reviewRepository, UserRepository userRepository, MetadataExtractor metadataExtractor){
+			ReviewRepository reviewRepository, UserRepository userRepository, MetadataExtractor metadataExtractor,
+			EmailService emailService) {
 
 		this.paperRepository = sciPaperRepository;
 		this.xslTransformer = xslTransformer;
@@ -89,7 +85,7 @@ public class PaperService {
 		this.metadataExtractor = metadataExtractor;
 		this.emailService = emailService;
 		this.userRepository = userRepository;
-		
+
 	}
 
 	public String convertXMLtoHTML(String name) {
@@ -128,8 +124,8 @@ public class PaperService {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String recievedDate = sdf.format(new Date());
 		sp.setAttribute("id", currentMilli.toString());
-		
-		sp.setAttribute("about", "https://github.com/MilePrastalo/XML_SIIT_TIM_23/"+title);
+
+		sp.setAttribute("about", "https://github.com/MilePrastalo/XML_SIIT_TIM_23/" + title);
 		Element recDateElement = document.createElement("sci:recievedDate");
 		recDateElement.appendChild(document.createTextNode(recievedDate));
 		recDateElement.setAttribute("property", "pred:recievedDate");
@@ -146,12 +142,15 @@ public class PaperService {
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
 		paperRepository.save(sw.toString(), title + ".xml");
+
 		metadataExtractor.extractMetadata(sw.toString());
 		FusekiWriter.saveRDF();
+
 		String user = getLoggedUser();
 		String coverLetter = "<coverLetter><authorUsername>" + user + "</authorUsername><Content>"
 				+ dto.getCoverLetter() + "</Content><title>" + title + "</title></coverLetter>";
 		paperRepository.saveCoverLetter(coverLetter);
+
 	}
 
 	public void updatePaper(PaperUploadDTO dto, String name) throws ParserConfigurationException, SAXException,
@@ -267,22 +266,25 @@ public class PaperService {
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
 	}
-	
-	public ArrayList<PaperViewDTO> searchByText( SearchDTO dto) {
+
+	public ArrayList<PaperViewDTO> searchByText(SearchDTO dto) {
 		String xPathExpression = "";
 		if (dto.isForUser()) {
 			String username = getLoggedUser();
-			xPathExpression = String.format("/ScientificPaper[Authors/Author/authorUsername = '%s' and   Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]", username ,dto.getText(), dto.getText());
-		}
-		else {
-			xPathExpression = String.format("/ScientificPaper[status = 'published' and  Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]", dto.getText());
+			xPathExpression = String.format(
+					"/ScientificPaper[Authors/Author/authorUsername = '%s' and   Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]",
+					username, dto.getText(), dto.getText());
+		} else {
+			xPathExpression = String.format(
+					"/ScientificPaper[status = 'published' and  Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]",
+					dto.getText());
 		}
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
-	} 
-	
-	public ArrayList<PaperViewDTO> searhByMetadata( SearchDTO dto) throws IOException {
+	}
+
+	public ArrayList<PaperViewDTO> searhByMetadata(SearchDTO dto) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("title", dto.getTitle());
 		params.put("language", dto.getLanguage());
@@ -291,7 +293,7 @@ public class PaperService {
 			String username = getLoggedUser();
 			TUser user = userRepository.findOneByUsername(username);
 			params.put("author", user.getFirstName() + " " + user.getLastName());
-		}else {
+		} else {
 			params.put("author", dto.getAuthors());
 		}
 		params.put("keyword", dto.getKeywords());
@@ -402,15 +404,14 @@ public class PaperService {
 		}
 		return username;
 	}
-	
+
 	private String createQXPathForIDs(ArrayList<String> titles, boolean forUser) {
 		String xPathExpression = "/ScientificPaper[";
 		for (int i = 0; i < titles.size(); i++) {
 			if (i == 0) {
-				xPathExpression += "(title = '"+ titles.get(i) + "'";
-			}
-			else {
-				xPathExpression += " or title = '"+ titles.get(i) + "'";
+				xPathExpression += "(title = '" + titles.get(i) + "'";
+			} else {
+				xPathExpression += " or title = '" + titles.get(i) + "'";
 			}
 		}
 		xPathExpression += ")";
@@ -456,8 +457,8 @@ public class PaperService {
 		changePaperStatus(paperName, "completed");
 
 		String author = getLoggedUser();
-		
-		//Send cover letter content in email
+
+		// Send cover letter content in email
 		Document coverLetterXml = paperRepository.findCoverLetter();
 		NodeList nodes = coverLetterXml.getElementsByTagName("coverLetter");
 		String coverLetter = "";
@@ -471,7 +472,7 @@ public class PaperService {
 			}
 		}
 		System.out.println(coverLetter);
-		emailService.sendPaperSubmissionToEditor(author, paperName,coverLetter);
+		emailService.sendPaperSubmissionToEditor(author, paperName, coverLetter);
 	}
 
 	public Boolean acceptPaper(String name) throws MailException, InterruptedException {

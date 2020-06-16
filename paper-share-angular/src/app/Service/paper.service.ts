@@ -12,6 +12,9 @@ export class PaperService {
 
   constructor(private http: HttpClient) { }
   path = 'http://localhost:8080';
+  headers: HttpHeaders = new HttpHeaders({
+    Authorization: 'Bearer ' + localStorage.getItem('token')
+  });
 
   sendPaper(paper: PaperUpload): Observable<void> {
     return this.http.post<void>(this.path + '/api/papers', paper);

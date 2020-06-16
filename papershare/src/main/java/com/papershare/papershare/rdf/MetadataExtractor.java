@@ -1,11 +1,9 @@
 package com.papershare.papershare.rdf;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 
@@ -33,8 +31,8 @@ public class MetadataExtractor {
 	
 	private TransformerFactory transformerFactory;
 
-	private static final String XSLT_FILE = "src/main/resources/xsl/grddl.xsl";
-	private static final String RDF_FILE = "src/main/resources/rdf/paper_metadata.rdf";
+	private static final String XSLT_FILE = "src/main/resources/data/xsl/grddl.xsl";
+	private static final String RDF_FILE = "src/main/resources/data/rdf/paper_metadata.rdf";
 	
 	public MetadataExtractor() throws SAXException, IOException {
 		
@@ -51,22 +49,21 @@ public class MetadataExtractor {
 	 */
 	public void extractMetadata(String xmlString) throws FileNotFoundException, TransformerException {
 		
-		OutputStream out = new FileOutputStream(RDF_FILE);
-		StreamSource source = new StreamSource(new StringReader(xmlString));
+		OutputStream out = new FileOutputStream(new File(RDF_FILE));
+		
 		
 		// Create transformation source
 		StreamSource transformSource = new StreamSource(new File(XSLT_FILE));
-		
 		// Initialize GRDDL transformer object
 		Transformer grddlTransformer = transformerFactory.newTransformer(transformSource);
-		
 		// Set the indentation properties
 		grddlTransformer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
 		grddlTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		
 		// Initialize result stream
 		StreamResult result = new StreamResult(out);
-		
+		// Initialize input stream
+		StreamSource source = new StreamSource(new StringReader(xmlString));
 		// Trigger the transformation
 		grddlTransformer.transform(source, result);
 		

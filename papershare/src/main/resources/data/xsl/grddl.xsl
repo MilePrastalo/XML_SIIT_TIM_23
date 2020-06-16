@@ -6,8 +6,7 @@
     xmlns:xsl  ="http://www.w3.org/1999/XSL/Transform" version="1.0"
     xmlns:h    ="http://www.w3.org/1999/xhtml"
     xmlns      ="http://www.w3.org/1999/XSL/Transform"
-    xmlns:rdf  ="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfa = "http://www.w3.org/ns/rdfa#">
+    xmlns:rdf  ="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
 <output indent="yes" method="xml" media-type="application/rdf+xml" encoding="UTF-8" omit-xml-declaration="yes"/>
 
@@ -48,29 +47,29 @@
 
 
 <!-- match RDFa element -->
-<template match="*[attribute::rdfa:property or attribute::rdfa:rel or attribute::rdfa:rev]">
+<template match="*[attribute::property or attribute::rel or attribute::rev]">
 
    <!-- identify suject -->
    <variable name="subject"> 
     <choose>
     	
      <!-- an attribute about was specified on the node -->
-     <when test="self::*/attribute::rdfa:about">
-       <call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="@rdfa:about"/></call-template>
+     <when test="self::*/attribute::about">
+       <call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="@about"/></call-template>
      </when>
 
      <!-- current node is a meta or a link in the body and with no about attribute -->
-     <when test="(self::h:link or self::h:meta) and not( ancestor::h:head ) and not(attribute::rdfa:about)">
+     <when test="(self::h:link or self::h:meta) and not( ancestor::h:head ) and not(attribute::about)">
      	<call-template name="self-curie-or-uri"><with-param name="node" select="parent::*"/></call-template>
      </when>
 
      <!-- current node is a meta or a link in the body and with no about attribute -->
-     <when test="(self::h:link or self::h:meta) and not( ancestor::h:head ) and not(attribute::rdfa:about)">
+     <when test="(self::h:link or self::h:meta) and not( ancestor::h:head ) and not(attribute::about)">
      	<call-template name="self-curie-or-uri"><with-param name="node" select="parent::*"/></call-template>
      </when>
 
      <!-- current node is a meta or a link in the head and with no about attribute -->
-     <when test="(self::h:link or self::h:meta) and ( ancestor::h:head ) and not(attribute::rdfa:about)">
+     <when test="(self::h:link or self::h:meta) and ( ancestor::h:head ) and not(attribute::about)">
      	<value-of select="$this"/>
      </when>
      
@@ -80,11 +79,11 @@
      </when> -->
      
      <!-- an about was specified on its ancestors or the ancestor had a rel or a rev attribute but no href. -->
-     <when test="ancestor::*[attribute::rdfa:about or ( not(attribute::rdfa:href) and ( attribute::rdfa:rel or attribute::rdfa:rev) )][position()=1]"> 
-     	<variable name="selected_ancestor" select="ancestor::*[attribute::rdfa:about or ( not(attribute::rdfa:href) and (attribute::rdfa:rel or attribute::rdfa:rev) )][position()=1]"/> 
+     <when test="ancestor::*[attribute::about or ( not(attribute::href) and ( attribute::rel or attribute::rev) )][position()=1]"> 
+     	<variable name="selected_ancestor" select="ancestor::*[attribute::about or ( not(attribute::href) and (attribute::rel or attribute::rev) )][position()=1]"/> 
      	<choose>
-     		<when test="$selected_ancestor//*[position()=1]/attribute::rdfa:about">
-     			<call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="$selected_ancestor/attribute::rdfa:about"/></call-template>
+     		<when test="$selected_ancestor//*[position()=1]/attribute::about">
+     			<call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="$selected_ancestor/attribute::about"/></call-template>
      		</when>
      		<otherwise>
      			<call-template name="self-curie-or-uri"><with-param name="node" select="$selected_ancestor"/></call-template>
@@ -101,11 +100,11 @@
    
    
    <!-- identify object -->
-   <if test="@rdfa:rel or @rdfa:rev">
+   <if test="@rel or @rev">
      <variable name="object">
        <choose>
-	     <when test="@rdfa:href"> 
-		   <call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="@rdfa:href"/></call-template>
+	     <when test="@href"> 
+		   <call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="@href"/></call-template>
 	     </when>
 	     <otherwise>
 	     	<call-template name="self-curie-or-uri"><with-param name="node" select="."/></call-template>
@@ -113,39 +112,39 @@
        </choose>
      </variable>
    
-     <if test="@rdfa:rel">
+     <if test="@rel">
        <call-template name="relation">
         <with-param name="subject" select ="$subject" />
         <with-param name="object" select ="$object" />
-        <with-param name="predicate" select ="@rdfa:rel"/>
+        <with-param name="predicate" select ="@rel"/>
        </call-template>       
      </if>
 
-     <if test="@rdfa:rev">
+     <if test="@rev">
        <call-template name="relation">
         <with-param name="subject" select ="$object" />
         <with-param name="object" select ="$subject" />
-        <with-param name="predicate" select ="@rdfa:rev"/>
+        <with-param name="predicate" select ="@rev"/>
        </call-template>      
      </if>
    </if>
 
    
    <!-- we have a property -->
-   <if test="@rdfa:property">
+   <if test="@property">
    	
    	 <!-- identify language -->
    	 <variable name="language" select="string(ancestor-or-self::*/attribute::xml:lang[position()=1])" />
    	 
-     <variable name="expended-pro"><call-template name="expand-ns"><with-param name="qname" select="@rdfa:property"/></call-template></variable>
+     <variable name="expended-pro"><call-template name="expand-ns"><with-param name="qname" select="@property"/></call-template></variable>
 
       <choose>
-       <when test="@rdfa:content"> <!-- there is a specific content -->
+       <when test="@content"> <!-- there is a specific content -->
          <call-template name="property">
           <with-param name="subject" select ="$subject" />
-          <with-param name="object" select ="@rdfa:content" />
-          <with-param name="datatype" select ="@rdfa:datatype" />
-          <with-param name="predicate" select ="@rdfa:property"/>
+          <with-param name="object" select ="@content" />
+          <with-param name="datatype" select ="@datatype" />
+          <with-param name="predicate" select ="@property"/>
           <with-param name="attrib" select ="'true'"/>
           <with-param name="language" select ="$language"/>
          </call-template>   
@@ -154,8 +153,8 @@
          <call-template name="property">
           <with-param name="subject" select ="$subject" />
           <with-param name="object" select ="." />
-          <with-param name="datatype" select ="@rdfa:datatype" />
-          <with-param name="predicate" select ="@rdfa:property"/>
+          <with-param name="datatype" select ="@datatype" />
+          <with-param name="predicate" select ="@property"/>
           <with-param name="attrib" select ="'false'"/>
           <with-param name="language" select ="$language"/>
          </call-template> 
@@ -238,8 +237,8 @@
   <template name="self-curie-or-uri" >
     <param name="node" />
     <choose>
-     <when test="$node/attribute::rdfa:about"> <!-- we have an about attribute to extend -->
-       <call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="$node/attribute::rdfa:about"/></call-template>
+     <when test="$node/attribute::about"> <!-- we have an about attribute to extend -->
+       <call-template name="expand-curie-or-uri"><with-param name="curie_or_uri" select="$node/attribute::about"/></call-template>
      </when>
      <when test="$node/attribute::id"> <!-- we have an id attribute to extend -->
        <value-of select="concat($this,'#',$node/attribute::id)" />

@@ -43,7 +43,6 @@ public class FusekiWriter {
 		//TODO Remove this later
 		// This will delete all of the triples in all of the named graphs 
 		// request.add(SparqlUtil.dropAll()); 
-		System.out.println("EEEJ => " + conn.updateEndpoint);
 		UpdateProcessor processor = UpdateExecutionFactory.createRemote(request, conn.updateEndpoint);
 		processor.execute();
 
