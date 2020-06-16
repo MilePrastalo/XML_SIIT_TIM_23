@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PaperUpload } from '../model/paperUpload';
 import { Observable } from 'rxjs';
 import { PaperView } from '../model/paperView';
+import { SearchDto } from '../model/searchDto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,9 @@ export class PaperService {
 
   constructor(private http: HttpClient) { }
   path = 'http://localhost:8080';
+  headers: HttpHeaders = new HttpHeaders({
+    Authorization: 'Bearer ' + localStorage.getItem('token')
+  });
 
   sendPaper(paper: PaperUpload): Observable<void> {
     return this.http.post<void>(this.path + '/api/papers', paper);
@@ -46,6 +50,18 @@ export class PaperService {
 
   rejectPaper(paperName: string): Observable<boolean> {
     return this.http.get<boolean>(this.path + '/api/papers/rejectPaper/' + paperName);
+  }
+
+  getAllPublishedPapers(): Observable<Array<PaperView>> {
+    return this.http.get<Array<PaperView>>(this.path + '/api/papers/publishedPapers', { headers: this.headers});
+  }
+
+  search( dto: SearchDto ): Observable<Array<PaperView>> {
+    return this.http.post<Array<PaperView>>(this.path + '/api/papers/searchByMetadata', dto, { headers: this.headers});
+  }
+
+  searchByText(dto: SearchDto ) {
+    return this.http.post<Array<PaperView>>(this.path + '/api/papers/searchByText', dto, { headers: this.headers});
   }
 
   deletePaper(paperName: string) {

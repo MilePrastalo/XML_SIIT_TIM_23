@@ -74,6 +74,11 @@ export class UserProfileComponent implements OnInit {
     );
   }
 
+
+  showSearchResult($event) {
+    this.userPapers = $event;
+  }
+
   getSubmittedReviews() {
     this.reviewService.getSubmittedReviews().subscribe(
       (response => {
@@ -87,5 +92,4 @@ export class UserProfileComponent implements OnInit {
       })
     );
   }
-  
 }

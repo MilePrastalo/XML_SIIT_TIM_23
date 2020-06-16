@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     xmlns:sci="https://XML_SIIT_TIM_23/ScientificPaper"
+    xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/"
     targetNamespace="https://XML_SIIT_TIM_23/ScientificPaper">
     <xs:element name="ScientificPaper">
         <xs:complexType>
@@ -41,17 +42,11 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
+                <xs:element name="recievedDate" type="xs:date"/>
+                <xs:element name="language" type="xs:string"/>
             </xs:sequence>
-            <xs:attribute name="recieved_date" type="xs:date"/>
             <xs:attribute name="accepted_date" type="xs:date"/>
             <xs:attribute name="revised_date" type="xs:date"/>
-            <xs:attribute name="language">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="2"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
             <xs:attribute name="page_number" type="xs:positiveInteger"/>
             <xs:attribute name="id" type="xs:positiveInteger"/>
         </xs:complexType>

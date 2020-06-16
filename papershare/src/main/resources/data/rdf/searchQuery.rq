@@ -1,0 +1,14 @@
+
+SELECT * FROM <http://localhost:8081/fuseki/ScientificPapers/data/papersMetadata> WHERE {
+ ?paper <https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/title> ?title .
+  ?paper <https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/language> ?language .
+  ?paper <https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/recievedDate> ?recievedDate .
+  ?paper <https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/keywords> ?keywords .
+  ?paper <https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/authors> ?authors .
+  FILTER( CONTAINS(UCASE(str(?title)), UCASE("{{title}}"))
+    && CONTAINS(UCASE(str(?language)), UCASE("{{language}}"))
+    && CONTAINS(UCASE(str(?authors)), UCASE("{{author}}"))
+    && CONTAINS(UCASE(str(?keywords)), UCASE("{{keyword}}"))
+    && CONTAINS(UCASE(str(?recievedDate)), UCASE("{{date}}"))
+  ) .
+} 

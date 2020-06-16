@@ -1,0 +1,29 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:h="http://www.w3.org/1999/xhtml">
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:title xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">AuroraBorealis</pred:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:language xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">english</pred:language>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:recievedDate xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">published</pred:recievedDate>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:authors xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">Mile Prastalo</pred:authors>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:authors xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">Jelena Cuk</pred:authors>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:authors xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">Nikola Saric</pred:authors>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:keywords xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">polarna svetlost</pred:keywords>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:keywords xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">etika</pred:keywords>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/AuroraBorealis">
+    <pred:recievedDate xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">16-06-2020</pred:recievedDate>
+  </rdf:Description>
+</rdf:RDF>

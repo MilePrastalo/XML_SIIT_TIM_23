@@ -6,6 +6,9 @@
             <app-paper-list [papers] = 'completedPapers' [forUser] = false></app-paper-list>
         </mat-tab>
         <mat-tab label="Your Papers">
+            <div style="text-align:center">
+                <app-search-dialog (searchResult)="showSearchResult($event)" [forUser] = true></app-search-dialog>
+            </div>
             <app-paper-list [papers] = 'userPapers' [forUser] = true></app-paper-list>
         </mat-tab>
         <mat-tab label="Your Reviews">

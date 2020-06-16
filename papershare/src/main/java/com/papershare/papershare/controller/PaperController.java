@@ -1,5 +1,6 @@
 package com.papershare.papershare.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.xml.transform.TransformerException;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.papershare.papershare.DTO.PaperUploadDTO;
 import com.papershare.papershare.DTO.PaperViewDTO;
+import com.papershare.papershare.DTO.SearchDTO;
 import com.papershare.papershare.service.PaperService;
 
 @RestController()
@@ -91,11 +93,30 @@ public class PaperController {
 		paperService.rejectPaper(name);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/publishedPapers")
+	public ResponseEntity<List<PaperViewDTO>> getPublishedPapers() {
+		List<PaperViewDTO> result = paperService.getPublishedPapers();
+		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/searchByMetadata")
+	public ResponseEntity<List<PaperViewDTO>> searchByMetadata(@RequestBody SearchDTO dto) throws IOException {
+		List<PaperViewDTO> result = paperService.searhByMetadata(dto);
+		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/searchByText")
+	public ResponseEntity<List<PaperViewDTO>> searchByText(@RequestBody SearchDTO dto) throws IOException {
+		List<PaperViewDTO> result = paperService.searchByText(dto);
+		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
+	}
 
 	@DeleteMapping(value = "/{publicationName}")
 	public ResponseEntity<Void> deletePaper(@PathVariable("publicationName") String publicationName) {
 		paperService.deletePaper(publicationName);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
 	}
 
 	@GetMapping(value = "asText/{paperName}")

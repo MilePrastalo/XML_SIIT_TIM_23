@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import com.papershare.papershare.DTO.PaperUploadDTO;
 import com.papershare.papershare.DTO.PaperViewDTO;
+import com.papershare.papershare.DTO.SearchDTO;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,35 +46,46 @@ import org.xmldb.api.modules.XMLResource;
 
 import com.papershare.papershare.dom.DOMParser;
 import com.papershare.papershare.dom.XSLTransformer;
-import com.papershare.papershare.exception.NotAnAuthorException;
-import com.papershare.papershare.exception.PaperAlreadyExistException;
 import com.papershare.papershare.model.TUser;
+import com.papershare.papershare.rdf.FusekiReader;
+import com.papershare.papershare.rdf.FusekiWriter;
+import com.papershare.papershare.rdf.MetadataExtractor;
+import com.papershare.papershare.exception.NotAnAuthorException;
 import com.papershare.papershare.repository.PaperRepository;
-import com.papershare.papershare.repository.ReviewRepository;
 import com.papershare.papershare.repository.UserRepository;
+import com.papershare.papershare.repository.ReviewRepository;
+import com.papershare.papershare.exception.PaperAlreadyExistException;
 
 @Service
 public class PaperService {
 
 	private final String scientificPublicatonXSL = "src/main/resources/data/xsl/scientificPaper.xsl";
-	private final String paperSchema = "src/main/resources/data/scientificPaper.xsd";
+	// private final String paperSchema =
+	// "src/main/resources/data/scientificPaper.xsd";
 	private static String xslFOPath = "src/main/resources/data/xsl/paperToPDF.xsl";
 	private DOMParser domParser;
 
 	private PaperRepository paperRepository;
+	private UserRepository userRepository;
 	private ReviewRepository reviewRepository;
 	private XSLTransformer xslTransformer;
+	private MetadataExtractor metadataExtractor;
 	private EmailService emailService;
-	private UserRepository userRepository;
 
 	public PaperService(XSLTransformer xslTransformer, PaperRepository sciPaperRepository, DOMParser domParser,
-			ReviewRepository reviewRepository, EmailService emailService, UserRepository userRepository) {
+
+			ReviewRepository reviewRepository, UserRepository userRepository, MetadataExtractor metadataExtractor,
+			EmailService emailService) {
+
 		this.paperRepository = sciPaperRepository;
 		this.xslTransformer = xslTransformer;
 		this.domParser = domParser;
+		this.userRepository = userRepository;
 		this.reviewRepository = reviewRepository;
+		this.metadataExtractor = metadataExtractor;
 		this.emailService = emailService;
 		this.userRepository = userRepository;
+
 	}
 
 	public String convertXMLtoHTML(String name) {
@@ -110,8 +124,8 @@ public class PaperService {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String recievedDate = sdf.format(new Date());
 		sp.setAttribute("id", currentMilli.toString());
-		
-		sp.setAttribute("about", "https://github.com/MilePrastalo/XML_SIIT_TIM_23/"+title);
+
+		sp.setAttribute("about", "https://github.com/MilePrastalo/XML_SIIT_TIM_23/" + title);
 		Element recDateElement = document.createElement("sci:recievedDate");
 		recDateElement.appendChild(document.createTextNode(recievedDate));
 		recDateElement.setAttribute("property", "pred:recievedDate");
@@ -128,10 +142,15 @@ public class PaperService {
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
 		paperRepository.save(sw.toString(), title + ".xml");
+
+		metadataExtractor.extractMetadata(sw.toString());
+		FusekiWriter.saveRDF();
+
 		String user = getLoggedUser();
 		String coverLetter = "<coverLetter><authorUsername>" + user + "</authorUsername><Content>"
 				+ dto.getCoverLetter() + "</Content><title>" + title + "</title></coverLetter>";
 		paperRepository.saveCoverLetter(coverLetter);
+
 	}
 
 	public void updatePaper(PaperUploadDTO dto, String name) throws ParserConfigurationException, SAXException,
@@ -225,8 +244,8 @@ public class PaperService {
 		paperRepository.modifyPaper(documentId, targetElement, xmlFragmet);
 	}
 
-	public ArrayList<PaperViewDTO> getAllPapers() {
-		String xPathExpression = "/ScientificPaper";
+	public ArrayList<PaperViewDTO> getPublishedPapers() {
+		String xPathExpression = "/ScientificPaper[status = 'published']";
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
@@ -248,6 +267,46 @@ public class PaperService {
 		return paperList;
 	}
 
+	public ArrayList<PaperViewDTO> searchByText(SearchDTO dto) {
+		String xPathExpression = "";
+		if (dto.isForUser()) {
+			String username = getLoggedUser();
+			xPathExpression = String.format(
+					"/ScientificPaper[Authors/Author/authorUsername = '%s' and   Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]",
+					username, dto.getText(), dto.getText());
+		} else {
+			xPathExpression = String.format(
+					"/ScientificPaper[status = 'published' and  Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]",
+					dto.getText());
+		}
+		ResourceSet result = paperRepository.findPapers(xPathExpression);
+		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
+		return paperList;
+	}
+
+	public ArrayList<PaperViewDTO> searhByMetadata(SearchDTO dto) throws IOException {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("title", dto.getTitle());
+		params.put("language", dto.getLanguage());
+		params.put("date", dto.getDate());
+		if (dto.isForUser()) {
+			String username = getLoggedUser();
+			TUser user = userRepository.findOneByUsername(username);
+			params.put("author", user.getFirstName() + " " + user.getLastName());
+		} else {
+			params.put("author", dto.getAuthors());
+		}
+		params.put("keyword", dto.getKeywords());
+		ArrayList<String> titles = FusekiReader.executeQuery(params);
+		ArrayList<PaperViewDTO> paperList = new ArrayList<PaperViewDTO>();
+		if (titles.size() != 0) {
+			String xPathExpression = createQXPathForIDs(titles, dto.isForUser());
+			ResourceSet result = paperRepository.findPapers(xPathExpression);
+			paperList = extractDataFromPapers(result);
+		}
+		return paperList;
+	}
+
 	private ArrayList<PaperViewDTO> extractDataFromPapers(ResourceSet resourceSet) {
 		ArrayList<PaperViewDTO> paperList = new ArrayList<PaperViewDTO>();
 		ResourceIterator i;
@@ -259,9 +318,10 @@ public class PaperService {
 				String id = document.getElementsByTagName("ScientificPaper").item(0).getAttributes().getNamedItem("id")
 						.getTextContent();
 				NodeList authors = document.getElementsByTagName("sci:authorName");
+				NodeList keywords = document.getElementsByTagName("sci:Keyword");
 				NodeList title = document.getElementsByTagName("sci:title");
 				NodeList status = document.getElementsByTagName("sci:status");
-				paperList.add(new PaperViewDTO(authors, title, status, id));
+				paperList.add(new PaperViewDTO(authors, title, status, id, keywords));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -345,6 +405,23 @@ public class PaperService {
 		return username;
 	}
 
+	private String createQXPathForIDs(ArrayList<String> titles, boolean forUser) {
+		String xPathExpression = "/ScientificPaper[";
+		for (int i = 0; i < titles.size(); i++) {
+			if (i == 0) {
+				xPathExpression += "(title = '" + titles.get(i) + "'";
+			} else {
+				xPathExpression += " or title = '" + titles.get(i) + "'";
+			}
+		}
+		xPathExpression += ")";
+		if (!forUser) {
+			xPathExpression += " and status = 'published'";
+		}
+		xPathExpression += "]";
+		return xPathExpression;
+	}
+
 	public String getPaperAsText(String name) throws TransformerException {
 		Document xml = paperRepository.findScientificPaper(name);
 		StringWriter sw = new StringWriter();
@@ -380,8 +457,8 @@ public class PaperService {
 		changePaperStatus(paperName, "completed");
 
 		String author = getLoggedUser();
-		
-		//Send cover letter content in email
+
+		// Send cover letter content in email
 		Document coverLetterXml = paperRepository.findCoverLetter();
 		NodeList nodes = coverLetterXml.getElementsByTagName("coverLetter");
 		String coverLetter = "";
@@ -395,7 +472,7 @@ public class PaperService {
 			}
 		}
 		System.out.println(coverLetter);
-		emailService.sendPaperSubmissionToEditor(author, paperName,coverLetter);
+		emailService.sendPaperSubmissionToEditor(author, paperName, coverLetter);
 	}
 
 	public Boolean acceptPaper(String name) throws MailException, InterruptedException {
@@ -422,7 +499,6 @@ public class PaperService {
 			TUser user = userRepository.findOneByUsername(username);
 			emailService.rejectedPaper(name, user.getEmail());
 		}
-
 		return true;
 	}
 }

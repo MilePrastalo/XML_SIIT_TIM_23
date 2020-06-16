@@ -13,6 +13,7 @@ export class PaperListComponent implements OnInit {
 
   @Input() papers: Array<PaperView>;
   @Input() forUser: boolean;
+  @Input() homePage: boolean;
 
   constructor(private paperService: PaperService, private router: Router, private snackBar: MatSnackBar) { }
 

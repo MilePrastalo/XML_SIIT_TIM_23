@@ -1,42 +1,66 @@
-<div>
-    <button (click)="openDialogue()">Search</button>
-        <div *ngIf="dialog">
-                <mat-dialog-content max-width="600px">
-                    <mat-card>
-                        <mat-card-title>
-                            <span class="headline">Search and Filter</span>
-                        </mat-card-title>
-                        <mat-card-content>
-                            <mat-grid-list cols="2" rowHeight="50px">
-                                <mat-grid-tile [colspan]="2" [rowspan]="1">
-                                    <input type="text" placeholder="Title*">
-                                </mat-grid-tile>
-                               <mat-grid-tile [colspan]="2" [rowspan]="1">
-                                    <input type="text" placeholder="Authors*">
-                                </mat-grid-tile>
-                                <mat-grid-tile [colspan]="1" [rowspan]="1">
-                                    <input type="text" placeholder="Subject*">
-                                </mat-grid-tile>
-                                <mat-grid-tile [colspan]="1" [rowspan]="1">
-                                    <input type="text" placeholder="Language*">
-                                </mat-grid-tile>
-                                 <mat-grid-tile [colspan]="2" [rowspan]="1">
-                                    <input type="date" name="" id="" placeholder="dd-MM-yyyy">
-                                </mat-grid-tile>
-                                <mat-grid-tile [colspan]="2" [rowspan]="1">
-                                    <input type="text" placeholder="Keywords">
-                                </mat-grid-tile>
-                                <mat-grid-tile [colspan]="2" [rowspan]="1">
-                                    <textarea placeholder="Text*"></textarea>
-                                </mat-grid-tile>
-                            </mat-grid-list>
-                        </mat-card-content>
-                    </mat-card>
-            
-                </mat-dialog-content>
-                <mat-dialog-actions>
-                    <button mat-button (click)="closeQuestionDialog()">Close</button>
-                    <button mat-button (click)="search()">Apply</button>
-                </mat-dialog-actions>
+<div class="search-wrapper">
+
+    <button mat-stroked-button color="primary" (click)="openDialogue()" >Search&nbsp;&nbsp;<i class="fa fa-search fa-2x" aria-hidden="true"> </i></button>
+    
+    <div  *ngIf="dialog" class="dialog">
+        <form *ngIf="dialog" [formGroup]="searchForm" >
+
+            <mat-form-field class="field-full-width">
+                <input id="title"
+                matInput
+                formControlName="title"
+                placeholder="Title" />
+            </mat-form-field>
+
+            <div style="display: inline;">
+                <mat-form-field style="width: 49%;">
+                    <mat-label>Date</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                &nbsp; &nbsp;
+                <mat-form-field class="field-full-width" style="width: 49%;">
+                    <input id="language"
+                    formControlName="language"
+                    matInput
+                    placeholder="Language" />
+                </mat-form-field>
             </div>
+            <div *ngIf= "!forUser" style="display: inline;">
+                <mat-form-field class="field-full-width" >
+                    <input id="author"
+                    matInput
+                    formControlName="author"
+                    placeholder="Author" />
+                </mat-form-field>
+            </div>
+            
+            <div style="display: inline;">
+                <mat-form-field class="field-full-width" >
+                    <input id="keyword"
+                    matInput
+                    formControlName="keyword"
+                    placeholder="Keyword" />
+                </mat-form-field>
+            </div>
+
+            <div style="display: inline;">
+                <mat-form-field  style="width: 85%;" >
+                    <textarea id="text"
+                    matInput
+                    formControlName="text"
+                    placeholder="Text"></textarea>
+                </mat-form-field>
+                <button style="width: 15%;" (click) = "basicSearch()">Search By Text</button>
+            </div>
+            
+          
+            
+            <button mat-button color="primary" (click)="closeQuestionDialog()">Close</button>
+            <button mat-button color="primary" (click)="search()">Apply</button>
+
+        </form>
+    </div>
+
 </div>

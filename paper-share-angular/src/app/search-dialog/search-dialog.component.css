@@ -1,0 +1,13 @@
+
+.search-wrapper {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 5%;
+    width: 60%;
+}
+
+
+.search-wrapper form .field-full-width {
+    width: 100%;
+}
+
