@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AssignReview } from '../model/assignReview';
 import { ReviewService } from '../Service/review.service';
 import { MatSnackBar } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-assign-review',
@@ -12,24 +13,43 @@ import { MatSnackBar } from '@angular/material';
 export class AssignReviewComponent implements OnInit {
 
   assignReviewForm: FormGroup;
+  title: string;
+  recommendedReviewers: string[];
+  user: string;
 
-  constructor(private formBuilder: FormBuilder, private reviewService: ReviewService, private snackBar: MatSnackBar) { }
+  constructor(private reviewService: ReviewService, private snackBar: MatSnackBar,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.assignReviewForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      publicationName: ['', [Validators.required]]
+
+    this.route.params.subscribe(params => {
+      this.title = params['title'];
     });
+
+    this.getRecommendedReviewers(this.title);
   }
 
-  get username() { return this.assignReviewForm.controls.username.value as string; }
-  get publicationName() { return this.assignReviewForm.controls.publicationName.value as string; }
-
   onAssignReviewSubmit() {
-    const assignReview = new AssignReview(this.username, this.publicationName);
+
+    if (this.user == null || this.user === '') {
+      this.snackBar.open('You must choose a reviewer.');
+      return;
+    }
+
+    const assignReview = new AssignReview(this.user, this.title);
 
     this.reviewService.assignReview(assignReview).subscribe((response => {
       this.snackBar.open(response);
+    }),
+    (error => {
+      const err = JSON.parse(error.error);
+      this.snackBar.open(err.message);
+    }));
+  }
+
+  getRecommendedReviewers(title: string) {
+    this.reviewService.getRecommendedReviewers(title).subscribe((response => {
+      this.recommendedReviewers = response;
     }),
     (error => {
       const err = JSON.parse(error.error);

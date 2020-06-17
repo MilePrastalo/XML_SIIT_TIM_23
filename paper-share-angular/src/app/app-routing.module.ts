@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'view-paper/:name', component: ViewPaperComponent },
   { path: 'review/:name', component: ViewReviewComponent },
   { path: 'united-reviews/:name', component: UnitedReviewsComponent },
-  { path: 'assign-review', component: AssignReviewComponent },
+  { path: 'assign-review/:title', component: AssignReviewComponent },
   { path: 'paper-list', component: PaperListComponent },
   { path: 'user-profile', component: UserProfileComponent },
   { path: 'paper-reviews/:paperName', component: PaperReviewsComponent }

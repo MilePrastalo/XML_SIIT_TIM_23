@@ -61,8 +61,8 @@ export class PaperListComponent implements OnInit {
     );
   }
 
-  assignReview() {
-    this.router.navigateByUrl('/assign-review');
+  assignReview(title: string) {
+    this.router.navigateByUrl('/assign-review/' + title);
   }
 
   openPaper(name: string) {

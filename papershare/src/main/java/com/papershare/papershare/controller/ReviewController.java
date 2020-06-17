@@ -38,11 +38,6 @@ public class ReviewController {
 		this.reviewService = reviewService;
 	}
 
-	@GetMapping(value = "/testReview")
-	public void review() {
-		reviewService.findById("1");
-	}
-
 	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> addReview(@RequestBody AddReviewDTO dto)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException,
@@ -51,6 +46,15 @@ public class ReviewController {
 		return new ResponseEntity<String>(
 				"Successfully assigned review for: " + dto.getPublicationName() + " to: " + dto.getUsername(),
 				HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/recommendReviewers/{title}")
+	public ResponseEntity<List<String>> recommendReviewers(@PathVariable("title") String title)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, XMLDBException,
+			ParserConfigurationException, SAXException, IOException {
+		List<String> usernames = reviewService.recommendReviewers(title);
+
+		return new ResponseEntity<>(usernames, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/userReviews")

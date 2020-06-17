@@ -58,7 +58,8 @@ public class ReviewService {
 	private PaperService paperService;
 
 	public ReviewService(ReviewRepository repository, XSLTransformer xslTransformer, UserRepository userRepository,
-			PaperRepository paperRepository, ExistManager existManager, DOMParser domParser, EmailService emailService, PaperService paperService) {
+			PaperRepository paperRepository, ExistManager existManager, DOMParser domParser, EmailService emailService,
+			PaperService paperService) {
 		this.reviewRepository = repository;
 		this.xslTransformer = xslTransformer;
 		this.userRepository = userRepository;
@@ -71,6 +72,18 @@ public class ReviewService {
 
 	public Review findById(String id) {
 		return reviewRepository.findById(id);
+	}
+
+	public List<String> recommendReviewers(String title) throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException, XMLDBException, ParserConfigurationException, SAXException, IOException {
+		List<String> authors = paperService.findAuthorsByPaper(title);
+		List<String> usernames = userRepository.findAllUsernames();
+		
+		for( String author : authors) {
+			usernames.remove(author);
+		}
+
+		return usernames;
 	}
 
 	public void addReview(AddReviewDTO dto) throws ClassNotFoundException, InstantiationException,
@@ -119,7 +132,7 @@ public class ReviewService {
 		reviewRepository.save(review, id);
 
 		paperRepository.modifyPaper(dto.getPublicationName(), "/ScientificPaper/status", "reviewing");
-		
+
 		emailService.assignReviewForPaper(dto.getUsername(), dto.getPublicationName(), user.getEmail());
 	}
 
@@ -186,12 +199,12 @@ public class ReviewService {
 		Document xml = reviewRepository.findByName(id);
 		return xslTransformer.convertXMLtoHTML(reviewXSL, xml);
 	}
-	
+
 	public String convertUnitedReviewToHTML(String paperName) {
 		if (!paperName.endsWith(".xml")) {
 			paperName = paperName + ".xml";
 		}
-		
+
 		Document xml = reviewRepository.findByName(paperName);
 		return xslTransformer.convertXMLtoHTML(unitedReviewXSL, xml);
 	}
@@ -204,19 +217,18 @@ public class ReviewService {
 		String targetElement = "/review/metadata/status";
 		String xmlFragmet = "accepted";
 		reviewRepository.modifyReview(name, targetElement, xmlFragmet);
-		
+
 		String reviewer = getLoggedUser();
 		this.emailService.acceptReviewForPaper(reviewer, name);
 	}
 
-	public void rejectReview(String name)
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+	public void rejectReview(String name) throws ClassNotFoundException, InstantiationException, IllegalAccessException,
 			XMLDBException, MailException, InterruptedException {
 		if (!name.endsWith(".xml")) {
 			name = name + ".xml";
 		}
 		reviewRepository.removeReview(name);
-		
+
 		String reviewer = getLoggedUser();
 		emailService.rejectReviewForPaper(reviewer, name);
 
@@ -231,7 +243,7 @@ public class ReviewService {
 		String targetElement = "/review/metadata/status";
 		String xmlFragmet = "submitted";
 		reviewRepository.modifyReview(reviewId, targetElement, xmlFragmet);
-		
+
 		String reviewer = getLoggedUser();
 		emailService.finisheddReviewForPaper(reviewer, reviewId);
 	}
@@ -291,15 +303,13 @@ public class ReviewService {
 				Document document = domParser.buildDocumentFromText(resource.getContent().toString());
 				String status = document.getElementsByTagName("status").item(0).getTextContent();
 				NodeList body = document.getElementsByTagName("body");
-				
+
 				String unitedReview = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 						+ "<unitedReviews xmlns=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\" xmlns:rv=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\">\r\n"
-						+ "<paperName>" + paperName + "</paperName>\r\n"
-						+ "<reviews>\r\n"   
-						+ "</reviews>\r\n"
+						+ "<paperName>" + paperName + "</paperName>\r\n" + "<reviews>\r\n" + "</reviews>\r\n"
 						+ "</unitedReviews>";
 				reviewRepository.save(unitedReview, paperName);
-				
+
 				if (status.equals("submitted")) {
 					StringWriter sw = new StringWriter();
 					Transformer serializer = TransformerFactory.newInstance().newTransformer();
@@ -307,19 +317,18 @@ public class ReviewService {
 					reviews += sw.toString().replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "") + "\r\n";
 					sw.close();
 				}
-				
+
 				reviewRepository.removeReview(resource.getDocumentId());
 			}
-	
+
 			reviewRepository.uniteReviews(paperName, reviews);
-			
+
 			paperRepository.modifyPaper(paperName, "/ScientificPaper/status", "revision");
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		List<String> authorsUsernames = paperService.findAuthorsByPaper(paperName);
 
 		for (String username : authorsUsernames) {
