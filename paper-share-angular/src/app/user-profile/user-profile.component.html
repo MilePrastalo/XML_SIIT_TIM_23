@@ -5,7 +5,7 @@
         <mat-tab *ngIf= "role === 'ROLE_ADMIN'" label="New Papers">
             <app-paper-list [papers] = 'completedPapers' [forUser] = false></app-paper-list>
         </mat-tab>
-        <mat-tab label="Your Papers">
+        <mat-tab label="Your Papers" *ngIf= "role === 'ROLE_USER'">
             <div style="text-align:center">
                 <app-search-dialog (searchResult)="showSearchResult($event)" [forUser] = true></app-search-dialog>
             </div>

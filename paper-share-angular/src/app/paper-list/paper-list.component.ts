@@ -14,10 +14,12 @@ export class PaperListComponent implements OnInit {
   @Input() papers: Array<PaperView>;
   @Input() forUser: boolean;
   @Input() homePage: boolean;
+  role: string;
 
   constructor(private paperService: PaperService, private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.role = localStorage.getItem('role');
   }
 
   getUserPapers() {
@@ -66,7 +68,7 @@ export class PaperListComponent implements OnInit {
   }
 
   openPaper(name: string) {
-    this.router.navigate(['/view-paper', name]);
+    window.open('/view-paper/' + name);
   }
 
   goToPaperReviews(paperName: string) {

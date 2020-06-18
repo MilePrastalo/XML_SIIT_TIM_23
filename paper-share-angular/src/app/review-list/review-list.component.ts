@@ -63,7 +63,7 @@ export class ReviewListComponent implements OnInit {
   }
 
   edit(name: string) {
-    this.router.navigateByUrl("/addReview/" + name);
+    window.open('/addReview/' + name);
   }
   publish(name: string) {
     this.reviewService.publishReview(name).subscribe(

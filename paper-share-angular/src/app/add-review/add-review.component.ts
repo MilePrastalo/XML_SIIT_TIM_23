@@ -16,7 +16,7 @@ export class AddReviewComponent implements OnInit {
   paperTitle: string;
   reviewName: string;
   reviewText: string;
-  constructor(private xonomyService: XonomyService, private reviewService: ReviewService, private route: ActivatedRoute) { }
+  constructor(private xonomyService: XonomyService, private reviewService: ReviewService, private route: ActivatedRoute,private router:Router) { }
 
   ngOnInit(): void {
     this.reviewName = this.route.snapshot.paramMap.get('title');
@@ -49,6 +49,11 @@ export class AddReviewComponent implements OnInit {
     this.reviewService.sendReview(new SendReview(text, this.reviewName)).subscribe(
       response => {
         console.log("Hello");
+      },
+      error=>{
+        if(error.status === 200){
+          this.router.navigateByUrl("/user-profile");
+        }
       }
     );
   }

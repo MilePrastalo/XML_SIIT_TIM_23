@@ -18,7 +18,7 @@
 			<xsl:for-each
 				select="./sci:ChapterBody/sci:ChapterContent">
 				<fo:block>
-					<fo:block font-size="18px" space-after="7px">
+					<fo:block font-size="12px" space-after="7px">
 						<xsl:value-of select="." />
 					</fo:block>
 				</fo:block>

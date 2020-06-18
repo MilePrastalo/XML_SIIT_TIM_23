@@ -3,7 +3,7 @@
         <div *ngIf = "papers.length === 0">
             <h2 style="text-align: center;">No Scientific Papers</h2>
         </div>
-        <button (click)="addPaper()" mat-raised-button color="primary">Add paper</button>
+        <button *ngIf = "role === 'ROLE_USER'" (click)="addPaper()" mat-raised-button color="primary">Add paper</button>
         <mat-card  *ngFor = "let paper of papers; index as i" class="paper-card">
             <div style="display: flex">
                 <mat-card-title>

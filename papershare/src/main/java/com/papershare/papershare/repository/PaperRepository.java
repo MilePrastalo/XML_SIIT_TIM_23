@@ -33,7 +33,7 @@ public class PaperRepository {
 			name = name + ".xml";
 		}
 		try {
-			XMLResource xmlResource = existMenager.load(collectionId, name);
+			XMLResource xmlResource = existMenager.load(collectionId, name.replace(" ", "_"));
 			document = (Document) xmlResource.getContentAsDOM();
 		} catch (Exception e) {
 			e.printStackTrace();

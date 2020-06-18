@@ -125,7 +125,7 @@ public class PaperService {
 		String recievedDate = sdf.format(new Date());
 		sp.setAttribute("id", currentMilli.toString());
 
-		sp.setAttribute("about", "https://github.com/MilePrastalo/XML_SIIT_TIM_23/" + title);
+		sp.setAttribute("about", "https://github.com/MilePrastalo/XML_SIIT_TIM_23/" +  title.replace(" ", "_"));
 		Element recDateElement = document.createElement("sci:recievedDate");
 		recDateElement.appendChild(document.createTextNode(recievedDate));
 		recDateElement.setAttribute("property", "pred:recievedDate");
@@ -141,7 +141,7 @@ public class PaperService {
 
 		transformer.transform(new DOMSource(document), new StreamResult(sw));
 
-		paperRepository.save(sw.toString(), title + ".xml");
+		paperRepository.save(sw.toString(), title.replace(" ", "_") + ".xml");
 
 		metadataExtractor.extractMetadata(sw.toString());
 		FusekiWriter.saveRDF();
@@ -203,8 +203,8 @@ public class PaperService {
 				throw new PaperAlreadyExistException("Paper already exist");
 			}
 		}
-		paperRepository.removePaper(name);
-		paperRepository.save(xmlFragmet, title);
+		paperRepository.removePaper(name.replace(" ", "_"));
+		paperRepository.save(xmlFragmet, title.replace(" ", "_"));
 		String user = getLoggedUser();
 		String title_raw = ndTitle.item(0).getTextContent();
 
@@ -234,6 +234,7 @@ public class PaperService {
 
 	public void changePaperStatus(String paperName, String status) {
 		String documentId;
+		paperName = paperName.replace(" ", "_");
 		if (!paperName.endsWith(".xml")) {
 			documentId = paperName + ".xml";
 		} else {
@@ -252,7 +253,7 @@ public class PaperService {
 	}
 
 	public ArrayList<PaperViewDTO> findCompletedPapers() {
-		String xPathExpression = "/ScientificPaper[status = 'completed']";
+		String xPathExpression = "/ScientificPaper[status = 'completed' or status = 'revision']";
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;

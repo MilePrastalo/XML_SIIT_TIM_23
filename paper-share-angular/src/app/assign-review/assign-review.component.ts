@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AssignReview } from '../model/assignReview';
 import { ReviewService } from '../Service/review.service';
 import { MatSnackBar } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-assign-review',
@@ -18,7 +18,7 @@ export class AssignReviewComponent implements OnInit {
   user: string;
 
   constructor(private reviewService: ReviewService, private snackBar: MatSnackBar,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
 
@@ -55,6 +55,10 @@ export class AssignReviewComponent implements OnInit {
       const err = JSON.parse(error.error);
       this.snackBar.open(err.message);
     }));
+  }
+
+  back() {
+    this.router.navigateByUrl('/user-profile' + name);
   }
 
 }

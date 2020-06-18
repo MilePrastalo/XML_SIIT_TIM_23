@@ -25,7 +25,7 @@ export class CreatePaperComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.scientificPublication = '<ScientificPaper xmlns="https://github.com/MilePrastalo/XML_SIIT_TIM_23"' + ' xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate"></ScientificPaper>';
+    this.scientificPublication = '<ScientificPaper xmlns="https://github.com/MilePrastalo/XML_SIIT_TIM_23"' + ' xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/"></ScientificPaper>';
     if (this.paperName) {
       this.paperService.getPaperAsText(this.paperName).subscribe(
         response => { 
@@ -61,6 +61,7 @@ export class CreatePaperComponent implements OnInit {
     this.paperService.sendPaper(new PaperUpload(text, cover)).subscribe(
       response => {
         console.log("Hello");
+        this.router.navigateByUrl('/user-profile');
       },
       error => {
         console.log(error);
@@ -77,6 +78,7 @@ export class CreatePaperComponent implements OnInit {
     this.paperService.updatePaper(new PaperUpload(text, cover), this.paperName).subscribe(
       response => {
         console.log("Hello");
+        this.router.navigateByUrl('/user-profile');
       },
       error => {
         console.log(error);

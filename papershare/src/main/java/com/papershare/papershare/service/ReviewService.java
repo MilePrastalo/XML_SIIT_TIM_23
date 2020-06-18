@@ -123,7 +123,7 @@ public class ReviewService {
 				+ "        <paperName>" + dto.getPublicationName() + "</paperName>\r\n"
 				+ "		   <status>created</status>\r\n" + "        <submissionDate>" + today + "</submissionDate>\r\n"
 				+ "    </metadata>\r\n" + "    <body>\r\n" + "        <criteriaEvaluation>\r\n"
-				+ "            <abstract> </abstract>\r\n" + "            <relevance> </relevance>\r\n"
+				+ "            <abstract> </abstract>\r\n" + "            <relevance>   </relevance>\r\n"
 				+ "            <readability> </readability>\r\n" + "            <methodology> </methodology>\r\n"
 				+ "            <results> </results>\r\n" + "        </criteriaEvaluation>\r\n"
 				+ "        <overallEvaluation></overallEvaluation>\r\n" + "        <chapterReviews>\r\n"
@@ -131,9 +131,9 @@ public class ReviewService {
 				+ "    </body>\r\n" + "</review>";
 		reviewRepository.save(review, id);
 
-		paperRepository.modifyPaper(dto.getPublicationName(), "/ScientificPaper/status", "reviewing");
+		paperRepository.modifyPaper(dto.getPublicationName().replace(" ", "_"), "/ScientificPaper/status", "reviewing");
 
-		emailService.assignReviewForPaper(dto.getUsername(), dto.getPublicationName(), user.getEmail());
+		emailService.assignReviewForPaper(dto.getUsername(), dto.getPublicationName().replace(" ", "_"), user.getEmail());
 	}
 
 	public ArrayList<ReviewDTO> findReviewsByUser() throws XMLDBException {
@@ -205,7 +205,7 @@ public class ReviewService {
 			paperName = paperName + ".xml";
 		}
 
-		Document xml = reviewRepository.findByName(paperName);
+		Document xml = reviewRepository.findByName(paperName.replace(" ", "_"));
 		return xslTransformer.convertXMLtoHTML(unitedReviewXSL, xml);
 	}
 
@@ -308,7 +308,7 @@ public class ReviewService {
 						+ "<unitedReviews xmlns=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\" xmlns:rv=\"https://github.com/MilePrastalo/XML_SIIT_TIM_23\">\r\n"
 						+ "<paperName>" + paperName + "</paperName>\r\n" + "<reviews>\r\n" + "</reviews>\r\n"
 						+ "</unitedReviews>";
-				reviewRepository.save(unitedReview, paperName);
+				reviewRepository.save(unitedReview, paperName.replace(" ", "_"));
 
 				if (status.equals("submitted")) {
 					StringWriter sw = new StringWriter();
@@ -321,9 +321,9 @@ public class ReviewService {
 				reviewRepository.removeReview(resource.getDocumentId());
 			}
 
-			reviewRepository.uniteReviews(paperName, reviews);
+			reviewRepository.uniteReviews(paperName.replace(" ", "_"), reviews);
 
-			paperRepository.modifyPaper(paperName, "/ScientificPaper/status", "revision");
+			paperRepository.modifyPaper(paperName.replace(" ", "_"), "/ScientificPaper/status", "revision");
 
 		} catch (Exception e) {
 			e.printStackTrace();
