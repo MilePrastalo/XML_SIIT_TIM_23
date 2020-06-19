@@ -60,8 +60,8 @@ import com.papershare.papershare.exception.PaperAlreadyExistException;
 public class PaperService {
 
 	private final String scientificPublicatonXSL = "src/main/resources/data/xsl/scientificPaper.xsl";
-	// private final String paperSchema =
-	// "src/main/resources/data/scientificPaper.xsd";
+	private final String anonymusScientificPublicatonXSL = "src/main/resources/data/xsl/anonymusScientificPaper.xsl";
+
 	private static String xslFOPath = "src/main/resources/data/xsl/paperToPDF.xsl";
 	private DOMParser domParser;
 
@@ -91,6 +91,11 @@ public class PaperService {
 	public String convertXMLtoHTML(String name) {
 		Document xml = paperRepository.findScientificPaper(name);
 		return xslTransformer.convertXMLtoHTML(scientificPublicatonXSL, xml);
+	}
+	
+	public String convertAnonymusXMLtoHTML(String name) {
+		Document xml = paperRepository.findScientificPaper(name);
+		return xslTransformer.convertXMLtoHTML(anonymusScientificPublicatonXSL, xml);
 	}
 
 	public void savePaper(PaperUploadDTO dto) throws ParserConfigurationException, SAXException, IOException,
@@ -253,7 +258,7 @@ public class PaperService {
 	}
 
 	public ArrayList<PaperViewDTO> findCompletedPapers() {
-		String xPathExpression = "/ScientificPaper[status = 'completed' or status = 'revision']";
+		String xPathExpression = "/ScientificPaper[status = 'completed' or status = 'revision' or status = 'reviewing']";
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);
 		return paperList;
@@ -278,7 +283,7 @@ public class PaperService {
 		} else {
 			xPathExpression = String.format(
 					"/ScientificPaper[status = 'published' and  Chapters/Chapter/ChapterBody/ChapterContent[contains(text(), '%s')] or Abstract/Paragraph[contains(text(), '%s')]]",
-					dto.getText());
+					dto.getText(), dto.getText());
 		}
 		ResourceSet result = paperRepository.findPapers(xPathExpression);
 		ArrayList<PaperViewDTO> paperList = extractDataFromPapers(result);

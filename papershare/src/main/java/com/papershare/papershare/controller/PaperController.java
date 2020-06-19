@@ -60,6 +60,12 @@ public class PaperController {
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/sciPaper/{name}", produces = MediaType.TEXT_HTML_VALUE)
+	public ResponseEntity<String> getAnonymusSciPaperHTML(@PathVariable("name") String name) {
+		String result = paperService.convertAnonymusXMLtoHTML(name);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/{name}/pdf", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public ResponseEntity<Object> getPdf(@PathVariable("name") String name) throws Exception {
 		Resource resource = paperService.getPdf(name);
@@ -93,19 +99,19 @@ public class PaperController {
 		paperService.rejectPaper(name);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/publishedPapers")
 	public ResponseEntity<List<PaperViewDTO>> getPublishedPapers() {
 		List<PaperViewDTO> result = paperService.getPublishedPapers();
 		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/searchByMetadata")
 	public ResponseEntity<List<PaperViewDTO>> searchByMetadata(@RequestBody SearchDTO dto) throws IOException {
 		List<PaperViewDTO> result = paperService.searhByMetadata(dto);
 		return new ResponseEntity<List<PaperViewDTO>>(result, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/searchByText")
 	public ResponseEntity<List<PaperViewDTO>> searchByText(@RequestBody SearchDTO dto) throws IOException {
 		List<PaperViewDTO> result = paperService.searchByText(dto);

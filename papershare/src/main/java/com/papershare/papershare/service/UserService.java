@@ -64,6 +64,7 @@ public class UserService {
 					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		} catch (BadCredentialsException | InternalAuthenticationServiceException e) {
 			e.printStackTrace();
+			throw new BadCredentialsException("Bad credentials.");
 		}
 		final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String jwt = jwtTokenUtil.generateToken(userDetails);

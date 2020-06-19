@@ -25,9 +25,13 @@ export class PaperService {
   }
 
   getPaper(name: string) {
-    const x = this.http.get(this.path + '/api/papers/' + name, { responseType: 'text' });
-    return x;
+    return this.http.get(this.path + '/api/papers/' + name, { responseType: 'text' });
   }
+
+  getAnonymusPaper(name: string) {
+    return this.http.get(this.path + '/api/papers/sciPaper/' + name, { responseType: 'text' });
+  }
+
   getPaperAsText(name: string): Observable<string> {
     return this.http.get(this.path + '/api/papers/asText/' + name, { responseType: 'text' });
   }

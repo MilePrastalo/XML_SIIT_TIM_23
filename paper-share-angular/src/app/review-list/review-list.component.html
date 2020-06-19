@@ -20,6 +20,7 @@
                 <button (click)="publish(review.reviewName)" *ngIf="review.status === 'accepted'" mat-button color="primary">publish</button>
                 <button (click)="sendReviewsToAuthor(review.publicationName)" *ngIf="review.status === 'submitted'" mat-button color="primary">send reviews to author</button>
                 <button (click)="viewReview(review.reviewName)" mat-button color="primary">view review</button>
+                <button (click)="viewPaper(review.publicationName)" mat-button color="primary">view paper</button>
             </mat-card>
         </div>
 

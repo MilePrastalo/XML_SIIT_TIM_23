@@ -12,6 +12,7 @@ import { AssignReviewComponent } from './assign-review/assign-review.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
 import { UnitedReviewsComponent } from './united-reviews/united-reviews.component';
+import { ViewAnonPaperComponent } from './view-anon-paper/view-anon-paper.component';
 
 
 const routes: Routes = [
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'addReview/:title', component: AddReviewComponent },
   { path: 'view-paper/:name', component: ViewPaperComponent },
   { path: 'review/:name', component: ViewReviewComponent },
+  { path: 'review/sciPaper/:name', component: ViewAnonPaperComponent },
   { path: 'united-reviews/:name', component: UnitedReviewsComponent },
   { path: 'assign-review/:title', component: AssignReviewComponent },
   { path: 'paper-list', component: PaperListComponent },

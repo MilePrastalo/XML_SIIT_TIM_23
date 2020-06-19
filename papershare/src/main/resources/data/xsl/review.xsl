@@ -20,6 +20,9 @@
 					.tab {
 					margin-left: 2.5em
 					}
+					
+					body {text-align: justify; text-justify: inter-word; margin: auto 50px
+					auto 50px;}
 				</style>
 			</head>
 
@@ -108,8 +111,8 @@
 					<xsl:for-each
 						select="/x:review/x:body/x:chapterReviews/x:chapterReview">
 						<p class="center">
-							<b>Paragraph ID:</b>
-							<xsl:value-of select="@partID" />
+							<b>Chapter ID:</b>
+							<xsl:value-of select="@chapterID" />
 							<br />
 							<b>Comment:</b>
 							<xsl:value-of select="current()" />

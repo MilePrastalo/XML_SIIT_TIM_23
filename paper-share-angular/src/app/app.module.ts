@@ -25,6 +25,7 @@ import { ReviewListComponent } from './review-list/review-list.component';
 import { PaperReviewsComponent } from './paper-reviews/paper-reviews.component';
 import { TokenInterceptorService } from './Service/token-interceptor.service';
 import { UnitedReviewsComponent } from './united-reviews/united-reviews.component';
+import { ViewAnonPaperComponent } from './view-anon-paper/view-anon-paper.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { UnitedReviewsComponent } from './united-reviews/united-reviews.componen
     UserProfileComponent,
     ReviewListComponent,
     PaperReviewsComponent,
-    UnitedReviewsComponent
+    UnitedReviewsComponent,
+    ViewAnonPaperComponent
   ],
   imports: [
     BrowserModule,

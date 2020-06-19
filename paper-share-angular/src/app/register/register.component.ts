@@ -3,6 +3,7 @@ import { User } from '../../model/user.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { UserService } from 'src/app/Service/user.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   hide = true;
   registerBtn = false;
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private snackBar: MatSnackBar) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private snackBar: MatSnackBar, private router: Router) {
   }
 
   ngOnInit() {
@@ -34,7 +35,6 @@ export class RegisterComponent implements OnInit {
 
   onRegisterSubmit() {
     const user = this.userData;
-    alert(JSON.stringify(user));
     if (user.password !== user.repeatedPassword) {
       this.snackBar.open('Wrong repeated password.');
       return;
@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
       (response => {
         if (response !== null) {
           this.snackBar.open('Successfuly registred!');
-          this.registerBtn = true;
+          this.router.navigateByUrl('/login');
         }
       }),
       (error => {

@@ -1,17 +1,26 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:h="http://www.w3.org/1999/xhtml">
-  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/inglis">
-    <pred:language xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">inglis</pred:language>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/Xml_i_veb_servisi">
+    <pred:title xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">Xml i veb servisi</pred:title>
   </rdf:Description>
-  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/inglis">
-    <pred:title xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">inglis</pred:title>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/Xml_i_veb_servisi">
+    <pred:language xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">serbian</pred:language>
   </rdf:Description>
-  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/inglis">
-    <pred:authors xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">mira</pred:authors>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/Xml_i_veb_servisi">
+    <pred:authors xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">Mira Miric</pred:authors>
   </rdf:Description>
-  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/inglis">
-    <pred:keywords xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">key</pred:keywords>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/Xml_i_veb_servisi">
+    <pred:authors xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">Nikola Saric</pred:authors>
   </rdf:Description>
-  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/inglis">
-    <pred:recievedDate xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">18-06-2020</pred:recievedDate>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/Xml_i_veb_servisi">
+    <pred:keywords xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral"> xml</pred:keywords>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/Xml_i_veb_servisi">
+    <pred:keywords xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">web</pred:keywords>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/Xml_i_veb_servisi">
+    <pred:keywords xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">servis</pred:keywords>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://github.com/MilePrastalo/XML_SIIT_TIM_23/Xml_i_veb_servisi">
+    <pred:recievedDate xmlns:pred="https://github.com/MilePrastalo/XML_SIIT_TIM_23/predicate/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">19-06-2020</pred:recievedDate>
   </rdf:Description>
 </rdf:RDF>
